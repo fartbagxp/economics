@@ -1,0 +1,17 @@
+[project]
+name = "economics"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fredapi>=0.5.2",
+    "matplotlib>=3.10.5",
+    "polars>=1.32.0",
+    "python-dotenv>=1.1.1",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.2.0",
+]

@@ -1,0 +1,39 @@
+---
+name: Generate Personal Access Token
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "scripts/generate-pat/**"
+      - ".github/workflows/generate-pat.yml"
+
+  pull_request:
+    branches:
+      - "**"
+    paths:
+      - "scripts/generate-pat/**"
+      - ".github/workflows/generate-pat.yml"
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: update and run the script
+        env:
+          GITHUB_USER: "${{ secrets.GIT_USER }}"
+          GITHUB_PASSWORD: "${{ secrets.GIT_PASSWORD }}"
+          GITHUB_USER_TOTP: "${{ secrets.GIT_USER_TOTP }}"
+        run: |
+          python -m pip install -r requirements.txt
+          python main.py
+        working-directory: "scripts/generate-pat"

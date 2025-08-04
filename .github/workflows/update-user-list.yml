@@ -1,0 +1,466 @@
+name: Github User List Sync
+
+on:
+  pull_request:
+    branches-ignore:
+      - 'user-list-update-*'
+    paths:
+      - 'scripts/discovery/**'
+      - '.github/workflows/update-user-list.yml'
+  workflow_dispatch:
+    inputs:
+      update_lists_only:
+        description: 'Only update user lists (skip removals)'
+        type: boolean
+        default: false
+  repository_dispatch:
+    types:
+      - remove_users_from_org
+      - update_user_lists
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/discovery/**'
+      - '.github/workflows/update-user-list.yml'
+  schedule:
+    - cron: '30 20 * * *' # at At 20:30 UTC everyday
+
+permissions:
+  contents: write
+
+jobs:
+  verify-dispatch:
+    if: github.event_name == 'repository_dispatch'
+    runs-on: ubuntu-latest
+    outputs:
+      is_valid: ${{ steps.validate.outputs.is_valid }}
+      dispatch_type: ${{ steps.validate.outputs.dispatch_type }}
+      process_cdcgov_after: ${{ steps.validate.outputs.process_cdcgov_after }}
+    steps:
+      - name: Debug Event Context
+        id: debug
+        run: |
+          echo "=== Event Context ==="
+          echo "Event name: ${{ github.event_name }}"
+          echo "Event action: ${{ github.event.action }}"
+          echo "Repository: ${{ github.repository }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "Workflow: ${{ github.workflow }}"
+          echo "Workflow ref: ${{ github.workflow_ref }}"
+          echo ""
+          echo "=== Client Payload ==="
+          echo "Raw event: ${{ toJSON(github.event) }}"
+
+          if [ "${{ github.event.action }}" == "remove_users_from_org" ]; then
+            echo "Branch ref: ${{ github.event.client_payload.ref }}"
+            echo "Test mode: ${{ github.event.client_payload.test_mode }}"
+            echo "Process CDCgov after: ${{ github.event.client_payload.process_cdcgov_after }}"
+            echo "Users: ${{ toJSON(github.event.client_payload.usernames) }}"
+          elif [ "${{ github.event.action }}" == "update_user_lists" ]; then
+            echo "Test mode: ${{ github.event.client_payload.test_mode }}"
+            echo "CDCGov processed: ${{ github.event.client_payload.cdcgov_processed }}"
+            echo "Job status: ${{ github.event.client_payload.job_status }}"
+          fi
+
+      - name: Validate Dispatch
+        id: validate
+        run: |
+          # Default values
+          is_valid="false"
+          dispatch_type="unknown"
+          process_cdcgov_after="false"
+
+          if [ "${{ github.event.action }}" == "remove_users_from_org" ]; then
+            # Validate remove_users_from_org payload
+            if [ -z "${{ github.event.client_payload.ref }}" ] || \
+               [ -z "${{ github.event.client_payload.test_mode }}" ] || \
+               [ -z "${{ toJSON(github.event.client_payload.usernames) }}" ]; then
+              echo "Missing required fields in remove_users_from_org payload"
+            else
+              echo "remove_users_from_org validation passed"
+              is_valid="true"
+              dispatch_type="remove_users_from_org"
+
+              # Check if we should process CDCgov after
+              if [ "${{ github.event.client_payload.process_cdcgov_after }}" == "true" ]; then
+                process_cdcgov_after="true"
+              fi
+            fi
+          elif [ "${{ github.event.action }}" == "update_user_lists" ]; then
+            # Validate update_user_lists payload
+            if [ -z "${{ github.event.client_payload.test_mode }}" ] || \
+               [ -z "${{ github.event.client_payload.cdcgov_processed }}" ]; then
+              echo "Missing required fields in update_user_lists payload"
+            else
+              echo "update_user_lists validation passed"
+              is_valid="true"
+              dispatch_type="update_user_lists"
+            fi
+          else
+            echo "Unknown dispatch action: ${{ github.event.action }}"
+          fi
+
+          # Set outputs
+          echo "is_valid=${is_valid}" >> $GITHUB_OUTPUT
+          echo "dispatch_type=${dispatch_type}" >> $GITHUB_OUTPUT
+          echo "process_cdcgov_after=${process_cdcgov_after}" >> $GITHUB_OUTPUT
+
+  process-cdcent-removals:
+    needs: verify-dispatch
+    if: |
+      github.event_name == 'repository_dispatch' &&
+      needs.verify-dispatch.outputs.is_valid == 'true' &&
+      needs.verify-dispatch.outputs.dispatch_type == 'remove_users_from_org' &&
+      !inputs.update_lists_only
+    runs-on: ubuntu-latest
+    outputs:
+      processed_usernames: ${{ steps.set-output.outputs.processed_usernames }}
+      test_mode: ${{ steps.set-output.outputs.test_mode }}
+    steps:
+      - name: Debug Info
+        run: |
+          echo "=== Processing Removal Request ==="
+          echo "Organization: cdcent"
+          echo "Test Mode: ${{ github.event.client_payload.test_mode }}"
+          echo "Target Branch: ${{ github.event.client_payload.ref }}"
+          echo "Users to Process: ${{ toJSON(github.event.client_payload.usernames) }}"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.client_payload.ref }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.GIT_APP_OCIO_EDSO_APP_ID }}
+          private-key: ${{ secrets.GIT_APP_OCIO_EDSO_PRIVATE_KEY }}
+          owner: cdcent
+
+      - name: Process Removals - cdcent
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          TEST_MODE: ${{ github.event.client_payload.test_mode }}
+        run: |
+          FORMATTED_JSON=$(echo '${{ toJSON(github.event.client_payload.usernames) }}' | tr -d '\n')
+          echo "Processing usernames: ${FORMATTED_JSON}"
+          export USERNAMES="${FORMATTED_JSON}"
+          export PYTHONPATH="${PYTHONPATH:+${PYTHONPATH}:}${PWD}/scripts/org_removal"
+          python scripts/org_removal/main.py
+
+      - name: Set outputs for next steps
+        id: set-output
+        run: |
+          echo "processed_usernames=$(echo '${{ toJSON(github.event.client_payload.usernames) }}' | tr -d '\n')" >> $GITHUB_OUTPUT
+          echo "test_mode=${{ github.event.client_payload.test_mode }}" >> $GITHUB_OUTPUT
+
+      - name: Upload removal results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cdcent-removal-results
+          path: |
+            cdcent_removal_*.log
+            cdcent_removal_results.json
+
+      - name: Report Status
+        run: |
+          echo "=== Removal Status for cdcent ==="
+          echo "Completed processing for users:"
+          echo '${{ toJSON(github.event.client_payload.usernames) }}' | jq -r '.[]'
+          echo "Mode: ${{ github.event.client_payload.test_mode && 'TEST' || 'PRODUCTION' }}"
+
+  update-user-lists:
+    runs-on: ubuntu-latest
+    needs: [verify-dispatch, process-cdcent-removals]
+    if: |
+      always() &&
+      (
+        (github.event_name != 'repository_dispatch') ||
+        (github.event_name == 'repository_dispatch' && needs.verify-dispatch.outputs.is_valid == 'true' &&
+         (
+           (needs.process-cdcent-removals.result == 'success') ||
+           (needs.process-cdcent-removals.result == 'skipped') ||
+           (needs.verify-dispatch.outputs.dispatch_type == 'update_user_lists')
+         )
+        )
+      )
+    steps:
+      - name: Debug Information
+        run: |
+          echo "=== User List Update Information ==="
+          echo "Event name: ${{ github.event_name }}"
+          if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+            echo "Event action: ${{ github.event.action }}"
+            echo "Dispatch type: ${{ needs.verify-dispatch.outputs.dispatch_type }}"
+            echo "CDCent removal result: ${{ needs.process-cdcent-removals.result }}"
+          fi
+          echo "Update lists only: ${{ inputs.update_lists_only }}"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+  github-user-list-pull-cdcent:
+    needs: [update-user-lists]
+    if: always() && needs.update-user-lists.result == 'success'
+    environment: userlist-cdcent
+    runs-on: ubuntu-latest
+    outputs:
+      cdcent_complete: ${{ steps.completion.outputs.complete }}
+    steps:
+      - name: Checkout the Codebase
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Refresh Github User List
+        working-directory: ./scripts/discovery
+        env:
+          API_TOKEN_GITHUB: "${{ secrets.API_TOKEN }}"
+          ORG_GITHUB: "cdcent"
+        run: |
+          pip install -r requirements.txt
+          python update-all-users.py
+
+      - uses: actions/create-github-app-token@v1
+        if: github.ref == 'refs/heads/main'
+        id: app-token
+        with:
+          app-id: ${{ vars.GIT_APP_OCIO_EDSO_APP_ID }}
+          private-key: ${{ secrets.GIT_APP_OCIO_EDSO_PRIVATE_KEY }}
+          owner: cdcent
+
+      - name: Configure Pull Request
+        if: github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: '${{ steps.app-token.outputs.token }}'
+        run: |
+          git config --global user.email "noreply@github.com"
+          git config --global user.name "github-automation"
+          git status
+
+      - name: Switch to branch
+        if: github.ref == 'refs/heads/main'
+        id: switch_branch
+        run: |
+          date="$(date '+%Y-%m-%d-%H-%M-%S')"
+          export BRANCH_NAME="user-list-update-cdcent-${date}"
+          echo "BRANCH_NAME=${BRANCH_NAME}" >> "$GITHUB_OUTPUT"
+          git checkout -b "$BRANCH_NAME"
+
+      - name: Write to file
+        if: github.ref == 'refs/heads/main'
+        id: write_to_file
+        run: |
+          git add .
+          # Check if there are any changes to commit
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            echo "changes_exist=false" >> "$GITHUB_OUTPUT" # Set the output to indicate no changes
+            exit 0
+          else
+            echo "changes_exist=true" >> "$GITHUB_OUTPUT" # Set the output to indicate changes exist
+            # Commit and push if there are changes
+            git commit -m "chore(users): Syncing Github user list for cdcent"
+            git push -f -u origin HEAD
+          fi
+
+      - name: Create PR
+        if: github.ref == 'refs/heads/main' && steps.write_to_file.outputs.changes_exist == 'true'
+        env:
+          GITHUB_TOKEN: '${{ steps.app-token.outputs.token }}'
+        run: |
+          gh pr create --title "Update user list for cdcent" --body "Update user list for cdcent" --base main --head '${{ steps.switch_branch.outputs.BRANCH_NAME }}'
+
+      - name: Merge PR
+        if: github.ref == 'refs/heads/main' && steps.write_to_file.outputs.changes_exist == 'true'
+        env:
+          GITHUB_TOKEN: '${{ steps.app-token.outputs.token }}'
+        run: |
+          # List PRs, gets the PR number for the first one (our PR)
+          pr_number=$(gh pr list --state open --limit 1 --json number --jq '.[0].number')
+
+          # Try to merge
+          if ! gh pr merge "$pr_number" --admin --squash; then
+            echo "PR can't be merged automatically. Merging with auto..."
+            gh pr merge "$pr_number" --admin --squash --auto
+          fi
+
+      - name: Signal completion
+        id: completion
+        run: |
+          echo "complete=true" >> $GITHUB_OUTPUT
+
+  trigger-cdcgov-process:
+    needs: [verify-dispatch, process-cdcent-removals, github-user-list-pull-cdcent]
+    if: |
+      needs.verify-dispatch.outputs.process_cdcgov_after == 'true' &&
+      needs.github-user-list-pull-cdcent.outputs.cdcent_complete == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Dispatch to CDCgov repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.CDCGOV_REPO_PAT }}
+          USERNAMES_JSON: ${{ needs.process-cdcent-removals.outputs.processed_usernames }}
+          TEST_MODE: ${{ needs.process-cdcent-removals.outputs.test_mode }}
+        run: |
+          export PYTHONPATH="${PYTHONPATH:+${PYTHONPATH}:}${PWD}/scripts"
+          python scripts/org_removal/send_cdcgov_dispatch.py
+
+  handle-cdcgov-callback:
+    runs-on: ubuntu-latest
+    needs: [verify-dispatch]
+    if: |
+      github.event_name == 'repository_dispatch' &&
+      needs.verify-dispatch.outputs.is_valid == 'true' &&
+      needs.verify-dispatch.outputs.dispatch_type == 'update_user_lists' &&
+      github.event.client_payload.cdcgov_processed == true
+    outputs:
+      cdcgov_complete: ${{ steps.handle-callback.outputs.cdcgov_complete }}
+      cdcgov_status: ${{ steps.handle-callback.outputs.cdcgov_status }}
+      cdcgov_test_mode: ${{ steps.handle-callback.outputs.cdcgov_test_mode }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Handle CDCgov callback
+        id: handle-callback
+        run: |
+          export PYTHONPATH="${PYTHONPATH:+${PYTHONPATH}:}${PWD}/scripts"
+          python scripts/org_removal/handle_cdcgov_callback.py
+
+  github-user-list-pull-cdcgov:
+    needs: [handle-cdcgov-callback]
+    if: |
+      needs.handle-cdcgov-callback.outputs.cdcgov_complete == 'true'
+    environment: userlist-cdcgov
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the Codebase
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Refresh Github User List
+        working-directory: ./scripts/discovery
+        env:
+          API_TOKEN_GITHUB: "${{ secrets.API_TOKEN }}"
+          ORG_GITHUB: "cdcgov"
+        run: |
+          pip install -r requirements.txt
+          python update-all-users.py
+
+      - uses: actions/create-github-app-token@v1
+        if: github.ref == 'refs/heads/main'
+        id: app-token
+        with:
+          app-id: ${{ vars.GIT_APP_OCIO_EDSO_APP_ID }}
+          private-key: ${{ secrets.GIT_APP_OCIO_EDSO_PRIVATE_KEY }}
+          owner: cdcent
+
+      - name: Configure Pull Request
+        if: github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: '${{ steps.app-token.outputs.token }}'
+        run: |
+          git config --global user.email "noreply@github.com"
+          git config --global user.name "github-automation"
+          git status
+
+      - name: Switch to branch
+        if: github.ref == 'refs/heads/main'
+        id: switch_branch
+        run: |
+          date="$(date '+%Y-%m-%d-%H-%M-%S')"
+          export BRANCH_NAME="user-list-update-cdcgov-${date}"
+          echo "BRANCH_NAME=${BRANCH_NAME}" >> "$GITHUB_OUTPUT"
+          git checkout -b "$BRANCH_NAME"
+
+      - name: Write to file
+        if: github.ref == 'refs/heads/main'
+        id: write_to_file
+        run: |
+          git add .
+          # Check if there are any changes to commit
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            echo "changes_exist=false" >> "$GITHUB_OUTPUT" # Set the output to indicate no changes
+            exit 0
+          else
+            echo "changes_exist=true" >> "$GITHUB_OUTPUT" # Set the output to indicate changes exist
+            # Commit and push if there are changes
+            git commit -m "chore(users): Syncing Github user list for cdcgov"
+            git push -f -u origin HEAD
+          fi
+
+      - name: Create PR
+        if: github.ref == 'refs/heads/main' && steps.write_to_file.outputs.changes_exist == 'true'
+        env:
+          GITHUB_TOKEN: '${{ steps.app-token.outputs.token }}'
+        run: |
+          gh pr create --title "Update user list for cdcgov" --body "Update user list for cdcgov" --base main --head '${{ steps.switch_branch.outputs.BRANCH_NAME }}'
+
+      - name: Merge PR
+        if: github.ref == 'refs/heads/main' && steps.write_to_file.outputs.changes_exist == 'true'
+        env:
+          GITHUB_TOKEN: '${{ steps.app-token.outputs.token }}'
+        run: |
+          # List PRs, gets the PR number for the first one (our PR)
+          pr_number=$(gh pr list --state open --limit 1 --json number --jq '.[0].number')
+
+          # Try to merge
+          if ! gh pr merge "$pr_number" --admin --squash; then
+            echo "PR can't be merged automatically. Merging with auto..."
+            gh pr merge "$pr_number" --admin --squash --auto
+          fi
