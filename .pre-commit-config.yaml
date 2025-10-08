@@ -14,7 +14,6 @@ repos:
       - id: ruff-format
         name: "ruff format & sort imports"
         entry: bash -c 'ruff check --select I --fix && ruff format'
-        files: ".py$"
         exclude: ^data/raw/
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.28.0
