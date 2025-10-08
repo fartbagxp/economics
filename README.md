@@ -15,11 +15,10 @@ US economic data collection and analysis project using FRED and BLS data sources
 pip install -r requirements.txt
 ```
 
-2. Create `.env` file with API keys:
+1. Create `.env` file with API keys:
 
-```
+```bash
 FRED_API_TOKEN=your_fred_api_key
-BLS_API_KEY=your_bls_api_key (optional)
 ```
 
 ## Usage
