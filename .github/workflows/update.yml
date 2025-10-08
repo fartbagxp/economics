@@ -30,7 +30,7 @@ jobs:
         env:
           FRED_API_TOKEN: ${{ secrets.FRED_API_TOKEN }}
         run: |
-          uv run python main.py data/raw/
+          uv run python main.py
 
       - name: Commit and push changes
         if: github.ref == 'refs/heads/main'
