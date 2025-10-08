@@ -11,10 +11,10 @@ repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.14.0
     hooks:
+      - id: ruff
+        args: [--fix]
+        exclude: ^data/raw/
       - id: ruff-format
-        name: "ruff format & sort imports"
-        entry: bash -c 'ruff check --select I --fix && ruff format'
-        files: ".py$"
         exclude: ^data/raw/
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.28.0
