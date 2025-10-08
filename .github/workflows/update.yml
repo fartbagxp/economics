@@ -9,8 +9,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  update:
+  update-data:
     runs-on: ubuntu-latest
+    environment:
+      name: prod
     permissions:
       contents: write # Write access is needed to push changes back to the repository
     steps:
@@ -25,6 +27,8 @@ jobs:
           version: "latest"
 
       - name: Running update script
+        env:
+          FRED_API_TOKEN: ${{ secrets.FRED_API_TOKEN }}
         run: |
           uv run python main.py data/raw/
 
