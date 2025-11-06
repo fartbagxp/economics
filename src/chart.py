@@ -39,6 +39,26 @@ class EconomicChart:
             return self.metadata[series_key].get("title", series_name.upper())
         return series_name.upper()
 
+    def get_short_title(self, series_name):
+        """Get a shortened title for chart legends."""
+        series_key = series_name.lower()
+
+        # Custom short labels for U-series
+        short_labels = {
+            "u1rate": "U-1: 15+ Weeks Unemployed",
+            "u2rate": "U-2: Job Losers",
+            "unrate": "U-3: Official Rate",
+            "u4rate": "U-4: + Discouraged Workers",
+            "u5rate": "U-5: + Marginally Attached",
+            "u6rate": "U-6: + Part-Time Economic",
+        }
+
+        if series_key in short_labels:
+            return short_labels[series_key]
+
+        # For other series, use full title
+        return self.get_title(series_name)
+
     def plot_single(self, series_name, output_file=None, title=None, ylabel=None):
         """Plot a single economic series."""
         df = self.load_series(series_name)
@@ -77,10 +97,14 @@ class EconomicChart:
 
         for config in series_configs:
             df = self.load_series(config["name"])
+            # Use short title for legend if label not provided
+            label = config.get("label")
+            if label is None:
+                label = self.get_short_title(config["name"])
             plt.plot(
                 df["date"].to_list(),
                 df["value"].to_list(),
-                label=config.get("label", config["name"].upper()),
+                label=label,
                 color=config.get("color"),
                 linewidth=2,
             )

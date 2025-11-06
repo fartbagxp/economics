@@ -71,6 +71,17 @@ class FredCollector:
             "UMCSENT": "Consumer Confidence (U. Michigan)",
             "UNRATE": "Unemployment Rate",
             "CIVPART": "Labor Force Participation Rate",
+            "U6RATE": "Total Unemployed + Marginally Attached + Part Time (U-6)",
+            "U5RATE": "Total Unemployed + Discouraged + Marginally Attached (U-5)",
+            "U4RATE": "Total Unemployed + Discouraged Workers (U-4)",
+            "U2RATE": "Unemployment Rate - Job Losers (U-2)",
+            "U1RATE": "Unemployed 15 Weeks and Over (U-1)",
+            "LNS14000012": "Unemployment Rate - 16-19 Yrs.",
+            "LNS14000036": "Unemployment Rate - 20-24 Yrs.",
+            "LNS14000089": "Unemployment Rate - 25-34 Yrs.",
+            "LNS14024230": "Unemployment Rate - 55 Yrs. & Over",
+            "ICSA": "Initial Claims",
+            "CCSA": "Continued Claims",
         }
 
         for series_id, name in series_map.items():
