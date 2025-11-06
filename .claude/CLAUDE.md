@@ -21,12 +21,14 @@ US economic data collection and analysis project. Collects historical data from 
 ## Commands
 
 **Data Collection:**
+
 - `python main.py --source fred` - Collect all FRED data
 - `python main.py --source bls` - Collect BLS data
 - `python main.py --source all` - Collect from all sources
 - `python main.py --source fred --series CPIAUCSL` - Collect specific series
 
 **Visualization:**
+
 - `python main.py --plot unrate` - Plot single series
 - `python main.py --plot unrate civpart` - Plot multiple series
 - `python main.py --plot unrate --plot-output chart.png --plot-title "Custom Title"`
@@ -47,16 +49,19 @@ US economic data collection and analysis project. Collects historical data from 
 **src/config.py** - Environment variable validation (checks FRED_API_TOKEN)
 
 **src/fred.py (FredCollector):**
+
 - Fetches data from FRED API using `fredapi` library
 - Automatically fetches and stores series metadata (units, title, frequency, seasonal adjustment)
 - Saves metadata to `data/metadata.json` for use by charting
 
 **src/bls.py (BlsCollector):**
+
 - Fetches data from BLS public API
 - No authentication required
 - Does not yet store metadata (future enhancement)
 
 **src/chart.py (EconomicChart):**
+
 - Loads metadata from `data/metadata.json` on initialization
 - Automatically uses correct units for Y-axis labels (e.g., "Percent" for UNRATE)
 - Falls back to "Value" if metadata unavailable
@@ -65,6 +70,7 @@ US economic data collection and analysis project. Collects historical data from 
 ### Metadata System
 
 When collecting FRED data, metadata is automatically fetched and stored in `data/metadata.json` with structure:
+
 ```json
 {
   "seriesid": {
@@ -81,7 +87,7 @@ Charts automatically read this metadata to set Y-axis labels and titles. Can be 
 
 ## Data Storage
 
-- **data/raw/*.csv** - Time series data (date, value columns)
+- **data/raw/\*.csv** - Time series data (date, value columns)
 - **data/metadata.json** - Series metadata (units, titles, etc.)
 - Both are committed to git for version control and tracking changes over time
 
