@@ -3,16 +3,16 @@ name = "economics"
 version = "1.0.0"
 description = "To collect various economic based metrics"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.13"
 dependencies = [
     "fredapi>=0.5.2",
-    "matplotlib>=3.10.7",
-    "polars>=1.35.2",
+    "matplotlib>=3.10.8",
+    "polars>=1.37.1",
     "python-dotenv>=1.2.1",
     "requests>=2.32.5",
 ]
 
 [dependency-groups]
 dev = [
-    "pre-commit>=4.5.0",
+    "pre-commit>=4.5.1",
 ]
