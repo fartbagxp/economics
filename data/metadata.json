@@ -102,13 +102,13 @@
     "units": "Number",
     "frequency": "Weekly, Ending Saturday",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-02-19 07:33:46-06"
+    "last_updated": "2026-02-26 07:34:31-06"
   },
   "ccsa": {
     "title": "Continued Claims (Insured Unemployment)",
     "units": "Number",
     "frequency": "Weekly, Ending Saturday",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-02-19 07:33:50-06"
+    "last_updated": "2026-02-26 07:34:34-06"
   }
 }
