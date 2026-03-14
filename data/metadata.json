@@ -4,14 +4,14 @@
     "units": "Index 1982-1984=100",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-02-13 08:05:50-06"
+    "last_updated": "2026-03-11 08:05:55-05"
   },
   "gdp": {
     "title": "Gross Domestic Product",
     "units": "Billions of Dollars",
     "frequency": "Quarterly",
     "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
-    "last_updated": "2026-02-20 07:47:50-06"
+    "last_updated": "2026-03-13 07:49:31-05"
   },
   "umcsent": {
     "title": "University of Michigan: Consumer Sentiment",
@@ -102,13 +102,13 @@
     "units": "Number",
     "frequency": "Weekly, Ending Saturday",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-03-05 07:48:33-06"
+    "last_updated": "2026-03-12 07:49:28-05"
   },
   "ccsa": {
     "title": "Continued Claims (Insured Unemployment)",
     "units": "Number",
     "frequency": "Weekly, Ending Saturday",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-03-05 07:48:32-06"
+    "last_updated": "2026-03-12 07:49:35-05"
   }
 }
