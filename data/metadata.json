@@ -11,7 +11,7 @@
     "units": "Billions of Dollars",
     "frequency": "Quarterly",
     "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
-    "last_updated": "2026-04-09 07:52:30-05"
+    "last_updated": "2026-04-30 07:49:05-05"
   },
   "umcsent": {
     "title": "University of Michigan: Consumer Sentiment",
@@ -102,13 +102,13 @@
     "units": "Number",
     "frequency": "Weekly, Ending Saturday",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-04-23 07:49:37-05"
+    "last_updated": "2026-04-30 07:49:49-05"
   },
   "ccsa": {
     "title": "Continued Claims (Insured Unemployment)",
     "units": "Number",
     "frequency": "Weekly, Ending Saturday",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-04-23 07:49:41-05"
+    "last_updated": "2026-04-30 07:49:59-05"
   }
 }
