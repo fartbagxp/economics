@@ -6,6 +6,7 @@ US economic data collection and analysis project using FRED and BLS data sources
 - [Collection](docs/collection.md) for the collection of datasets.
 
 <!-- ECONOMIC-DATA-START -->
+
 ## Economic Dashboard
 
 _Last updated: 2026-05-11 15:19 UTC_
@@ -14,7 +15,7 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 
 ### Labor Market Overview
 
-| Indicator                 | Trend (sparkline)          | Latest    | Chg (prev) | Chg (1Y) | As of      |
+| Indicator                 | Trend                      | Latest    | Chg (prev) | Chg (1Y) | As of      |
 | ------------------------- | -------------------------- | --------- | ---------- | -------- | ---------- |
 | Unemployment Rate (U-3)   | `▁▁▃▄▄▃▃▄▃▂▄▄▄▅▃▅▅▆█▆▅▆▅▅` | 4.3%      | +0.0pp     | +0.1pp   | 2026-04-01 |
 | Labor Force Participation | `▇▇▇███▆▅▆▇▆▆▇▅▄▄▄▆▆▅▃▂▁▁` | 61.8%     | -0.1pp     | -0.7pp   | 2026-04-01 |
@@ -23,7 +24,7 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 
 ### Unemployment Measures (U1–U6)
 
-| Indicator                  | Trend (sparkline)          | Latest | MoM    | YoY (12m) | As of      |
+| Indicator                  | Trend                      | Latest | MoM    | YoY (12m) | As of      |
 | -------------------------- | -------------------------- | ------ | ------ | --------- | ---------- |
 | U-1: 15+ Weeks Unemployed  | `▁▂▃▅▅▅▆▆▅▃▃▃▅▃▅█▆██████▆` | 1.7%   | -0.1pp | +0.2pp    | 2026-04-01 |
 | U-2: Job Losers            | `▁▁▁█▄▁▄▄▁▁▄▁▄▄▁▄▄██▄██▄█` | 2.1%   | +0.1pp | +0.2pp    | 2026-04-01 |
@@ -34,7 +35,7 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 
 ### Unemployment by Age
 
-| Indicator  | Trend (sparkline)          | Latest | MoM    | YoY (12m) | As of      |
+| Indicator  | Trend                      | Latest | MoM    | YoY (12m) | As of      |
 | ---------- | -------------------------- | ------ | ------ | --------- | ---------- |
 | Ages 16–19 | `▁▁▁▂▄▄▄▂▁▁▂▄▂▃▅▆▄▃█▇▃▅▃▅` | 14.4%  | +0.7pp | +0.6pp    | 2026-04-01 |
 | Ages 20–24 | `▁▄▃▄▄▂▄▄▃▅▅▃▅▅▅▄██▅▅▂▃▁▃` | 7.6%   | +1.2pp | +0.0pp    | 2026-04-01 |
@@ -43,9 +44,10 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 
 ### Economy
 
-| Indicator                     | Trend (sparkline)          | Latest     | Chg (prev) | Chg (1Y) | As of      |
+| Indicator                     | Trend                      | Latest     | Chg (prev) | Chg (1Y) | As of      |
 | ----------------------------- | -------------------------- | ---------- | ---------- | -------- | ---------- |
 | GDP                           | `▁▂▂▂▃▃▃▄▄▄▅▅▅▅▅▆▆▆▆▆▇▇▇█` | $31,856.3B | +433.7B    | +1814.1B | 2026-01-01 |
 | CPI (All Urban)               | `▁▁▁▁▁▁▁▂▂▃▃▃▃▄▄▄▄▅▅▅▆▆▆█` | 330.29     | +2.83      | +10.61   | 2026-03-01 |
 | Consumer Sentiment (U. Mich.) | `█▅▅▅▅▆▆▆▇▆▄▂▁▁▃▃▂▂▁▁▁▂▂▁` | 53.30      | -3.30      | -3.70    | 2026-03-01 |
+
 <!-- ECONOMIC-DATA-END -->
