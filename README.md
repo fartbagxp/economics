@@ -2,114 +2,52 @@
 
 US economic data collection and analysis project using FRED and BLS data sources.
 
-## Data Sources
+- [Setup](docs/setup.md) on how to run this repository.
+- [Collection](docs/collection.md) for the collection of datasets.
 
-- **FRED (Federal Reserve Economic Data)**: CPI, GDP, Consumer Confidence, Unemployment
-- **BLS (Bureau of Labor Statistics)**: Additional labor and economic statistics
+<!-- ECONOMIC-DATA-START -->
 
-## Setup
+## Economic Dashboard
 
-1. Install dependencies:
+_Last updated: 2026-05-11 14:11 UTC_
 
-```bash
-pip install -r requirements.txt
-```
+_Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 points (quarterly)._
 
-1. Create `.env` file with API keys:
+### Labor Market Overview
 
-```bash
-FRED_API_TOKEN=your_fred_api_key
-```
+| Indicator                 | Trend (sparkline)          | Latest    | Chg (prev) | Chg (1Y) | As of      |
+| ------------------------- | -------------------------- | --------- | ---------- | -------- | ---------- |
+| Unemployment Rate (U-3)   | `▁▁▃▄▄▃▃▄▃▂▄▄▄▅▃▅▅▆█▆▅▆▅▅` | 4.3%      | +0.0pp     | +0.1pp   | 2026-04-01 |
+| Labor Force Participation | `▇▇▇███▆▅▆▇▆▆▇▅▄▄▄▆▆▅▃▂▁▁` | 61.8%     | -0.1pp     | -0.7pp   | 2026-04-01 |
+| Initial Jobless Claims    | `▅▅█▆▄▃▃▂▄▄▇▇▃▄▄▄▃▄▃▅▃▄▁▂` | 200,000   | +10,000    | -28,000  | 2026-05-02 |
+| Continued Claims          | `█▇▆▅▆▄▆▅▄▃▄▄▄▃▅▄▄▂▃▁▂▂▁▁` | 1,766,000 | -10,000    | -110,000 | 2026-04-25 |
 
-## Usage
+### Unemployment Measures (U1–U6)
 
-### Data Collection
-
-Collect all data from FRED:
-
-```bash
-python main.py --source fred
-```
-
-Collect from all sources:
-
-```bash
-python main.py --source all
-```
-
-Collect specific series:
-
-```bash
-python main.py --source fred --series CPIAUCSL
-```
-
-### Visualization
-
-Plot a single series:
-
-```bash
-python main.py --plot unrate
-```
-
-Plot multiple series on the same chart:
-
-```bash
-python main.py --plot unrate civpart
-```
-
-Custom chart options:
-
-```bash
-python main.py --plot unrate --plot-output unemployment.png --plot-title "US Unemployment Rate"
-```
-
-#### Unemployment Charts
-
-Plot alternative unemployment measures (U1-U6):
-
-```bash
-python main.py --plot U1RATE U2RATE UNRATE U4RATE U5RATE U6RATE \
-  --plot-output unemployment_measures.png \
-  --plot-title "Alternative Unemployment Measures (U1-U6)"
-```
-
-Plot unemployment by age group:
-
-```bash
-python main.py --plot LNS14000012 LNS14000036 LNS14000089 LNS14024230 \
-  --plot-output unemployment_by_age.png \
-  --plot-title "Unemployment Rate by Age Group"
-```
-
-Compare official rate with U6 (broadest measure):
-
-```bash
-python main.py --plot UNRATE U6RATE --plot-output unrate_vs_u6.png
-```
-
-## Data Collected
-
-### Core Economic Indicators
-
-- **CPIAUCSL**: CPI - All Urban Consumers
-- **GDP**: Gross Domestic Product
-- **UMCSENT**: Consumer Confidence (U. Michigan)
-- **UNRATE**: Unemployment Rate (U-3, official rate)
-- **CIVPART**: Labor Force Participation Rate
-
-### Alternative Unemployment Measures
-
-- **U1RATE**: Persons unemployed 15 weeks or longer
-- **U2RATE**: Job losers and persons who completed temporary jobs
-- **U4RATE**: Total unemployed plus discouraged workers
-- **U5RATE**: U-4 plus all other marginally attached to labor force
-- **U6RATE**: U-5 plus employed part time for economic reasons (broadest measure)
+| Indicator                  | Trend (sparkline)          | Latest | MoM    | YoY (12m) | As of      |
+| -------------------------- | -------------------------- | ------ | ------ | --------- | ---------- |
+| U-1: 15+ Weeks Unemployed  | `▁▂▃▅▅▅▆▆▅▃▃▃▅▃▅█▆██████▆` | 1.7%   | -0.1pp | +0.2pp    | 2026-04-01 |
+| U-2: Job Losers            | `▁▁▁█▄▁▄▄▁▁▄▁▄▄▁▄▄██▄██▄█` | 2.1%   | +0.1pp | +0.2pp    | 2026-04-01 |
+| U-3: Official Rate         | `▁▁▃▄▄▃▃▄▃▂▄▄▄▅▃▅▅▆█▆▅▆▅▅` | 4.3%   | +0.0pp | +0.1pp    | 2026-04-01 |
+| U-4: + Discouraged Workers | `▁▁▂▄▃▂▂▃▃▃▃▄▃▄▄▄▅▆█▅▅▅▄▅` | 4.6%   | +0.1pp | +0.1pp    | 2026-04-01 |
+| U-5: + Marginally Attached | `▁▁▂▃▃▃▃▃▃▂▃▃▃▃▃▅▅▇█▅▅▅▅▅` | 5.3%   | +0.0pp | +0.2pp    | 2026-04-01 |
+| U-6: + Part-Time Economic  | `▁▁▁▃▃▂▂▂▂▁▄▃▃▃▂▃▄▄█▆▄▃▄▅` | 8.2%   | +0.2pp | +0.3pp    | 2026-04-01 |
 
 ### Unemployment by Age
 
-- **LNS14000012**: Unemployment Rate - Ages 16-19
-- **LNS14000036**: Unemployment Rate - Ages 20-24
-- **LNS14000089**: Unemployment Rate - Ages 25-54
-- **LNS14024230**: Unemployment Rate - Ages 55 and over
+| Indicator  | Trend (sparkline)          | Latest | MoM    | YoY (12m) | As of      |
+| ---------- | -------------------------- | ------ | ------ | --------- | ---------- |
+| Ages 16–19 | `▁▁▁▂▄▄▄▂▁▁▂▄▂▃▅▆▄▃█▇▃▅▃▅` | 14.4%  | +0.7pp | +0.6pp    | 2026-04-01 |
+| Ages 20–24 | `▁▄▃▄▄▂▄▄▃▅▅▃▅▅▅▄██▅▅▂▃▁▃` | 7.6%   | +1.2pp | +0.0pp    | 2026-04-01 |
+| Ages 25–54 | `▁▂▅▇▅▂▂▄▅▃▄▂▃▂▁▄▄▇█▄█▇▇▇` | 4.8%   | +0.0pp | +0.8pp    | 2026-04-01 |
+| Ages 55+   | `▄▁▂▅▄▂▃▄▅▄▃▃▅▄▄▃▃▆▅▄▆██▄` | 3.0%   | -0.3pp | +0.1pp    | 2026-04-01 |
 
-Raw data is saved to `data/raw/` as CSV files, with metadata stored in `data/metadata.json`.
+### Economy
+
+| Indicator                     | Trend (sparkline)          | Latest     | Chg (prev) | Chg (1Y) | As of      |
+| ----------------------------- | -------------------------- | ---------- | ---------- | -------- | ---------- |
+| GDP                           | `▁▂▂▂▃▃▃▄▄▄▅▅▅▅▅▆▆▆▆▆▇▇▇█` | $31,856.3B | +433.7B    | +1814.1B | 2026-01-01 |
+| CPI (All Urban)               | `▁▁▁▁▁▁▁▂▂▃▃▃▃▄▄▄▄▅▅▅▆▆▆█` | 330.29     | +2.83      | +10.61   | 2026-03-01 |
+| Consumer Sentiment (U. Mich.) | `█▅▅▅▅▆▆▆▇▆▄▂▁▁▃▃▂▂▁▁▁▂▂▁` | 53.30      | -3.30      | -3.70    | 2026-03-01 |
+
+<!-- ECONOMIC-DATA-END -->
