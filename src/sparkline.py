@@ -182,7 +182,7 @@ def build_dashboard(data_dir: str = "data/raw") -> str:
 
         header = [
             "Indicator",
-            "Trend (sparkline)",
+            "Trend",
             "Latest",
             period_col,
             yoy_col,
