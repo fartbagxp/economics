@@ -8,7 +8,7 @@ US economic data collection and analysis project using FRED and BLS data sources
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-05-11 15:26 UTC_
+_Last updated: 2026-05-12 20:54 UTC_
 
 _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 points (quarterly)._
 
@@ -46,6 +46,6 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 | Indicator                     | Trend                      | Latest     | Chg (prev) | Chg (1Y) | As of      |
 | ----------------------------- | -------------------------- | ---------- | ---------- | -------- | ---------- |
 | GDP                           | `▁▂▂▂▃▃▃▄▄▄▅▅▅▅▅▆▆▆▆▆▇▇▇█` | $31,856.3B | +433.7B    | +1814.1B | 2026-01-01 |
-| CPI (All Urban)               | `▁▁▁▁▁▁▁▂▂▃▃▃▃▄▄▄▄▅▅▅▆▆▆█` | 330.29     | +2.83      | +10.61   | 2026-03-01 |
+| CPI (All Urban)               | `▁▁▁▁▁▁▁▂▂▃▃▃▃▃▄▄▄▅▅▅▅▆▇█` | 332.41     | +2.11      | +12.62   | 2026-04-01 |
 | Consumer Sentiment (U. Mich.) | `█▅▅▅▅▆▆▆▇▆▄▂▁▁▃▃▂▂▁▁▁▂▂▁` | 53.30      | -3.30      | -3.70    | 2026-03-01 |
 <!-- ECONOMIC-DATA-END -->
