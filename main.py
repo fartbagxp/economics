@@ -2,6 +2,7 @@ from src.bls import BlsCollector
 from src.chart import EconomicChart
 from src.cli import Cli
 from src.config import Config
+from src.derive import Deriver
 from src.fred import FredCollector
 
 
@@ -41,6 +42,9 @@ def main():
 
         if args.series:
             bls_collector.collect_series(args.series, args.series)
+
+    print("\n📐 Computing derived statistics...")
+    Deriver(args.output).derive_all()
 
 
 if __name__ == "__main__":

@@ -1,13 +1,24 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-const SERIES = ['unrate', 'cpiaucsl', 'gdp', 'umcsent', 'civpart', 'u6rate', 'icsa'];
+const RAW_SERIES = [
+  'unrate', 'u6rate', 'civpart', 'icsa',
+  'cpiaucsl',
+  'gdp', 'umcsent',
+];
 
-function loadSeries(id) {
-  const csvPath = join(process.cwd(), '..', 'data', 'raw', `${id}.csv`);
-  const raw = readFileSync(csvPath, 'utf-8');
-  const lines = raw.trim().split('\n').slice(1);
-  return lines
+const DERIVED_SERIES = [
+  'cpiaucsl_mom', 'cpiaucsl_yoy',
+  'cpilfesl_mom', 'cpilfesl_yoy',
+  'pcepi_mom',    'pcepi_yoy',
+  'pcepilfe_mom', 'pcepilfe_yoy',
+  'ppifid_mom',   'ppifid_yoy',
+  'ppifes_mom',   'ppifes_yoy',
+];
+
+function loadCsv(path) {
+  const raw = readFileSync(path, 'utf-8');
+  return raw.trim().split('\n').slice(1)
     .map((line) => {
       const [dateStr, val] = line.split(',');
       const value = parseFloat(val);
@@ -23,6 +34,11 @@ function loadMetadata() {
 
 export function load() {
   const metadata = loadMetadata();
-  const series = Object.fromEntries(SERIES.map((id) => [id, loadSeries(id)]));
-  return { series, metadata };
+  const raw = Object.fromEntries(
+    RAW_SERIES.map((id) => [id, loadCsv(join(process.cwd(), '..', 'data', 'raw', `${id}.csv`))])
+  );
+  const derived = Object.fromEntries(
+    DERIVED_SERIES.map((id) => [id, loadCsv(join(process.cwd(), '..', 'data', 'derived', `${id}.csv`))])
+  );
+  return { series: { ...raw, ...derived }, metadata };
 }
