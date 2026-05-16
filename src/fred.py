@@ -67,6 +67,11 @@ class FredCollector:
         """Collect all available economic indicators."""
         series_map = {
             "CPIAUCSL": "CPI - All Urban Consumers",
+            "CPILFESL": "CPI Less Food and Energy (Core CPI)",
+            "PCEPI": "PCE Price Index",
+            "PCEPILFE": "PCE Excluding Food and Energy (Core PCE)",
+            "PPIFID": "PPI - Final Demand",
+            "PPIFES": "PPI - Final Demand Less Foods and Energy (Core PPI)",
             "GDP": "Gross Domestic Product",
             "UMCSENT": "Consumer Confidence (U. Michigan)",
             "UNRATE": "Unemployment Rate",
