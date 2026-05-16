@@ -122,6 +122,53 @@ class EconomicChart:
         else:
             plt.show()
 
+    def plot_panels(self, panel_configs, output_file=None, title=None):
+        """
+        Plot multiple panels side by side.
+
+        panel_configs: list of lists of dicts, each inner list is one panel.
+        Example: [[{'name': 'unrate'}, {'name': 'u6rate'}], [{'name': 'civpart'}]]
+        """
+        n = len(panel_configs)
+        fig, axes = plt.subplots(1, n, figsize=(8 * n, 6), sharey=False)
+        if n == 1:
+            axes = [axes]
+
+        colors = ["#1f77b4", "#d62728", "#2ca02c", "#ff7f0e", "#9467bd"]
+
+        for ax, configs in zip(axes, panel_configs):
+            for i, config in enumerate(configs):
+                df = self.load_series(config["name"])
+                label = config.get("label") or self.get_short_title(config["name"])
+                color = config.get("color") or colors[i % len(colors)]
+                ax.plot(
+                    df["date"].to_list(),
+                    df["value"].to_list(),
+                    label=label,
+                    color=color,
+                    linewidth=2,
+                )
+
+            panel_title = configs[0].get("panel_title")
+            if panel_title is None and len(configs) == 1:
+                panel_title = self.get_title(configs[0]["name"])
+            ax.set_title(panel_title or "", fontsize=12)
+            ax.set_xlabel("Year")
+            ax.set_ylabel(self.get_ylabel(configs[0]["name"]))
+            ax.legend(fontsize=9)
+            ax.grid(True)
+
+        if title:
+            fig.suptitle(title, fontsize=14, y=1.02)
+
+        plt.tight_layout()
+
+        if output_file:
+            plt.savefig(output_file, bbox_inches="tight")
+            print(f"✅ Chart saved as {output_file}")
+        else:
+            plt.show()
+
     # Usage examples:
 
     # # Single series
