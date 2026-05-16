@@ -26,6 +26,13 @@ class Cli:
             help="Output filename for chart (default: chart.png)",
         )
         parser.add_argument("--plot-title", help="Custom title for the chart")
+        parser.add_argument(
+            "--plot-panel",
+            nargs="+",
+            metavar="SERIES",
+            action="append",
+            help="One panel of series (repeat flag for each panel, e.g., --plot-panel unrate u6rate --plot-panel civpart)",
+        )
 
         args = parser.parse_args()
         return args

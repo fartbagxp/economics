@@ -39,12 +39,14 @@
   <h1>US Economic Dashboard</h1>
   <p class="subtitle">Hover over any data point for details &nbsp;·&nbsp; Source: FRED / BLS</p>
 
+  <!-- ── Labor Market ─────────────────────────────────────────── -->
+  <h3 class="section-label">Labor Market</h3>
   <section class="grid">
 
-    <!-- Unemployment Rate -->
+    <!-- Unemployment Rate (U-3) -->
     <div class="card">
-      <h2>Unemployment Rate</h2>
-      <p class="meta">Monthly · Seasonally Adjusted · Percent</p>
+      <h2>Unemployment Rate (U-3)</h2>
+      <p class="meta">Monthly · Seasonally Adjusted · Percent · Official measure</p>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -55,7 +57,7 @@
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip">
-                  <span class="tip-label">Unemployment Rate</span>
+                  <span class="tip-label">Unemployment Rate (U-3)</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   <span class="tip-val">{datum.value.toFixed(1)}%</span>
                 </div>
@@ -66,22 +68,23 @@
       </Plot>
     </div>
 
-    <!-- GDP -->
+    <!-- U-6 Unemployment -->
     <div class="card">
-      <h2>Gross Domestic Product</h2>
-      <p class="meta">Quarterly · SAAR · Billions of Dollars</p>
-      <Plot height={220} marginLeft={56} marginRight={10} x={{ type: 'time' }} y={{ label: '$B', grid: true }}>
+      <h2>U-6 Unemployment Rate</h2>
+      <p class="meta">Monthly · Seasonally Adjusted · Percent · Broadest measure</p>
+      <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
+        <RuleY data={[0]} />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
-        <Line data={gdp} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
+        <Line data={u6rate} x="date" y="value" stroke="#6a4c93" strokeWidth={1.5} />
         {#snippet overlay()}
-          <HTMLTooltip data={gdp} x="date" y="value">
+          <HTMLTooltip data={u6rate} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip">
-                  <span class="tip-label">GDP</span>
+                  <span class="tip-label">U-6 Unemployment</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
-                  <span class="tip-val">${datum.value.toLocaleString('en-US', { maximumFractionDigits: 0 })}B</span>
+                  <span class="tip-val">{datum.value.toFixed(1)}%</span>
                 </div>
               {/if}
             {/snippet}
@@ -89,6 +92,61 @@
         {/snippet}
       </Plot>
     </div>
+
+    <!-- Labor Force Participation -->
+    <div class="card">
+      <h2>Labor Force Participation Rate</h2>
+      <p class="meta">Monthly · Seasonally Adjusted · Percent</p>
+      <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
+        <Frame />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={civpart} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
+        {#snippet overlay()}
+          <HTMLTooltip data={civpart} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                <div class="tip">
+                  <span class="tip-label">Labor Force Participation</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-val">{datum.value.toFixed(1)}%</span>
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+    </div>
+
+    <!-- Initial Jobless Claims -->
+    <div class="card">
+      <h2>Initial Jobless Claims</h2>
+      <p class="meta">Weekly · Seasonally Adjusted · Number of Claims</p>
+      <Plot height={220} marginLeft={64} marginRight={10} x={{ type: 'time' }} y={{ label: 'Claims', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={icsa} x="date" y="value" stroke="#bc4749" strokeWidth={1.5} />
+        {#snippet overlay()}
+          <HTMLTooltip data={icsa} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                <div class="tip">
+                  <span class="tip-label">Initial Claims</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-val">{datum.value.toLocaleString('en-US', { maximumFractionDigits: 0 })}</span>
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+    </div>
+
+  </section>
+
+  <!-- ── Prices & Output ───────────────────────────────────────── -->
+  <h3 class="section-label">Prices &amp; Output</h3>
+  <section class="grid">
 
     <!-- CPI -->
     <div class="card">
@@ -138,72 +196,22 @@
       </Plot>
     </div>
 
-    <!-- Labor Force Participation -->
-    <div class="card">
-      <h2>Labor Force Participation Rate</h2>
-      <p class="meta">Monthly · Seasonally Adjusted · Percent</p>
-      <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
-        <Frame />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
-        <Line data={civpart} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
-        {#snippet overlay()}
-          <HTMLTooltip data={civpart} x="date" y="value">
-            {#snippet children({ datum })}
-              {#if datum}
-                <div class="tip">
-                  <span class="tip-label">Labor Force Participation</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
-                  <span class="tip-val">{datum.value.toFixed(1)}%</span>
-                </div>
-              {/if}
-            {/snippet}
-          </HTMLTooltip>
-        {/snippet}
-      </Plot>
-    </div>
-
-    <!-- U-6 Unemployment -->
-    <div class="card">
-      <h2>U-6 Unemployment Rate</h2>
-      <p class="meta">Monthly · Seasonally Adjusted · Percent · Broadest measure</p>
-      <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
-        <Frame />
-        <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
-        <Line data={u6rate} x="date" y="value" stroke="#6a4c93" strokeWidth={1.5} />
-        {#snippet overlay()}
-          <HTMLTooltip data={u6rate} x="date" y="value">
-            {#snippet children({ datum })}
-              {#if datum}
-                <div class="tip">
-                  <span class="tip-label">U-6 Unemployment</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
-                  <span class="tip-val">{datum.value.toFixed(1)}%</span>
-                </div>
-              {/if}
-            {/snippet}
-          </HTMLTooltip>
-        {/snippet}
-      </Plot>
-    </div>
-
-    <!-- Initial Jobless Claims — full width -->
+    <!-- GDP — full width -->
     <div class="card wide">
-      <h2>Initial Jobless Claims</h2>
-      <p class="meta">Weekly · Seasonally Adjusted · Number of Claims</p>
-      <Plot height={200} marginLeft={64} marginRight={10} x={{ type: 'time' }} y={{ label: 'Claims', grid: true }}>
+      <h2>Gross Domestic Product</h2>
+      <p class="meta">Quarterly · SAAR · Billions of Dollars</p>
+      <Plot height={200} marginLeft={56} marginRight={10} x={{ type: 'time' }} y={{ label: '$B', grid: true }}>
         <Frame />
-        <RuleY data={[0]} />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
-        <Line data={icsa} x="date" y="value" stroke="#bc4749" strokeWidth={1} />
+        <Line data={gdp} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
         {#snippet overlay()}
-          <HTMLTooltip data={icsa} x="date" y="value">
+          <HTMLTooltip data={gdp} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip">
-                  <span class="tip-label">Initial Claims</span>
+                  <span class="tip-label">GDP</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
-                  <span class="tip-val">{datum.value.toLocaleString('en-US', { maximumFractionDigits: 0 })}</span>
+                  <span class="tip-val">${datum.value.toLocaleString('en-US', { maximumFractionDigits: 0 })}B</span>
                 </div>
               {/if}
             {/snippet}
@@ -240,6 +248,17 @@
     color: #666;
     margin: 0 0 2rem;
     font-size: 0.875rem;
+  }
+
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #999;
+    margin: 2rem 0 0.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #e5e7eb;
   }
 
   .grid {
