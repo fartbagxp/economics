@@ -8,7 +8,7 @@ US economic data collection and analysis project using FRED and BLS data sources
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-05-16 18:29 UTC_
+_Last updated: 2026-05-23 18:30 UTC_
 
 _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 points (quarterly)._
 
@@ -18,8 +18,8 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 | ------------------------- | -------------------------- | --------- | ---------- | -------- | ---------- |
 | Unemployment Rate (U-3)   | `▁▁▃▄▄▃▃▄▃▂▄▄▄▅▃▅▅▆█▆▅▆▅▅` | 4.3%      | +0.0pp     | +0.1pp   | 2026-04-01 |
 | Labor Force Participation | `▇▇▇███▆▅▆▇▆▆▇▅▄▄▄▆▆▅▃▂▁▁` | 61.8%     | -0.1pp     | -0.7pp   | 2026-04-01 |
-| Initial Jobless Claims    | `▅█▆▄▃▃▂▄▄▇▇▃▄▄▄▃▄▃▅▃▄▁▂▄` | 211,000   | +12,000    | -15,000  | 2026-05-09 |
-| Continued Claims          | `█▆▆▇▅▆▅▅▃▄▅▅▃▅▄▄▃▃▂▃▃▁▁▁` | 1,782,000 | +24,000    | -102,000 | 2026-05-02 |
+| Initial Jobless Claims    | `█▆▄▃▃▂▄▄▇▇▃▄▄▄▃▄▃▅▃▄▁▂▄▃` | 209,000   | -3,000     | -16,000  | 2026-05-16 |
+| Continued Claims          | `▇▆█▅▇▆▅▃▄▅▅▄▆▅▅▃▄▂▃▃▁▁▁▂` | 1,782,000 | +6,000     | -107,000 | 2026-05-09 |
 
 ### Unemployment Measures (U1–U6)
 
@@ -47,5 +47,5 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 | ----------------------------- | -------------------------- | ---------- | ---------- | -------- | ---------- |
 | GDP                           | `▁▂▂▂▃▃▃▄▄▄▅▅▅▅▅▆▆▆▆▆▇▇▇█` | $31,856.3B | +433.7B    | +1814.1B | 2026-01-01 |
 | CPI (All Urban)               | `▁▁▁▁▁▁▁▂▂▃▃▃▃▃▄▄▄▅▅▅▅▆▇█` | 332.41     | +2.11      | +12.62   | 2026-04-01 |
-| Consumer Sentiment (U. Mich.) | `█▅▅▅▅▆▆▆▇▆▄▂▁▁▃▃▂▂▁▁▁▂▂▁` | 53.30      | -3.30      | -3.70    | 2026-03-01 |
+| Consumer Sentiment (U. Mich.) | `▆▆▅▆▆▆▇█▇▅▃▁▁▄▄▃▂▂▁▁▂▂▂▁` | 49.80      | -3.50      | -2.40    | 2026-04-01 |
 <!-- ECONOMIC-DATA-END -->

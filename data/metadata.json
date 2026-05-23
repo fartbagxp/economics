@@ -18,7 +18,7 @@
     "units": "Index 1966:Q1=100",
     "frequency": "Monthly",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-04-24 10:02:31-05"
+    "last_updated": "2026-05-22 10:02:29-05"
   },
   "unrate": {
     "title": "Unemployment Rate",
@@ -102,14 +102,14 @@
     "units": "Number",
     "frequency": "Weekly, Ending Saturday",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-05-14 07:33:32-05"
+    "last_updated": "2026-05-21 07:34:09-05"
   },
   "ccsa": {
     "title": "Continued Claims (Insured Unemployment)",
     "units": "Number",
     "frequency": "Weekly, Ending Saturday",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-05-14 07:33:40-05"
+    "last_updated": "2026-05-21 07:34:31-05"
   },
   "cpilfesl": {
     "title": "Consumer Price Index for All Urban Consumers: All Items Less Food and Energy in U.S. City Average",
