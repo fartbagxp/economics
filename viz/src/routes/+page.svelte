@@ -4,7 +4,7 @@
   let { data } = $props();
 
   function parse(rows) {
-    return rows.map((d) => ({ date: new Date(d.date), value: d.value }));
+    return rows.map((d) => ({ date: new Date(d.date + 'T12:00:00'), value: d.value }));
   }
 
   const cutoff = new Date('1994-01-01');
