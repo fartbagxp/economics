@@ -42,6 +42,9 @@ jobs:
         env:
           BASE_PATH: /${{ github.event.repository.name }}
 
+      - name: Verify viz build contains latest data
+        run: node tests/check_viz_build.js
+
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: viz/build

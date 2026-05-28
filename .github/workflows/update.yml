@@ -32,6 +32,10 @@ jobs:
         run: |
           uv run python main.py
 
+      - name: Verify data freshness
+        run: |
+          uv run --group dev pytest tests/test_freshness.py -v
+
       - name: Update README dashboard
         run: |
           uv run python -m src.readme_updater
