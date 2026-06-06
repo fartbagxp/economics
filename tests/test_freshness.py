@@ -3,8 +3,9 @@ Sanity checks for data freshness and viz coverage.
 
 Freshness thresholds are based on typical release lags per frequency:
   - Weekly (ICSA, CCSA): released every Thursday, expect data within 21 days
-  - Monthly: released 1–5 weeks into the following month, expect data within 60 days
-  - PCE: released last Friday of following month, slightly longer lag (75 days)
+  - Monthly: observation date is the 1st of the month; data released up to ~6 weeks
+    later, so worst-case age just before the next release is ~66 days (75-day threshold)
+  - PCE: released last Friday of following month, same lag profile (75 days)
   - Quarterly (GDP): advance estimate ~30 days after quarter end; observation date
     is the quarter start, so the threshold is wider (215 days covers the full
     quarter + release lag + one additional quarter of buffer before next release)
@@ -34,13 +35,13 @@ SERIES_MAX_AGE = [
     ("lns14000036", 60),
     ("lns14000089", 60),
     ("lns14024230", 60),
-    ("cpiaucsl", 60),
-    ("cpilfesl", 60),
-    ("umcsent", 60),
+    ("cpiaucsl", 75),
+    ("cpilfesl", 75),
+    ("umcsent", 75),
     ("pcepi", 75),
     ("pcepilfe", 75),
-    ("ppifid", 60),
-    ("ppifes", 60),
+    ("ppifid", 75),
+    ("ppifes", 75),
     # Quarterly — observation date is quarter start, not release date
     ("gdp", 215),
 ]
