@@ -8,7 +8,7 @@ US economic data collection and analysis project using FRED and BLS data sources
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-06-06 22:10 UTC_
+_Last updated: 2026-06-07 03:05 UTC_
 
 _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 points (quarterly)._
 
