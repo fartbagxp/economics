@@ -87,6 +87,15 @@ class FredCollector:
             "LNS14024230": "Unemployment Rate - 55 Yrs. & Over",
             "ICSA": "Initial Claims",
             "CCSA": "Continued Claims",
+            "UEMP27OV": "Civilians Unemployed for 27 Weeks and Over",
+            "LNS13008397": "Long-Term Unemployed (27+ Weeks) as Percent of Total Unemployed",
+            "JTSHIR": "Job Openings and Labor Turnover: Hires Rate",
+            "LNS11300001": "Labor Force Participation Rate - Men",
+            "LNS11300002": "Labor Force Participation Rate - Women",
+            "LNS11327659": "Labor Force Participation Rate - Less Than High School Diploma, 25+",
+            "LNS11327660": "Labor Force Participation Rate - High School Graduates No College, 25+",
+            "LNS11327689": "Labor Force Participation Rate - Some College or Associate Degree, 25+",
+            "LNS11327662": "Labor Force Participation Rate - Bachelor's Degree and Higher, 25+",
         }
 
         for series_id, name in series_map.items():

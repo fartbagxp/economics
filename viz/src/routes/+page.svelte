@@ -7,12 +7,54 @@
     return rows.map((d) => ({ date: new Date(d.date + 'T12:00:00'), value: d.value }));
   }
 
+  // Merges named series into a flat array (for HTMLTooltip data) and a date→values Map
+  function multiLine(named) {
+    const entries = Object.entries(named);
+    const all = entries.flatMap(([, arr]) => arr);
+    const m = new Map();
+    for (const [key, arr] of entries) {
+      for (const d of arr) {
+        if (!m.has(d.date.getTime())) m.set(d.date.getTime(), { date: d.date });
+        m.get(d.date.getTime())[key] = d.value;
+      }
+    }
+    return { all, byDate: m };
+  }
+
   const cutoff = new Date('1994-01-01');
 
-  const unrate = $derived(parse(data.series.unrate).filter((d) => d.date >= cutoff));
-  const u6rate = $derived(parse(data.series.u6rate).filter((d) => d.date >= cutoff));
-  const civpart = $derived(parse(data.series.civpart).filter((d) => d.date >= cutoff));
-  const icsa = $derived(parse(data.series.icsa).filter((d) => d.date >= cutoff));
+  const unrate       = $derived(parse(data.series.unrate).filter((d) => d.date >= cutoff));
+  const u6rate       = $derived(parse(data.series.u6rate).filter((d) => d.date >= cutoff));
+  const ltunempPct   = $derived(parse(data.series.lns13008397).filter((d) => d.date >= cutoff));
+  const ltunempCount = $derived(parse(data.series.uemp27ov).filter((d) => d.date >= cutoff));
+  const civpart      = $derived(parse(data.series.civpart).filter((d) => d.date >= cutoff));
+  const lfprMen      = $derived(parse(data.series.lns11300001).filter((d) => d.date >= cutoff));
+  const lfprWomen    = $derived(parse(data.series.lns11300002).filter((d) => d.date >= cutoff));
+  const lfprLtHs     = $derived(parse(data.series.lns11327659));
+  const lfprHsOnly   = $derived(parse(data.series.lns11327660));
+  const lfprSomeCol  = $derived(parse(data.series.lns11327689));
+  const lfprBachPlus = $derived(parse(data.series.lns11327662));
+
+  // Merged dataset so HTMLTooltip fires near any of the 4 education lines
+  const eduAllPoints = $derived([
+    ...lfprLtHs.map((d) => ({ ...d, cat: 'ltHs' })),
+    ...lfprHsOnly.map((d) => ({ ...d, cat: 'hsOnly' })),
+    ...lfprSomeCol.map((d) => ({ ...d, cat: 'someCol' })),
+    ...lfprBachPlus.map((d) => ({ ...d, cat: 'bachPlus' })),
+  ]);
+
+  // Date-keyed lookup for all 4 values so the tooltip can show them together
+  const eduByDate = $derived(
+    (() => {
+      const m = new Map();
+      for (const d of lfprBachPlus) m.set(d.date.getTime(), { bachPlus: d.value });
+      for (const d of lfprSomeCol) { const e = m.get(d.date.getTime()); if (e) e.someCol = d.value; }
+      for (const d of lfprHsOnly)  { const e = m.get(d.date.getTime()); if (e) e.hsOnly  = d.value; }
+      for (const d of lfprLtHs)    { const e = m.get(d.date.getTime()); if (e) e.ltHs    = d.value; }
+      return m;
+    })()
+  );
+  const icsa         = $derived(parse(data.series.icsa).filter((d) => d.date >= cutoff));
   const cpiaucsl     = $derived(parse(data.series.cpiaucsl).filter((d) => d.date >= cutoff));
   const cpi_mom      = $derived(parse(data.series.cpiaucsl_mom).filter((d) => d.date >= cutoff));
   const cpi_yoy      = $derived(parse(data.series.cpiaucsl_yoy).filter((d) => d.date >= cutoff));
@@ -28,6 +70,15 @@
   const core_ppi_yoy = $derived(parse(data.series.ppifes_yoy).filter((d) => d.date >= cutoff));
   const gdp = $derived(parse(data.series.gdp).filter((d) => d.date >= cutoff));
   const umcsent = $derived(parse(data.series.umcsent).filter((d) => d.date >= cutoff));
+
+  const cpiYoyML  = $derived(multiLine({ headline: cpi_yoy,     core: core_cpi_yoy }));
+  const pceYoyML  = $derived(multiLine({ headline: pce_yoy,     core: core_pce_yoy }));
+  const ppiYoyML  = $derived(multiLine({ headline: ppi_yoy,     core: core_ppi_yoy }));
+  const coreYoyML = $derived(multiLine({ cpi: core_cpi_yoy, pce: core_pce_yoy, ppi: core_ppi_yoy }));
+  const cpiMomML  = $derived(multiLine({ headline: cpi_mom,     core: core_cpi_mom }));
+  const pceMomML  = $derived(multiLine({ headline: pce_mom,     core: core_pce_mom }));
+  const ppiMomML  = $derived(multiLine({ headline: ppi_mom,     core: core_ppi_mom }));
+  const coreMomML = $derived(multiLine({ cpi: core_cpi_mom, pce: core_pce_mom, ppi: core_ppi_mom }));
 
   const recessions = [
     { start: new Date('1990-07-01'), end: new Date('1991-03-01') },
@@ -106,8 +157,58 @@
       </Plot>
     </div>
 
-    <!-- Labor Force Participation -->
+    <!-- Long-term Unemployed — % of total -->
     <div class="card">
+      <h2>Long-Term Unemployed (27+ Weeks)</h2>
+      <p class="meta">Monthly · Seasonally Adjusted · % of Total Unemployed</p>
+      <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={ltunempPct} x="date" y="value" stroke="#d62828" strokeWidth={1.5} />
+        {#snippet overlay()}
+          <HTMLTooltip data={ltunempPct} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                <div class="tip">
+                  <span class="tip-label">Long-Term Unemployed</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-val">{datum.value.toFixed(1)}%</span>
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+    </div>
+
+    <!-- Long-term Unemployed — count -->
+    <div class="card">
+      <h2>Long-Term Unemployed — Count</h2>
+      <p class="meta">Monthly · Seasonally Adjusted · Thousands of Persons</p>
+      <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: 'Thousands', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={ltunempCount} x="date" y="value" stroke="#e07a5f" strokeWidth={1.5} />
+        {#snippet overlay()}
+          <HTMLTooltip data={ltunempCount} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                <div class="tip">
+                  <span class="tip-label">Long-Term Unemployed</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-val">{datum.value.toLocaleString('en-US', { maximumFractionDigits: 0 })}K</span>
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+    </div>
+
+    <!-- Labor Force Participation -->
+    <div class="card wide">
       <h2>Labor Force Participation Rate</h2>
       <p class="meta">Monthly · Seasonally Adjusted · Percent</p>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
@@ -130,11 +231,98 @@
       </Plot>
     </div>
 
-    <!-- Initial Jobless Claims -->
+    <!-- LFPR Men -->
     <div class="card">
+      <h2>Labor Force Participation — Men</h2>
+      <p class="meta">Monthly · Seasonally Adjusted · Percent</p>
+      <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
+        <Frame />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={lfprMen} x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
+        {#snippet overlay()}
+          <HTMLTooltip data={lfprMen} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                <div class="tip">
+                  <span class="tip-label">LFPR Men</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-val">{datum.value.toFixed(1)}%</span>
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+    </div>
+
+    <!-- LFPR Women -->
+    <div class="card">
+      <h2>Labor Force Participation — Women</h2>
+      <p class="meta">Monthly · Seasonally Adjusted · Percent</p>
+      <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
+        <Frame />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={lfprWomen} x="date" y="value" stroke="#e76f51" strokeWidth={1.5} />
+        {#snippet overlay()}
+          <HTMLTooltip data={lfprWomen} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                <div class="tip">
+                  <span class="tip-label">LFPR Women</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-val">{datum.value.toFixed(1)}%</span>
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+    </div>
+
+    <!-- LFPR by Educational Attainment -->
+    <div class="card wide">
+      <h2>Labor Force Participation by Educational Attainment (25+)</h2>
+      <p class="meta">
+        Monthly · Seasonally Adjusted · Percent · Data from Jan 1992 ·
+        <span class="legend-swatch" style="background:#bc4749"></span> Less than HS &nbsp;
+        <span class="legend-swatch" style="background:#f4a261"></span> HS grad, no college &nbsp;
+        <span class="legend-swatch" style="background:#457b9d"></span> Some college / Associate &nbsp;
+        <span class="legend-swatch" style="background:#2a9d8f"></span> Bachelor's and higher
+      </p>
+      <Plot height={300} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
+        <Frame />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={lfprLtHs}     x="date" y="value" stroke="#bc4749" strokeWidth={1.5} />
+        <Line data={lfprHsOnly}   x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
+        <Line data={lfprSomeCol}  x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
+        <Line data={lfprBachPlus} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
+        {#snippet overlay()}
+          <HTMLTooltip data={eduAllPoints} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const edu = eduByDate.get(datum.date.getTime())}
+                <div class="tip">
+                  <span class="tip-label">LFPR by Education (25+)</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  {#if edu}
+                    <span class="tip-edu-row"><span style="color:#2a9d8f">●</span> Bach+    <b>{edu.bachPlus?.toFixed(1)}%</b></span>
+                    <span class="tip-edu-row"><span style="color:#457b9d">●</span> Some col <b>{edu.someCol?.toFixed(1)}%</b></span>
+                    <span class="tip-edu-row"><span style="color:#f4a261">●</span> HS only  <b>{edu.hsOnly?.toFixed(1)}%</b></span>
+                    <span class="tip-edu-row"><span style="color:#bc4749">●</span> &lt; HS   <b>{edu.ltHs?.toFixed(1)}%</b></span>
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+    </div>
+
+    <!-- Initial Jobless Claims -->
+    <div class="card wide">
       <h2>Initial Jobless Claims</h2>
       <p class="meta">Weekly · Seasonally Adjusted · Number of Claims</p>
-      <Plot height={220} marginLeft={64} marginRight={10} x={{ type: 'time' }} y={{ label: 'Claims', grid: true }}>
+      <Plot height={300} marginLeft={64} marginRight={10} x={{ type: 'time' }} y={{ label: 'Claims', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
@@ -256,13 +444,17 @@
         <Line data={core_cpi_yoy} x="date" y="value" stroke="#ff9f43" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={cpi_yoy} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
         {#snippet overlay()}
-          <HTMLTooltip data={cpi_yoy} x="date" y="value">
+          <HTMLTooltip data={cpiYoyML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
+                {@const v = cpiYoyML.byDate.get(datum.date.getTime())}
                 <div class="tip">
                   <span class="tip-label">CPI YoY</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
-                  <span class="tip-val">{datum.value.toFixed(2)}%</span>
+                  {#if v}
+                    <span class="tip-edu-row"><span style="color:#e63946">●</span> Headline <b>{v.headline?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span style="color:#ff9f43">●</span> Core     <b>{v.core?.toFixed(2)}%</b></span>
+                  {/if}
                 </div>
               {/if}
             {/snippet}
@@ -286,13 +478,17 @@
         <Line data={core_pce_yoy} x="date" y="value" stroke="#52b788" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={pce_yoy} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
         {#snippet overlay()}
-          <HTMLTooltip data={pce_yoy} x="date" y="value">
+          <HTMLTooltip data={pceYoyML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
+                {@const v = pceYoyML.byDate.get(datum.date.getTime())}
                 <div class="tip">
                   <span class="tip-label">PCE YoY</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
-                  <span class="tip-val">{datum.value.toFixed(2)}%</span>
+                  {#if v}
+                    <span class="tip-edu-row"><span style="color:#2a9d8f">●</span> Headline <b>{v.headline?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span style="color:#52b788">●</span> Core     <b>{v.core?.toFixed(2)}%</b></span>
+                  {/if}
                 </div>
               {/if}
             {/snippet}
@@ -315,13 +511,17 @@
         <Line data={core_ppi_yoy} x="date" y="value" stroke="#74b3ce" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={ppi_yoy} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
         {#snippet overlay()}
-          <HTMLTooltip data={ppi_yoy} x="date" y="value">
+          <HTMLTooltip data={ppiYoyML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
+                {@const v = ppiYoyML.byDate.get(datum.date.getTime())}
                 <div class="tip">
                   <span class="tip-label">PPI YoY</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
-                  <span class="tip-val">{datum.value.toFixed(2)}%</span>
+                  {#if v}
+                    <span class="tip-edu-row"><span style="color:#457b9d">●</span> Headline <b>{v.headline?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span style="color:#74b3ce">●</span> Core     <b>{v.core?.toFixed(2)}%</b></span>
+                  {/if}
                 </div>
               {/if}
             {/snippet}
@@ -347,13 +547,18 @@
         <Line data={core_pce_yoy} x="date" y="value" stroke="#52b788" strokeWidth={1.5} />
         <Line data={core_ppi_yoy} x="date" y="value" stroke="#74b3ce" strokeWidth={1.5} />
         {#snippet overlay()}
-          <HTMLTooltip data={core_pce_yoy} x="date" y="value">
+          <HTMLTooltip data={coreYoyML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
+                {@const v = coreYoyML.byDate.get(datum.date.getTime())}
                 <div class="tip">
-                  <span class="tip-label">Core PCE YoY</span>
+                  <span class="tip-label">Core Inflation YoY</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
-                  <span class="tip-val">{datum.value.toFixed(2)}%</span>
+                  {#if v}
+                    <span class="tip-edu-row"><span style="color:#ff9f43">●</span> Core CPI <b>{v.cpi?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span style="color:#52b788">●</span> Core PCE <b>{v.pce?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span style="color:#74b3ce">●</span> Core PPI <b>{v.ppi?.toFixed(2)}%</b></span>
+                  {/if}
                 </div>
               {/if}
             {/snippet}
@@ -381,13 +586,17 @@
         <Line data={core_cpi_mom} x="date" y="value" stroke="#ff9f43" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={cpi_mom} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
         {#snippet overlay()}
-          <HTMLTooltip data={cpi_mom} x="date" y="value">
+          <HTMLTooltip data={cpiMomML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
+                {@const v = cpiMomML.byDate.get(datum.date.getTime())}
                 <div class="tip">
                   <span class="tip-label">CPI MoM</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
-                  <span class="tip-val">{datum.value.toFixed(2)}%</span>
+                  {#if v}
+                    <span class="tip-edu-row"><span style="color:#e63946">●</span> Headline <b>{v.headline?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span style="color:#ff9f43">●</span> Core     <b>{v.core?.toFixed(2)}%</b></span>
+                  {/if}
                 </div>
               {/if}
             {/snippet}
@@ -410,13 +619,17 @@
         <Line data={core_pce_mom} x="date" y="value" stroke="#52b788" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={pce_mom} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
         {#snippet overlay()}
-          <HTMLTooltip data={pce_mom} x="date" y="value">
+          <HTMLTooltip data={pceMomML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
+                {@const v = pceMomML.byDate.get(datum.date.getTime())}
                 <div class="tip">
                   <span class="tip-label">PCE MoM</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
-                  <span class="tip-val">{datum.value.toFixed(2)}%</span>
+                  {#if v}
+                    <span class="tip-edu-row"><span style="color:#2a9d8f">●</span> Headline <b>{v.headline?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span style="color:#52b788">●</span> Core     <b>{v.core?.toFixed(2)}%</b></span>
+                  {/if}
                 </div>
               {/if}
             {/snippet}
@@ -439,13 +652,17 @@
         <Line data={core_ppi_mom} x="date" y="value" stroke="#74b3ce" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={ppi_mom} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
         {#snippet overlay()}
-          <HTMLTooltip data={ppi_mom} x="date" y="value">
+          <HTMLTooltip data={ppiMomML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
+                {@const v = ppiMomML.byDate.get(datum.date.getTime())}
                 <div class="tip">
                   <span class="tip-label">PPI MoM</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
-                  <span class="tip-val">{datum.value.toFixed(2)}%</span>
+                  {#if v}
+                    <span class="tip-edu-row"><span style="color:#457b9d">●</span> Headline <b>{v.headline?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span style="color:#74b3ce">●</span> Core     <b>{v.core?.toFixed(2)}%</b></span>
+                  {/if}
                 </div>
               {/if}
             {/snippet}
@@ -470,13 +687,18 @@
         <Line data={core_pce_mom} x="date" y="value" stroke="#52b788" strokeWidth={1.5} />
         <Line data={core_ppi_mom} x="date" y="value" stroke="#74b3ce" strokeWidth={1.5} />
         {#snippet overlay()}
-          <HTMLTooltip data={core_pce_mom} x="date" y="value">
+          <HTMLTooltip data={coreMomML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
+                {@const v = coreMomML.byDate.get(datum.date.getTime())}
                 <div class="tip">
-                  <span class="tip-label">Core PCE MoM</span>
+                  <span class="tip-label">Core Inflation MoM</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
-                  <span class="tip-val">{datum.value.toFixed(2)}%</span>
+                  {#if v}
+                    <span class="tip-edu-row"><span style="color:#ff9f43">●</span> Core CPI <b>{v.cpi?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span style="color:#52b788">●</span> Core PCE <b>{v.pce?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span style="color:#74b3ce">●</span> Core PPI <b>{v.ppi?.toFixed(2)}%</b></span>
+                  {/if}
                 </div>
               {/if}
             {/snippet}
@@ -613,5 +835,13 @@
     font-size: 1.05rem;
     font-weight: 700;
     margin-top: 0.1rem;
+  }
+
+  :global(.tip-edu-row) {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
   }
 </style>

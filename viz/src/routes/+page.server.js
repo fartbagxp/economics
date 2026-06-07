@@ -2,7 +2,10 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 const RAW_SERIES = [
-  'unrate', 'u6rate', 'civpart', 'icsa',
+  'unrate', 'u6rate', 'lns13008397', 'uemp27ov',
+  'civpart', 'lns11300001', 'lns11300002',
+  'lns11327659', 'lns11327660', 'lns11327689', 'lns11327662',
+  'icsa',
   'cpiaucsl',
   'gdp', 'umcsent',
 ];
