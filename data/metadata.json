@@ -145,5 +145,68 @@
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
     "last_updated": "2026-05-13 09:32:21-05"
+  },
+  "uemp27ov": {
+    "title": "Number Unemployed for 27 Weeks & over",
+    "units": "Thousands of Persons",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted",
+    "last_updated": "2026-06-05 08:31:13-05"
+  },
+  "lns13008397": {
+    "title": "Of Total Unemployed, Percent Unemployed Less Than 5 Weeks",
+    "units": "Percent",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted",
+    "last_updated": "2026-06-05 08:37:46-05"
+  },
+  "jtshir": {
+    "title": "Hires: Total Nonfarm",
+    "units": "Rate",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted",
+    "last_updated": "2026-06-02 09:12:57-05"
+  },
+  "lns11300001": {
+    "title": "Labor Force Participation Rate - Men",
+    "units": "Percent",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted",
+    "last_updated": "2026-06-05 08:39:30-05"
+  },
+  "lns11300002": {
+    "title": "Labor Force Participation Rate - Women",
+    "units": "Percent",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted",
+    "last_updated": "2026-06-05 08:39:30-05"
+  },
+  "lns11327659": {
+    "title": "Labor Force Participation Rate - Less Than a High School Diploma, 25 Yrs. & over",
+    "units": "Percent",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted",
+    "last_updated": "2026-06-05 08:37:27-05"
+  },
+  "lns11327660": {
+    "title": "Labor Force Participation Rate - High School Graduates, No College, 25 Yrs. & over",
+    "units": "Percent",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted",
+    "last_updated": "2026-06-05 08:38:16-05"
+  },
+  "lns11327689": {
+    "title": "Labor Force Participation Rate - Some College or Associate Degree, 25 Yrs. & over",
+    "units": "Percent",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted",
+    "last_updated": "2026-06-05 08:38:20-05"
+  },
+  "lns11327662": {
+    "title": "Labor Force Participation Rate - Bachelor's Degree and Higher, 25 Yrs. & over",
+    "units": "Percent",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted",
+    "last_updated": "2026-06-05 08:39:24-05"
   }
 }
