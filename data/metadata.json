@@ -4,7 +4,7 @@
     "units": "Index 1982-1984=100",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-05-12 08:03:57-05"
+    "last_updated": "2026-06-10 08:20:52-05"
   },
   "gdp": {
     "title": "Gross Domestic Product",
@@ -102,21 +102,21 @@
     "units": "Number",
     "frequency": "Weekly, Ending Saturday",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-04 07:34:17-05"
+    "last_updated": "2026-06-11 07:34:17-05"
   },
   "ccsa": {
     "title": "Continued Claims (Insured Unemployment)",
     "units": "Number",
     "frequency": "Weekly, Ending Saturday",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-04 07:34:31-05"
+    "last_updated": "2026-06-11 07:34:12-05"
   },
   "cpilfesl": {
     "title": "Consumer Price Index for All Urban Consumers: All Items Less Food and Energy in U.S. City Average",
     "units": "Index 1982-1984=100",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-05-12 08:03:59-05"
+    "last_updated": "2026-06-10 08:20:44-05"
   },
   "pcepi": {
     "title": "Personal Consumption Expenditures: Chain-type Price Index",
