@@ -22,6 +22,7 @@
   }
 
   const cutoff = new Date('1994-01-01');
+  const midDate = new Date((cutoff.getTime() + new Date().getTime()) / 2);
 
   const unrate       = $derived(parse(data.series.unrate).filter((d) => d.date >= cutoff));
   const u6rate       = $derived(parse(data.series.u6rate).filter((d) => d.date >= cutoff));
@@ -87,6 +88,13 @@
     { start: new Date('2020-02-01'), end: new Date('2020-04-01') }
   ].filter((r) => r.end >= cutoff);
 
+  function tipTransform(datum) {
+    if (!datum) return 'translate(8px, -50%)';
+    return datum.date > midDate
+      ? 'translate(calc(-100% - 8px), -50%)'
+      : 'translate(8px, -50%)';
+  }
+
   function fmt(d) {
     if (!d) return '';
     const date = d instanceof Date ? d : new Date(d);
@@ -120,7 +128,7 @@
           <HTMLTooltip data={unrate} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
-                <div class="tip">
+                <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Unemployment Rate (U-3)</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   <span class="tip-val">{datum.value.toFixed(1)}%</span>
@@ -145,7 +153,7 @@
           <HTMLTooltip data={u6rate} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
-                <div class="tip">
+                <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">U-6 Unemployment</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   <span class="tip-val">{datum.value.toFixed(1)}%</span>
@@ -170,7 +178,7 @@
           <HTMLTooltip data={ltunempPct} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
-                <div class="tip">
+                <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Long-Term Unemployed</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   <span class="tip-val">{datum.value.toFixed(1)}%</span>
@@ -195,7 +203,7 @@
           <HTMLTooltip data={ltunempCount} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
-                <div class="tip">
+                <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Long-Term Unemployed</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   <span class="tip-val">{datum.value.toLocaleString('en-US', { maximumFractionDigits: 0 })}K</span>
@@ -219,7 +227,7 @@
           <HTMLTooltip data={civpart} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
-                <div class="tip">
+                <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Labor Force Participation</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   <span class="tip-val">{datum.value.toFixed(1)}%</span>
@@ -243,7 +251,7 @@
           <HTMLTooltip data={lfprMen} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
-                <div class="tip">
+                <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">LFPR Men</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   <span class="tip-val">{datum.value.toFixed(1)}%</span>
@@ -267,7 +275,7 @@
           <HTMLTooltip data={lfprWomen} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
-                <div class="tip">
+                <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">LFPR Women</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   <span class="tip-val">{datum.value.toFixed(1)}%</span>
@@ -301,7 +309,7 @@
             {#snippet children({ datum })}
               {#if datum}
                 {@const edu = eduByDate.get(datum.date.getTime())}
-                <div class="tip">
+                <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">LFPR by Education (25+)</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   {#if edu}
@@ -331,7 +339,7 @@
           <HTMLTooltip data={icsa} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
-                <div class="tip">
+                <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Initial Claims</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   <span class="tip-val">{datum.value.toLocaleString('en-US', { maximumFractionDigits: 0 })}</span>
@@ -361,7 +369,7 @@
           <HTMLTooltip data={cpiaucsl} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
-                <div class="tip">
+                <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">CPI</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   <span class="tip-val">{datum.value.toFixed(2)}</span>
@@ -385,7 +393,7 @@
           <HTMLTooltip data={umcsent} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
-                <div class="tip">
+                <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Consumer Sentiment</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   <span class="tip-val">{datum.value.toFixed(1)}</span>
@@ -409,7 +417,7 @@
           <HTMLTooltip data={gdp} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
-                <div class="tip">
+                <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">GDP</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   <span class="tip-val">${datum.value.toLocaleString('en-US', { maximumFractionDigits: 0 })}B</span>
@@ -448,7 +456,7 @@
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = cpiYoyML.byDate.get(datum.date.getTime())}
-                <div class="tip">
+                <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">CPI YoY</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   {#if v}
@@ -482,7 +490,7 @@
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = pceYoyML.byDate.get(datum.date.getTime())}
-                <div class="tip">
+                <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">PCE YoY</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   {#if v}
@@ -515,7 +523,7 @@
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = ppiYoyML.byDate.get(datum.date.getTime())}
-                <div class="tip">
+                <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">PPI YoY</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   {#if v}
@@ -551,7 +559,7 @@
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = coreYoyML.byDate.get(datum.date.getTime())}
-                <div class="tip">
+                <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Core Inflation YoY</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   {#if v}
@@ -590,7 +598,7 @@
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = cpiMomML.byDate.get(datum.date.getTime())}
-                <div class="tip">
+                <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">CPI MoM</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   {#if v}
@@ -623,7 +631,7 @@
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = pceMomML.byDate.get(datum.date.getTime())}
-                <div class="tip">
+                <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">PCE MoM</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   {#if v}
@@ -656,7 +664,7 @@
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = ppiMomML.byDate.get(datum.date.getTime())}
-                <div class="tip">
+                <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">PPI MoM</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   {#if v}
@@ -691,7 +699,7 @@
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = coreMomML.byDate.get(datum.date.getTime())}
-                <div class="tip">
+                <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Core Inflation MoM</span>
                   <span class="tip-date">{fmt(datum.date)}</span>
                   {#if v}
