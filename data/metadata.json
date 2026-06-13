@@ -137,14 +137,14 @@
     "units": "Index Nov 2009=100",
     "frequency": "Monthly",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-05-13 09:32:13-05"
+    "last_updated": "2026-06-11 09:58:28-05"
   },
   "ppifes": {
     "title": "Producer Price Index by Commodity: Final Demand: Final Demand Less Foods and Energy",
     "units": "Index Apr 2010=100",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-05-13 09:32:21-05"
+    "last_updated": "2026-06-11 09:59:53-05"
   },
   "uemp27ov": {
     "title": "Number Unemployed for 27 Weeks & over",
