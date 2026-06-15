@@ -53,6 +53,16 @@ SERIES_MAX_AGE = [
     ("ppifes", 75),
     # Quarterly — observation date is quarter start, not release date
     ("gdp", 215),
+    # Monthly — personal income & outlays (released ~30 days after month end)
+    ("pi", 75),
+    ("dspi", 75),
+    ("pce", 75),
+    ("psave", 215),
+    ("psavert", 75),
+    ("mich", 75),
+    # Daily — TIPS-based breakeven rates
+    ("t5yie", 21),
+    ("t10yie", 21),
 ]
 
 # Must match RAW_SERIES in viz/src/routes/+page.server.js

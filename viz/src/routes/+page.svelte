@@ -72,6 +72,18 @@
   const gdp = $derived(parse(data.series.gdp).filter((d) => d.date >= cutoff));
   const umcsent = $derived(parse(data.series.umcsent).filter((d) => d.date >= cutoff));
 
+  const pi       = $derived(parse(data.series.pi).filter((d) => d.date >= cutoff));
+  const dspi     = $derived(parse(data.series.dspi).filter((d) => d.date >= cutoff));
+  const pce      = $derived(parse(data.series.pce).filter((d) => d.date >= cutoff));
+  const psave    = $derived(parse(data.series.psave).filter((d) => d.date >= cutoff));
+  const psavert  = $derived(parse(data.series.psavert).filter((d) => d.date >= cutoff));
+  const mich     = $derived(parse(data.series.mich).filter((d) => d.date >= cutoff));
+  const t5yie    = $derived(parse(data.series.t5yie).filter((d) => d.date >= cutoff));
+  const t10yie   = $derived(parse(data.series.t10yie).filter((d) => d.date >= cutoff));
+
+  const incomeML  = $derived(multiLine({ income: pi, disposable: dspi }));
+  const inflExpML = $derived(multiLine({ mich: mich, b5y: t5yie, b10y: t10yie }));
+
   const cpiYoyML  = $derived(multiLine({ headline: cpi_yoy,     core: core_cpi_yoy }));
   const pceYoyML  = $derived(multiLine({ headline: pce_yoy,     core: core_pce_yoy }));
   const ppiYoyML  = $derived(multiLine({ headline: ppi_yoy,     core: core_ppi_yoy }));
@@ -706,6 +718,162 @@
                     <span class="tip-edu-row"><span style="color:#ff9f43">●</span> Core CPI <b>{v.cpi?.toFixed(2)}%</b></span>
                     <span class="tip-edu-row"><span style="color:#52b788">●</span> Core PCE <b>{v.pce?.toFixed(2)}%</b></span>
                     <span class="tip-edu-row"><span style="color:#74b3ce">●</span> Core PPI <b>{v.ppi?.toFixed(2)}%</b></span>
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+    </div>
+
+  </section>
+
+  <!-- ── Consumer Spending & Income ───────────────────────────── -->
+  <h3 class="section-label">Consumer Spending &amp; Income</h3>
+  <section class="grid">
+
+    <!-- Personal Income vs Disposable Income -->
+    <div class="card wide">
+      <h2>Personal Income &amp; Disposable Personal Income</h2>
+      <p class="meta">
+        Monthly · SAAR · Billions of Dollars ·
+        <span class="legend-swatch" style="background:#1a6faf"></span> Personal Income &nbsp;
+        <span class="legend-swatch dashed" style="border-color:#f4a261"></span> Disposable Personal Income
+      </p>
+      <Plot height={220} marginLeft={64} marginRight={10} x={{ type: 'time' }} y={{ label: '$B', grid: true }}>
+        <Frame />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={dspi} x="date" y="value" stroke="#f4a261" strokeWidth={1.5} strokeDasharray="5,3" />
+        <Line data={pi} x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
+        {#snippet overlay()}
+          <HTMLTooltip data={incomeML.all} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const v = incomeML.byDate.get(datum.date.getTime())}
+                <div class="tip" style:transform={tipTransform(datum)}>
+                  <span class="tip-label">Income</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  {#if v}
+                    <span class="tip-edu-row"><span style="color:#1a6faf">●</span> Personal Income &nbsp;<b>${v.income?.toLocaleString('en-US', { maximumFractionDigits: 0 })}B</b></span>
+                    <span class="tip-edu-row"><span style="color:#f4a261">●</span> Disposable &nbsp;<b>${v.disposable?.toLocaleString('en-US', { maximumFractionDigits: 0 })}B</b></span>
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+    </div>
+
+    <!-- Personal Consumption Expenditures -->
+    <div class="card wide">
+      <h2>Personal Consumption Expenditures</h2>
+      <p class="meta">Monthly · SAAR · Billions of Dollars</p>
+      <Plot height={220} marginLeft={64} marginRight={10} x={{ type: 'time' }} y={{ label: '$B', grid: true }}>
+        <Frame />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={pce} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
+        {#snippet overlay()}
+          <HTMLTooltip data={pce} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                <div class="tip" style:transform={tipTransform(datum)}>
+                  <span class="tip-label">PCE</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-val">${datum.value.toLocaleString('en-US', { maximumFractionDigits: 0 })}B</span>
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+    </div>
+
+    <!-- Personal Savings Level -->
+    <div class="card">
+      <h2>Personal Saving</h2>
+      <p class="meta">Monthly · SAAR · Billions of Dollars</p>
+      <Plot height={220} marginLeft={64} marginRight={10} x={{ type: 'time' }} y={{ label: '$B', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={psave} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
+        {#snippet overlay()}
+          <HTMLTooltip data={psave} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                <div class="tip" style:transform={tipTransform(datum)}>
+                  <span class="tip-label">Personal Saving</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-val">${datum.value.toLocaleString('en-US', { maximumFractionDigits: 0 })}B</span>
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+    </div>
+
+    <!-- Personal Savings Rate -->
+    <div class="card">
+      <h2>Personal Saving Rate</h2>
+      <p class="meta">Monthly · Seasonally Adjusted · Percent of Disposable Income</p>
+      <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={psavert} x="date" y="value" stroke="#6a4c93" strokeWidth={1.5} />
+        {#snippet overlay()}
+          <HTMLTooltip data={psavert} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                <div class="tip" style:transform={tipTransform(datum)}>
+                  <span class="tip-label">Personal Saving Rate</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-val">{datum.value.toFixed(1)}%</span>
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+    </div>
+
+  </section>
+
+  <!-- ── Inflation Expectations ────────────────────────────────── -->
+  <h3 class="section-label">Inflation Expectations</h3>
+  <section class="grid">
+
+    <!-- Inflation Expectations: Survey vs Market -->
+    <div class="card wide">
+      <h2>Inflation Expectations</h2>
+      <p class="meta">
+        <span class="legend-swatch" style="background:#e63946"></span> U. Michigan 1-Year (survey, monthly, NSA) &nbsp;
+        <span class="legend-swatch" style="background:#457b9d"></span> 5-Year Breakeven (market-based, daily) &nbsp;
+        <span class="legend-swatch dashed" style="border-color:#74b3ce"></span> 10-Year Breakeven (market-based, daily)
+      </p>
+      <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <RuleY data={[2]} stroke="#bbb" strokeDasharray="4,3" />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={t10yie} x="date" y="value" stroke="#74b3ce" strokeWidth={1.5} strokeDasharray="5,3" />
+        <Line data={t5yie} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
+        <Line data={mich} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
+        {#snippet overlay()}
+          <HTMLTooltip data={inflExpML.all} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const v = inflExpML.byDate.get(datum.date.getTime())}
+                <div class="tip" style:transform={tipTransform(datum)}>
+                  <span class="tip-label">Inflation Expectations</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  {#if v}
+                    {#if v.mich != null}<span class="tip-edu-row"><span style="color:#e63946">●</span> UMich 1Y &nbsp;<b>{v.mich?.toFixed(1)}%</b></span>{/if}
+                    {#if v.b5y != null}<span class="tip-edu-row"><span style="color:#457b9d">●</span> 5Y Breakeven <b>{v.b5y?.toFixed(2)}%</b></span>{/if}
+                    {#if v.b10y != null}<span class="tip-edu-row"><span style="color:#74b3ce">●</span> 10Y Breakeven <b>{v.b10y?.toFixed(2)}%</b></span>{/if}
                   {/if}
                 </div>
               {/if}

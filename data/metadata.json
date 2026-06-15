@@ -208,5 +208,61 @@
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
     "last_updated": "2026-06-05 08:39:24-05"
+  },
+  "pi": {
+    "title": "Personal Income",
+    "units": "Billions of Dollars",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+    "last_updated": "2026-05-28 07:43:04-05"
+  },
+  "dspi": {
+    "title": "Disposable Personal Income",
+    "units": "Billions of Dollars",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+    "last_updated": "2026-05-28 07:43:19-05"
+  },
+  "pce": {
+    "title": "Personal Consumption Expenditures",
+    "units": "Billions of Dollars",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+    "last_updated": "2026-05-28 07:42:54-05"
+  },
+  "psave": {
+    "title": "Personal Saving",
+    "units": "Billions of Dollars",
+    "frequency": "Quarterly",
+    "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+    "last_updated": "2026-05-28 07:47:22-05"
+  },
+  "psavert": {
+    "title": "Personal Saving Rate",
+    "units": "Percent",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+    "last_updated": "2026-05-28 07:42:49-05"
+  },
+  "mich": {
+    "title": "University of Michigan: Inflation Expectation",
+    "units": "Percent",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "last_updated": "2026-05-22 10:02:38-05"
+  },
+  "t5yie": {
+    "title": "5-Year Breakeven Inflation Rate",
+    "units": "Percent",
+    "frequency": "Daily",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "last_updated": "2026-06-12 16:03:21-05"
+  },
+  "t10yie": {
+    "title": "10-Year Breakeven Inflation Rate",
+    "units": "Percent",
+    "frequency": "Daily",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "last_updated": "2026-06-12 16:03:44-05"
   }
 }

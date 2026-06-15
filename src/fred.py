@@ -96,6 +96,14 @@ class FredCollector:
             "LNS11327660": "Labor Force Participation Rate - High School Graduates No College, 25+",
             "LNS11327689": "Labor Force Participation Rate - Some College or Associate Degree, 25+",
             "LNS11327662": "Labor Force Participation Rate - Bachelor's Degree and Higher, 25+",
+            "PI": "Personal Income",
+            "DSPI": "Disposable Personal Income",
+            "PCE": "Personal Consumption Expenditures",
+            "PSAVE": "Personal Saving",
+            "PSAVERT": "Personal Saving Rate",
+            "MICH": "University of Michigan: Inflation Expectation (1-Year)",
+            "T5YIE": "5-Year Breakeven Inflation Rate",
+            "T10YIE": "10-Year Breakeven Inflation Rate",
         }
 
         for series_id, name in series_map.items():

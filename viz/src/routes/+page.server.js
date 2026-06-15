@@ -8,6 +8,8 @@ const RAW_SERIES = [
   'icsa',
   'cpiaucsl',
   'gdp', 'umcsent',
+  'pi', 'dspi', 'pce', 'psave', 'psavert',
+  'mich', 't5yie', 't10yie',
 ];
 
 const DERIVED_SERIES = [
