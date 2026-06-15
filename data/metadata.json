@@ -256,13 +256,13 @@
     "units": "Percent",
     "frequency": "Daily",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-06-12 16:03:21-05"
+    "last_updated": "2026-06-15 16:47:55-05"
   },
   "t10yie": {
     "title": "10-Year Breakeven Inflation Rate",
     "units": "Percent",
     "frequency": "Daily",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-06-12 16:03:44-05"
+    "last_updated": "2026-06-15 16:48:06-05"
   }
 }
