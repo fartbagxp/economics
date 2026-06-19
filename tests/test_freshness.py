@@ -3,9 +3,14 @@ Sanity checks for data freshness and viz coverage.
 
 Freshness thresholds are based on typical release lags per frequency:
   - Weekly (ICSA, CCSA): released every Thursday, expect data within 21 days
-  - Monthly: observation date is the 1st of the month; data released up to ~6 weeks
-    later, so worst-case age just before the next release is ~66 days (75-day threshold)
-  - PCE: released last Friday of following month, same lag profile (75 days)
+  - Monthly (labor): observation date is the 1st of the month; data released up to
+    ~5 weeks later, so worst-case age just before the next release is ~56 days
+    (60-day threshold)
+  - Monthly (CPI/PPI): BLS releases ~2-3 weeks after month end; 75-day threshold
+  - Monthly (PCE/PI/Michigan): BEA/UMich releases at end of following month;
+    worst-case age just before next release is ~88 days (90-day threshold)
+  - Monthly (JOLTS): BLS releases ~5-6 weeks after month end; worst-case ~93 days
+    (95-day threshold)
   - Quarterly (GDP): advance estimate ~30 days after quarter end; observation date
     is the quarter start, so the threshold is wider (215 days covers the full
     quarter + release lag + one additional quarter of buffer before next release)
@@ -43,23 +48,23 @@ SERIES_MAX_AGE = [
     ("lns11327660", 60),
     ("lns11327689", 60),
     ("lns11327662", 60),
-    ("jtshir", 75),
+    ("jtshir", 95),
     ("cpiaucsl", 75),
     ("cpilfesl", 75),
-    ("umcsent", 75),
-    ("pcepi", 75),
-    ("pcepilfe", 75),
+    ("umcsent", 90),
+    ("pcepi", 90),
+    ("pcepilfe", 90),
     ("ppifid", 75),
     ("ppifes", 75),
     # Quarterly — observation date is quarter start, not release date
     ("gdp", 215),
-    # Monthly — personal income & outlays (released ~30 days after month end)
-    ("pi", 75),
-    ("dspi", 75),
-    ("pce", 75),
+    # Monthly — personal income & outlays (released end of following month)
+    ("pi", 90),
+    ("dspi", 90),
+    ("pce", 90),
     ("psave", 215),
-    ("psavert", 75),
-    ("mich", 75),
+    ("psavert", 90),
+    ("mich", 90),
     # Daily — TIPS-based breakeven rates
     ("t5yie", 21),
     ("t10yie", 21),
