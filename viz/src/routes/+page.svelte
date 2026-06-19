@@ -113,6 +113,10 @@
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
   }
 
+  function fredUrl(id) {
+    return `https://fred.stlouisfed.org/series/${id.toUpperCase()}`;
+  }
+
 </script>
 
 <svelte:head>
@@ -150,6 +154,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: <a href={fredUrl('unrate')} target="_blank" rel="noopener">FRED / UNRATE</a></p>
     </div>
 
     <!-- U-6 Unemployment -->
@@ -175,6 +180,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: <a href={fredUrl('u6rate')} target="_blank" rel="noopener">FRED / U6RATE</a></p>
     </div>
 
     <!-- Long-term Unemployed — % of total -->
@@ -200,6 +206,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: <a href={fredUrl('lns13008397')} target="_blank" rel="noopener">FRED / LNS13008397</a></p>
     </div>
 
     <!-- Long-term Unemployed — count -->
@@ -225,6 +232,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: <a href={fredUrl('uemp27ov')} target="_blank" rel="noopener">FRED / UEMP27OV</a></p>
     </div>
 
     <!-- Labor Force Participation -->
@@ -249,6 +257,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: <a href={fredUrl('civpart')} target="_blank" rel="noopener">FRED / CIVPART</a></p>
     </div>
 
     <!-- LFPR Men -->
@@ -1019,5 +1028,21 @@
     gap: 1rem;
     font-size: 0.8rem;
     font-variant-numeric: tabular-nums;
+  }
+
+  .source {
+    font-size: 0.68rem;
+    color: #aaa;
+    margin: 0.4rem 0 0;
+  }
+
+  .source a {
+    color: #aaa;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .source a:hover {
+    color: #666;
   }
 </style>
