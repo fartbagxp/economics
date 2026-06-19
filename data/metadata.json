@@ -4,265 +4,341 @@
     "units": "Index 1982-1984=100",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-10 08:20:52-05"
+    "last_updated": "2026-06-10 08:20:52-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/CPIAUCSL"
   },
   "gdp": {
     "title": "Gross Domestic Product",
     "units": "Billions of Dollars",
     "frequency": "Quarterly",
     "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
-    "last_updated": "2026-05-28 07:48:19-05"
+    "last_updated": "2026-05-28 07:48:19-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/GDP"
   },
   "umcsent": {
     "title": "University of Michigan: Consumer Sentiment",
     "units": "Index 1966:Q1=100",
     "frequency": "Monthly",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-05-22 10:02:29-05"
+    "last_updated": "2026-05-22 10:02:29-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/UMCSENT"
   },
   "unrate": {
     "title": "Unemployment Rate",
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-05 08:31:02-05"
+    "last_updated": "2026-06-05 08:31:02-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/UNRATE"
   },
   "civpart": {
     "title": "Labor Force Participation Rate",
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-05 08:38:13-05"
+    "last_updated": "2026-06-05 08:38:13-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/CIVPART"
   },
   "u6rate": {
     "title": "Total Unemployed, Plus All Persons Marginally Attached to the Labor Force, Plus Total Employed Part Time for Economic Reasons, as a Percent of the Civilian Labor Force Plus All Persons Marginally Attached to the Labor Force (U-6)",
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-05 08:31:32-05"
+    "last_updated": "2026-06-05 08:31:32-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/U6RATE"
   },
   "u5rate": {
     "title": "Total Unemployed, Plus Discouraged Workers, Plus All Other Persons Marginally Attached to the Labor Force, as a Percent of the Civilian Labor Force Plus All Persons Marginally Attached to the Labor Force (U-5)",
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-05 08:31:26-05"
+    "last_updated": "2026-06-05 08:31:26-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/U5RATE"
   },
   "u4rate": {
     "title": "Total Unemployed Plus Discouraged Workers, as a Percent of the Civilian Labor Force Plus Discouraged Workers (U-4)",
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-05 08:31:20-05"
+    "last_updated": "2026-06-05 08:31:20-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/U4RATE"
   },
   "u2rate": {
     "title": "Unemployment Rate - Job Losers (U-2)",
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-05 08:31:27-05"
+    "last_updated": "2026-06-05 08:31:27-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/U2RATE"
   },
   "u1rate": {
     "title": "Percent of Civilian Labor Force Unemployed 15 Weeks and over (U-1)",
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-05 08:31:37-05"
+    "last_updated": "2026-06-05 08:31:37-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/U1RATE"
   },
   "lns14000012": {
     "title": "Unemployment Rate - 16-19 Yrs.",
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-05 08:37:14-05"
+    "last_updated": "2026-06-05 08:37:14-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/LNS14000012"
   },
   "lns14000036": {
     "title": "Unemployment Rate - 20-24 Yrs.",
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-05 08:37:09-05"
+    "last_updated": "2026-06-05 08:37:09-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/LNS14000036"
   },
   "lns14000089": {
     "title": "Unemployment Rate - 25-34 Yrs.",
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-05 08:36:49-05"
+    "last_updated": "2026-06-05 08:36:49-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/LNS14000089"
   },
   "lns14024230": {
     "title": "Unemployment Rate - 55 Yrs. & over",
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-05 08:38:09-05"
+    "last_updated": "2026-06-05 08:38:09-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/LNS14024230"
   },
   "icsa": {
     "title": "Initial Claims",
     "units": "Number",
     "frequency": "Weekly, Ending Saturday",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-11 07:34:17-05"
+    "last_updated": "2026-06-11 07:34:17-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/ICSA"
   },
   "ccsa": {
     "title": "Continued Claims (Insured Unemployment)",
     "units": "Number",
     "frequency": "Weekly, Ending Saturday",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-11 07:34:12-05"
+    "last_updated": "2026-06-11 07:34:12-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/CCSA"
   },
   "cpilfesl": {
     "title": "Consumer Price Index for All Urban Consumers: All Items Less Food and Energy in U.S. City Average",
     "units": "Index 1982-1984=100",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-10 08:20:44-05"
+    "last_updated": "2026-06-10 08:20:44-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/CPILFESL"
   },
   "pcepi": {
     "title": "Personal Consumption Expenditures: Chain-type Price Index",
     "units": "Index 2017=100",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-05-28 07:42:47-05"
+    "last_updated": "2026-05-28 07:42:47-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/PCEPI"
   },
   "pcepilfe": {
     "title": "Personal Consumption Expenditures Excluding Food and Energy (Chain-Type Price Index)",
     "units": "Index 2017=100",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-05-28 07:43:00-05"
+    "last_updated": "2026-05-28 07:43:00-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/PCEPILFE"
   },
   "ppifid": {
     "title": "Producer Price Index by Commodity: Final Demand",
     "units": "Index Nov 2009=100",
     "frequency": "Monthly",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-06-11 09:58:28-05"
+    "last_updated": "2026-06-11 09:58:28-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/PPIFID"
   },
   "ppifes": {
     "title": "Producer Price Index by Commodity: Final Demand: Final Demand Less Foods and Energy",
     "units": "Index Apr 2010=100",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-11 09:59:53-05"
+    "last_updated": "2026-06-11 09:59:53-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/PPIFES"
   },
   "uemp27ov": {
     "title": "Number Unemployed for 27 Weeks & over",
     "units": "Thousands of Persons",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-05 08:31:13-05"
+    "last_updated": "2026-06-05 08:31:13-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/UEMP27OV"
   },
   "lns13008397": {
     "title": "Of Total Unemployed, Percent Unemployed Less Than 5 Weeks",
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-05 08:37:46-05"
+    "last_updated": "2026-06-05 08:37:46-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/LNS13008397"
   },
   "jtshir": {
     "title": "Hires: Total Nonfarm",
     "units": "Rate",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-02 09:12:57-05"
+    "last_updated": "2026-06-02 09:12:57-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/JTSHIR"
   },
   "lns11300001": {
     "title": "Labor Force Participation Rate - Men",
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-05 08:39:30-05"
+    "last_updated": "2026-06-05 08:39:30-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/LNS11300001"
   },
   "lns11300002": {
     "title": "Labor Force Participation Rate - Women",
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-05 08:39:30-05"
+    "last_updated": "2026-06-05 08:39:30-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/LNS11300002"
   },
   "lns11327659": {
     "title": "Labor Force Participation Rate - Less Than a High School Diploma, 25 Yrs. & over",
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-05 08:37:27-05"
+    "last_updated": "2026-06-05 08:37:27-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/LNS11327659"
   },
   "lns11327660": {
     "title": "Labor Force Participation Rate - High School Graduates, No College, 25 Yrs. & over",
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-05 08:38:16-05"
+    "last_updated": "2026-06-05 08:38:16-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/LNS11327660"
   },
   "lns11327689": {
     "title": "Labor Force Participation Rate - Some College or Associate Degree, 25 Yrs. & over",
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-05 08:38:20-05"
+    "last_updated": "2026-06-05 08:38:20-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/LNS11327689"
   },
   "lns11327662": {
     "title": "Labor Force Participation Rate - Bachelor's Degree and Higher, 25 Yrs. & over",
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-05 08:39:24-05"
+    "last_updated": "2026-06-05 08:39:24-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/LNS11327662"
   },
   "pi": {
     "title": "Personal Income",
     "units": "Billions of Dollars",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
-    "last_updated": "2026-05-28 07:43:04-05"
+    "last_updated": "2026-05-28 07:43:04-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/PI"
   },
   "dspi": {
     "title": "Disposable Personal Income",
     "units": "Billions of Dollars",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
-    "last_updated": "2026-05-28 07:43:19-05"
+    "last_updated": "2026-05-28 07:43:19-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/DSPI"
   },
   "pce": {
     "title": "Personal Consumption Expenditures",
     "units": "Billions of Dollars",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
-    "last_updated": "2026-05-28 07:42:54-05"
+    "last_updated": "2026-05-28 07:42:54-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/PCE"
   },
   "psave": {
     "title": "Personal Saving",
     "units": "Billions of Dollars",
     "frequency": "Quarterly",
     "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
-    "last_updated": "2026-05-28 07:47:22-05"
+    "last_updated": "2026-05-28 07:47:22-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/PSAVE"
   },
   "psavert": {
     "title": "Personal Saving Rate",
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
-    "last_updated": "2026-05-28 07:42:49-05"
+    "last_updated": "2026-05-28 07:42:49-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/PSAVERT"
   },
   "mich": {
     "title": "University of Michigan: Inflation Expectation",
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-05-22 10:02:38-05"
+    "last_updated": "2026-05-22 10:02:38-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/MICH"
   },
   "t5yie": {
     "title": "5-Year Breakeven Inflation Rate",
     "units": "Percent",
     "frequency": "Daily",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-06-15 16:47:55-05"
+    "last_updated": "2026-06-15 16:47:55-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/T5YIE"
   },
   "t10yie": {
     "title": "10-Year Breakeven Inflation Rate",
     "units": "Percent",
     "frequency": "Daily",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-06-15 16:48:06-05"
+    "last_updated": "2026-06-15 16:48:06-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/T10YIE"
   }
 }
