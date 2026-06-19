@@ -8,7 +8,7 @@ US economic data collection and analysis project using FRED and BLS data sources
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-06-15 22:29 UTC_
+_Last updated: 2026-06-19 19:21 UTC_
 
 _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 points (quarterly)._
 
@@ -18,8 +18,8 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 | ------------------------- | -------------------------- | --------- | ---------- | -------- | ---------- |
 | Unemployment Rate (U-3)   | `▁▃▄▄▃▃▄▃▂▄▄▄▅▃▅▅▆█▆▅▆▅▅▅` | 4.3%      | +0.0pp     | +0.1pp   | 2026-05-01 |
 | Labor Force Participation | `▇▇███▆▅▆▇▆▆▇▅▄▄▄▆▆▅▃▂▁▁▁` | 61.8%     | +0.0pp     | -0.8pp   | 2026-05-01 |
-| Initial Jobless Claims    | `▃▃▂▄▄██▄▄▅▅▃▄▃▅▄▅▁▂▄▄▄▇▇` | 229,000   | +4,000     | -17,000  | 2026-06-06 |
-| Continued Claims          | `▆█▆▆▄▅▅▆▄▆▅▅▃▄▂▃▃▁▁▁▁▂▁▂` | 1,795,000 | +24,000    | -152,000 | 2026-05-30 |
+| Initial Jobless Claims    | `▃▂▄▄██▄▄▅▅▃▄▃▅▄▅▁▂▄▄▄▇█▇` | 226,000   | -4,000     | -17,000  | 2026-06-13 |
+| Continued Claims          | `█▆▆▄▅▅▆▄▆▅▅▃▄▂▃▃▁▁▁▁▂▁▂▃` | 1,810,000 | +24,000    | -125,000 | 2026-06-06 |
 
 ### Unemployment Measures (U1–U6)
 
