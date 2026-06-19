@@ -39,6 +39,28 @@ class EconomicChart:
             return self.metadata[series_key].get("title", series_name.upper())
         return series_name.upper()
 
+    def get_source_text(self, series_names):
+        """Build a newspaper-style source citation for one or more series."""
+        if isinstance(series_names, str):
+            series_names = [series_names]
+
+        seen_sources = {}
+        for name in series_names:
+            key = name.lower()
+            meta = self.metadata.get(key, {})
+            source = meta.get("source", "FRED, Federal Reserve Bank of St. Louis")
+            url = meta.get("source_url", "")
+            seen_sources[source] = url
+
+        parts = []
+        for source, url in seen_sources.items():
+            if url and len(series_names) == 1:
+                parts.append(f"{source} — {url}")
+            else:
+                parts.append(source)
+
+        return "Source: " + "; ".join(parts)
+
     def get_short_title(self, series_name):
         """Get a shortened title for chart legends."""
         series_key = series_name.lower()
@@ -71,16 +93,21 @@ class EconomicChart:
         if title is None:
             title = self.get_title(series_name)
 
-        plt.figure(figsize=(14, 6))
-        plt.plot(df["date"].to_list(), df["value"].to_list(), linewidth=2)
-        plt.title(title, fontsize=14)
-        plt.xlabel("Year")
-        plt.ylabel(ylabel)
-        plt.grid(True)
+        fig, ax = plt.subplots(figsize=(14, 6))
+        ax.plot(df["date"].to_list(), df["value"].to_list(), linewidth=2)
+        ax.set_title(title, fontsize=14)
+        ax.set_xlabel("Year")
+        ax.set_ylabel(ylabel)
+        ax.grid(True)
+
+        source_text = self.get_source_text(series_name)
+        fig.text(0.01, -0.02, source_text, fontsize=8, color="#666666",
+                 ha="left", va="top", transform=ax.transAxes)
+
         plt.tight_layout()
 
         if output_file:
-            plt.savefig(output_file)
+            plt.savefig(output_file, bbox_inches="tight")
             print(f"✅ Chart saved as {output_file}")
         else:
             plt.show()
@@ -93,15 +120,14 @@ class EconomicChart:
             Example: [{'name': 'unrate', 'label': 'Unemployment Rate (%)',
         'color': 'red'}]
         """
-        plt.figure(figsize=(14, 6))
+        fig, ax = plt.subplots(figsize=(14, 6))
 
         for config in series_configs:
             df = self.load_series(config["name"])
-            # Use short title for legend if label not provided
             label = config.get("label")
             if label is None:
                 label = self.get_short_title(config["name"])
-            plt.plot(
+            ax.plot(
                 df["date"].to_list(),
                 df["value"].to_list(),
                 label=label,
@@ -109,15 +135,21 @@ class EconomicChart:
                 linewidth=2,
             )
 
-        plt.title(title or "Economic Indicators", fontsize=14)
-        plt.xlabel("Year")
-        plt.ylabel("Value")
-        plt.legend()
-        plt.grid(True)
+        ax.set_title(title or "Economic Indicators", fontsize=14)
+        ax.set_xlabel("Year")
+        ax.set_ylabel("Value")
+        ax.legend()
+        ax.grid(True)
+
+        series_names = [c["name"] for c in series_configs]
+        source_text = self.get_source_text(series_names)
+        fig.text(0.01, -0.02, source_text, fontsize=8, color="#666666",
+                 ha="left", va="top", transform=ax.transAxes)
+
         plt.tight_layout()
 
         if output_file:
-            plt.savefig(output_file)
+            plt.savefig(output_file, bbox_inches="tight")
             print(f"✅ Chart saved as {output_file}")
         else:
             plt.show()
@@ -160,6 +192,11 @@ class EconomicChart:
 
         if title:
             fig.suptitle(title, fontsize=14, y=1.02)
+
+        all_series = [c["name"] for configs in panel_configs for c in configs]
+        source_text = self.get_source_text(all_series)
+        fig.text(0, -0.02, source_text, fontsize=8, color="#666666",
+                 ha="left", va="top")
 
         plt.tight_layout()
 

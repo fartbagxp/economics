@@ -1,5 +1,6 @@
 from datetime import datetime
 from pathlib import Path
+import json
 
 import polars as pl
 
@@ -10,6 +11,28 @@ class BlsCollector:
     def __init__(self, output_dir: str = "data/raw"):
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        self.metadata_file = self.output_dir.parent / "metadata.json"
+
+    def save_metadata(self, series_id: str, name: str):
+        """Save or update metadata for a BLS series."""
+        if self.metadata_file.exists():
+            with open(self.metadata_file, "r") as f:
+                all_metadata = json.load(f)
+        else:
+            all_metadata = {}
+
+        all_metadata[series_id.lower()] = {
+            "title": name,
+            "units": "Value",
+            "frequency": "Monthly",
+            "seasonal_adjustment": "",
+            "last_updated": "",
+            "source": "U.S. Bureau of Labor Statistics",
+            "source_url": f"https://data.bls.gov/timeseries/{series_id.upper()}",
+        }
+
+        with open(self.metadata_file, "w") as f:
+            json.dump(all_metadata, f, indent=2)
 
     def collect_series(self, series_id: str, name: str):
         """Collect a single series from BLS."""
@@ -50,6 +73,7 @@ class BlsCollector:
                 filename = f"{series_id.lower()}.csv"
                 filepath = self.output_dir / filename
                 df.write_csv(filepath)
+                self.save_metadata(series_id, name)
                 print(f"✅ Saved {filename} ({len(df)} rows)")
                 return df
             else:

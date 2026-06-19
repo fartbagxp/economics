@@ -26,6 +26,8 @@ class FredCollector:
             "frequency": info.get("frequency", ""),
             "seasonal_adjustment": info.get("seasonal_adjustment", ""),
             "last_updated": str(last_updated) if last_updated else "",
+            "source": "FRED, Federal Reserve Bank of St. Louis",
+            "source_url": f"https://fred.stlouisfed.org/series/{series_id.upper()}",
         }
 
     def save_metadata(self, series_id: str, metadata: dict):
