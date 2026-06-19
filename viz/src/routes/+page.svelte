@@ -282,6 +282,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: <a href={fredUrl('lns11300001')} target="_blank" rel="noopener">FRED / LNS11300001</a></p>
     </div>
 
     <!-- LFPR Women -->
@@ -306,6 +307,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: <a href={fredUrl('lns11300002')} target="_blank" rel="noopener">FRED / LNS11300002</a></p>
     </div>
 
     <!-- LFPR by Educational Attainment -->
@@ -345,6 +347,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: FRED — <a href={fredUrl('lns11327659')} target="_blank" rel="noopener">LNS11327659</a> · <a href={fredUrl('lns11327660')} target="_blank" rel="noopener">LNS11327660</a> · <a href={fredUrl('lns11327689')} target="_blank" rel="noopener">LNS11327689</a> · <a href={fredUrl('lns11327662')} target="_blank" rel="noopener">LNS11327662</a></p>
     </div>
 
     <!-- Initial Jobless Claims -->
@@ -370,6 +373,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: <a href={fredUrl('icsa')} target="_blank" rel="noopener">FRED / ICSA</a></p>
     </div>
 
   </section>
@@ -400,6 +404,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: <a href={fredUrl('cpiaucsl')} target="_blank" rel="noopener">FRED / CPIAUCSL</a></p>
     </div>
 
     <!-- Consumer Sentiment -->
@@ -424,6 +429,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: <a href={fredUrl('umcsent')} target="_blank" rel="noopener">FRED / UMCSENT</a></p>
     </div>
 
     <!-- GDP — full width -->
@@ -448,6 +454,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: <a href={fredUrl('gdp')} target="_blank" rel="noopener">FRED / GDP</a></p>
     </div>
 
   </section>
@@ -490,6 +497,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: FRED — <a href={fredUrl('cpiaucsl')} target="_blank" rel="noopener">CPIAUCSL</a> · <a href={fredUrl('cpilfesl')} target="_blank" rel="noopener">CPILFESL</a></p>
     </div>
 
     <div class="card">
@@ -524,6 +532,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: FRED — <a href={fredUrl('pcepi')} target="_blank" rel="noopener">PCEPI</a> · <a href={fredUrl('pcepilfe')} target="_blank" rel="noopener">PCEPILFE</a></p>
     </div>
 
     <div class="card wide">
@@ -557,6 +566,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: FRED — <a href={fredUrl('ppifid')} target="_blank" rel="noopener">PPIFID</a> · <a href={fredUrl('ppifes')} target="_blank" rel="noopener">PPIFES</a></p>
     </div>
 
     <div class="card wide">
@@ -594,6 +604,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: FRED — <a href={fredUrl('cpilfesl')} target="_blank" rel="noopener">CPILFESL</a> · <a href={fredUrl('pcepilfe')} target="_blank" rel="noopener">PCEPILFE</a> · <a href={fredUrl('ppifes')} target="_blank" rel="noopener">PPIFES</a></p>
     </div>
 
   </section>
@@ -632,6 +643,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: FRED — <a href={fredUrl('cpiaucsl')} target="_blank" rel="noopener">CPIAUCSL</a> · <a href={fredUrl('cpilfesl')} target="_blank" rel="noopener">CPILFESL</a></p>
     </div>
 
     <div class="card">
@@ -665,6 +677,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: FRED — <a href={fredUrl('pcepi')} target="_blank" rel="noopener">PCEPI</a> · <a href={fredUrl('pcepilfe')} target="_blank" rel="noopener">PCEPILFE</a></p>
     </div>
 
     <div class="card wide">
@@ -698,6 +711,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: FRED — <a href={fredUrl('ppifid')} target="_blank" rel="noopener">PPIFID</a> · <a href={fredUrl('ppifes')} target="_blank" rel="noopener">PPIFES</a></p>
     </div>
 
     <div class="card wide">
@@ -734,6 +748,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: FRED — <a href={fredUrl('cpilfesl')} target="_blank" rel="noopener">CPILFESL</a> · <a href={fredUrl('pcepilfe')} target="_blank" rel="noopener">PCEPILFE</a> · <a href={fredUrl('ppifes')} target="_blank" rel="noopener">PPIFES</a></p>
     </div>
 
   </section>
@@ -773,6 +788,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: FRED — <a href={fredUrl('pi')} target="_blank" rel="noopener">PI</a> · <a href={fredUrl('dspi')} target="_blank" rel="noopener">DSPI</a></p>
     </div>
 
     <!-- Personal Consumption Expenditures -->
@@ -797,6 +813,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: <a href={fredUrl('pce')} target="_blank" rel="noopener">FRED / PCE</a></p>
     </div>
 
     <!-- Personal Savings Level -->
@@ -822,6 +839,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: <a href={fredUrl('psave')} target="_blank" rel="noopener">FRED / PSAVE</a></p>
     </div>
 
     <!-- Personal Savings Rate -->
@@ -847,6 +865,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: <a href={fredUrl('psavert')} target="_blank" rel="noopener">FRED / PSAVERT</a></p>
     </div>
 
   </section>
@@ -890,6 +909,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      <p class="source">Source: FRED — <a href={fredUrl('mich')} target="_blank" rel="noopener">MICH</a> · <a href={fredUrl('t5yie')} target="_blank" rel="noopener">T5YIE</a> · <a href={fredUrl('t10yie')} target="_blank" rel="noopener">T10YIE</a></p>
     </div>
 
   </section>
