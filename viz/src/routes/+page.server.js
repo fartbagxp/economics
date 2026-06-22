@@ -8,7 +8,7 @@ const RAW_SERIES = [
   'icsa',
   'cpiaucsl',
   'gdp', 'umcsent',
-  'pi', 'dspi', 'pce', 'psave', 'psavert',
+  'pi', 'w875rx1', 'dspi', 'pce', 'psave', 'psavert',
   'mich', 't5yie', 't10yie',
 ];
 
@@ -19,6 +19,7 @@ const DERIVED_SERIES = [
   'pcepilfe_mom', 'pcepilfe_yoy',
   'ppifid_mom',   'ppifid_yoy',
   'ppifes_mom',   'ppifes_yoy',
+  'w875rx1_yoy',
 ];
 
 function loadCsv(path) {

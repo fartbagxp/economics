@@ -340,5 +340,14 @@
     "last_updated": "2026-06-18 16:03:24-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/T10YIE"
+  },
+  "w875rx1": {
+    "title": "Real personal income excluding current transfer receipts",
+    "units": "Billions of Chained 2017 Dollars",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+    "last_updated": "2026-05-28 07:42:46-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/W875RX1"
   }
 }
