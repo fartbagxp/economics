@@ -72,8 +72,9 @@
   const gdp = $derived(parse(data.series.gdp).filter((d) => d.date >= cutoff));
   const umcsent = $derived(parse(data.series.umcsent).filter((d) => d.date >= cutoff));
 
-  const pi       = $derived(parse(data.series.pi).filter((d) => d.date >= cutoff));
-  const dspi     = $derived(parse(data.series.dspi).filter((d) => d.date >= cutoff));
+  const pi            = $derived(parse(data.series.pi).filter((d) => d.date >= cutoff));
+  const w875rx1_yoy   = $derived(parse(data.series.w875rx1_yoy).filter((d) => d.date >= cutoff));
+  const dspi          = $derived(parse(data.series.dspi).filter((d) => d.date >= cutoff));
   const pce      = $derived(parse(data.series.pce).filter((d) => d.date >= cutoff));
   const psave    = $derived(parse(data.series.psave).filter((d) => d.date >= cutoff));
   const psavert  = $derived(parse(data.series.psavert).filter((d) => d.date >= cutoff));
@@ -789,6 +790,32 @@
         {/snippet}
       </Plot>
       <p class="source">Source: FRED — <a href={fredUrl('pi')} target="_blank" rel="noopener">PI</a> · <a href={fredUrl('dspi')} target="_blank" rel="noopener">DSPI</a></p>
+    </div>
+
+    <!-- Real Personal Income ex. Transfers YoY -->
+    <div class="card wide">
+      <h2>Real Personal Income Excl. Transfer Receipts, YoY Change</h2>
+      <p class="meta">Monthly · Inflation-Adjusted · Excludes govt transfers (Social Security, unemployment, etc.)</p>
+      <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={w875rx1_yoy} x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
+        {#snippet overlay()}
+          <HTMLTooltip data={w875rx1_yoy} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                <div class="tip" style:transform={tipTransform(datum)}>
+                  <span class="tip-label">Real PI ex. Transfers</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-val">{datum.value.toFixed(2)}%</span>
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      <p class="source">Source: <a href={fredUrl('w875rx1')} target="_blank" rel="noopener">FRED / W875RX1</a></p>
     </div>
 
     <!-- Personal Consumption Expenditures -->

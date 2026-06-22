@@ -99,6 +99,7 @@ class FredCollector:
             "LNS11327689": "Labor Force Participation Rate - Some College or Associate Degree, 25+",
             "LNS11327662": "Labor Force Participation Rate - Bachelor's Degree and Higher, 25+",
             "PI": "Personal Income",
+            "W875RX1": "Real Personal Income Excluding Current Transfer Receipts",
             "DSPI": "Disposable Personal Income",
             "PCE": "Personal Consumption Expenditures",
             "PSAVE": "Personal Saving",

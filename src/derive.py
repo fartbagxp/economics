@@ -4,6 +4,7 @@ import polars as pl
 
 
 INFLATION_SERIES = ["cpiaucsl", "cpilfesl", "pcepi", "pcepilfe", "ppifid", "ppifes"]
+INCOME_YOY_SERIES = ["w875rx1"]
 
 
 class Deriver:
@@ -47,5 +48,11 @@ class Deriver:
         for series_id in INFLATION_SERIES:
             try:
                 self.derive_series(series_id)
+            except Exception as e:
+                print(f"❌ Error deriving {series_id}: {e}")
+        for series_id in INCOME_YOY_SERIES:
+            try:
+                df = self._load(series_id)
+                self._save(self._pct_change(df, 12), f"{series_id}_yoy")
             except Exception as e:
                 print(f"❌ Error deriving {series_id}: {e}")
