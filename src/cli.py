@@ -6,9 +6,14 @@ class Cli:
         parser = argparse.ArgumentParser(description="Collect US economic data")
         parser.add_argument(
             "--source",
-            choices=["fred", "bls", "all"],
+            choices=["fred", "bls", "nyfed", "all"],
             default="all",
             help="Data source to collect from",
+        )
+        parser.add_argument(
+            "--nyfed-quarter",
+            metavar="YYYYQn",
+            help="Specific NY Fed report quarter to download, e.g. 2024Q4 (default: auto-detect latest)",
         )
         parser.add_argument("--series", help="Specific series ID to collect")
         parser.add_argument(

@@ -107,6 +107,12 @@ class FredCollector:
             "MICH": "University of Michigan: Inflation Expectation (1-Year)",
             "T5YIE": "5-Year Breakeven Inflation Rate",
             "T10YIE": "10-Year Breakeven Inflation Rate",
+            # Household Debt
+            "HHMSDODNS": "Home Mortgages; Liability, Level",
+            "REVOLSL": "Revolving Consumer Credit (Credit Cards)",
+            "SLOAS": "Student Loans Owned and Securitized",
+            "MVLOAS": "Motor Vehicle Loans Owned and Securitized",
+            "NONREVSL": "Nonrevolving Consumer Credit (Auto + Student)",
         }
 
         for series_id, name in series_map.items():

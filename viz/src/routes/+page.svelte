@@ -82,6 +82,27 @@
   const t5yie    = $derived(parse(data.series.t5yie).filter((d) => d.date >= cutoff));
   const t10yie   = $derived(parse(data.series.t10yie).filter((d) => d.date >= cutoff));
 
+  // FRED debt series (millions → trillions)
+  const mortgage    = $derived(parse(data.series.hhmsdodns).filter((d) => d.date >= cutoff).map((d) => ({ ...d, value: d.value / 1e6 })));
+  const creditCards = $derived(parse(data.series.revolsl).filter((d) => d.date >= cutoff).map((d) => ({ ...d, value: d.value / 1e6 })));
+  const studentLoans = $derived(parse(data.series.sloas).filter((d) => d.date >= cutoff).map((d) => ({ ...d, value: d.value / 1e6 })));
+  const autoLoans   = $derived(parse(data.series.mvloas).filter((d) => d.date >= cutoff).map((d) => ({ ...d, value: d.value / 1e6 })));
+  const nonrevsl    = $derived(parse(data.series.nonrevsl).filter((d) => d.date >= cutoff).map((d) => ({ ...d, value: d.value / 1e6 })));
+  const debtML = $derived(multiLine({ mortgage, creditCards, studentLoans, autoLoans }));
+
+  // NY Fed / Equifax series (millions → trillions) — populated after running: python main.py --source nyfed
+  const nyfedCutoff = new Date('1999-01-01');
+  const nyfedMortgage    = $derived(parse(data.series.nyfed_mortgage).filter((d) => d.date >= nyfedCutoff).map((d) => ({ ...d, value: d.value / 1e6 })));
+  const nyfedHeloc       = $derived(parse(data.series.nyfed_he_revolving).filter((d) => d.date >= nyfedCutoff).map((d) => ({ ...d, value: d.value / 1e6 })));
+  const nyfedAuto        = $derived(parse(data.series.nyfed_auto).filter((d) => d.date >= nyfedCutoff).map((d) => ({ ...d, value: d.value / 1e6 })));
+  const nyfedCreditCard  = $derived(parse(data.series.nyfed_credit_card).filter((d) => d.date >= nyfedCutoff).map((d) => ({ ...d, value: d.value / 1e6 })));
+  const nyfedStudent     = $derived(parse(data.series.nyfed_student).filter((d) => d.date >= nyfedCutoff).map((d) => ({ ...d, value: d.value / 1e6 })));
+  const nyfedOther       = $derived(parse(data.series.nyfed_other).filter((d) => d.date >= nyfedCutoff).map((d) => ({ ...d, value: d.value / 1e6 })));
+  const nyfedTotal       = $derived(parse(data.series.nyfed_total).filter((d) => d.date >= nyfedCutoff).map((d) => ({ ...d, value: d.value / 1e6 })));
+  const nyfedHasData     = $derived(nyfedMortgage.length > 0);
+  const nyfedML = $derived(multiLine({ mortgage: nyfedMortgage, heloc: nyfedHeloc, auto: nyfedAuto, creditCard: nyfedCreditCard, student: nyfedStudent, other: nyfedOther }));
+  const nyfedMidDate = $derived(nyfedHasData ? new Date((nyfedCutoff.getTime() + new Date().getTime()) / 2) : midDate);
+
   const incomeML  = $derived(multiLine({ income: pi, disposable: dspi }));
   const inflExpML = $derived(multiLine({ mich: mich, b5y: t5yie, b10y: t10yie }));
 
@@ -893,6 +914,193 @@
         {/snippet}
       </Plot>
       <p class="source">Source: <a href={fredUrl('psavert')} target="_blank" rel="noopener">FRED / PSAVERT</a></p>
+    </div>
+
+  </section>
+
+  <!-- ── Household Debt ───────────────────────────────────────── -->
+  <h3 class="section-label">Household Debt</h3>
+  <section class="grid">
+
+    <!-- NY Fed / Equifax: full breakdown incl. HELOC + Other (medical) -->
+    {#if nyfedHasData}
+    <div class="card wide">
+      <h2>Household Debt by Category — NY Fed / Equifax</h2>
+      <p class="meta">
+        Quarterly · Not Seasonally Adjusted · Trillions of Dollars · Q1 1999–present ·
+        <span class="legend-swatch" style="background:#1a6faf"></span> Mortgage &nbsp;
+        <span class="legend-swatch" style="background:#457b9d"></span> HELOC &nbsp;
+        <span class="legend-swatch" style="background:#e63946"></span> Credit Card &nbsp;
+        <span class="legend-swatch" style="background:#f4a261"></span> Student Loan &nbsp;
+        <span class="legend-swatch" style="background:#2a9d8f"></span> Auto Loan &nbsp;
+        <span class="legend-swatch" style="background:#bc4749"></span> Other (incl. medical)
+      </p>
+      <Plot height={340} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: '$T', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={nyfedOther}      x="date" y="value" stroke="#bc4749" strokeWidth={1.5} />
+        <Line data={nyfedHeloc}      x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
+        <Line data={nyfedCreditCard} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
+        <Line data={nyfedStudent}    x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
+        <Line data={nyfedAuto}       x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
+        <Line data={nyfedMortgage}   x="date" y="value" stroke="#1a6faf" strokeWidth={2} />
+        {#snippet overlay()}
+          <HTMLTooltip data={nyfedML.all} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const v = nyfedML.byDate.get(datum.date.getTime())}
+                <div class="tip" style:transform={tipTransform(datum)}>
+                  <span class="tip-label">Household Debt (NY Fed)</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  {#if v}
+                    {#if v.mortgage   != null}<span class="tip-edu-row"><span style="color:#1a6faf">●</span> Mortgage    <b>${v.mortgage.toFixed(2)}T</b></span>{/if}
+                    {#if v.auto       != null}<span class="tip-edu-row"><span style="color:#2a9d8f">●</span> Auto        <b>${v.auto.toFixed(2)}T</b></span>{/if}
+                    {#if v.student    != null}<span class="tip-edu-row"><span style="color:#f4a261">●</span> Student     <b>${v.student.toFixed(2)}T</b></span>{/if}
+                    {#if v.creditCard != null}<span class="tip-edu-row"><span style="color:#e63946">●</span> Credit Card <b>${v.creditCard.toFixed(2)}T</b></span>{/if}
+                    {#if v.heloc      != null}<span class="tip-edu-row"><span style="color:#457b9d">●</span> HELOC       <b>${v.heloc.toFixed(2)}T</b></span>{/if}
+                    {#if v.other      != null}<span class="tip-edu-row"><span style="color:#bc4749">●</span> Other       <b>${v.other.toFixed(2)}T</b></span>{/if}
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      <p class="source">
+        Source: <a href="https://www.newyorkfed.org/microeconomics/hhdc" target="_blank" rel="noopener">NY Fed Household Debt &amp; Credit Report</a>
+        (NY Fed Consumer Credit Panel / Equifax) ·
+        "Other" includes medical debt, personal loans, and retail financing
+      </p>
+    </div>
+
+    <!-- NY Fed: Total household debt -->
+    <div class="card wide">
+      <h2>Total Household Debt — NY Fed / Equifax</h2>
+      <p class="meta">Quarterly · Not Seasonally Adjusted · Trillions of Dollars · Q1 1999–present</p>
+      <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: '$T', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={nyfedTotal} x="date" y="value" stroke="#1a1a2e" strokeWidth={2} />
+        {#snippet overlay()}
+          <HTMLTooltip data={nyfedTotal} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                <div class="tip" style:transform={tipTransform(datum)}>
+                  <span class="tip-label">Total Household Debt</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-val">${datum.value.toFixed(2)}T</span>
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      <p class="source">
+        Source: <a href="https://www.newyorkfed.org/microeconomics/hhdc" target="_blank" rel="noopener">NY Fed / Equifax Consumer Credit Panel</a>
+      </p>
+    </div>
+    {:else}
+    <!-- Fallback: FRED-sourced combined debt chart shown until NY Fed data is collected -->
+    <div class="card wide">
+      <h2>Household Debt by Category — FRED</h2>
+      <p class="meta">
+        Quarterly / Monthly · Not Seasonally Adjusted · Trillions of Dollars ·
+        <span class="legend-swatch" style="background:#1a6faf"></span> Mortgage &nbsp;
+        <span class="legend-swatch" style="background:#e63946"></span> Credit Cards &nbsp;
+        <span class="legend-swatch" style="background:#f4a261"></span> Student Loans (through Q4 2024) &nbsp;
+        <span class="legend-swatch" style="background:#2a9d8f"></span> Auto Loans (through Q4 2024)
+      </p>
+      <Plot height={320} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: '$T', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={autoLoans}    x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
+        <Line data={studentLoans} x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
+        <Line data={creditCards}  x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
+        <Line data={mortgage}     x="date" y="value" stroke="#1a6faf" strokeWidth={2} />
+        {#snippet overlay()}
+          <HTMLTooltip data={debtML.all} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const v = debtML.byDate.get(datum.date.getTime())}
+                <div class="tip" style:transform={tipTransform(datum)}>
+                  <span class="tip-label">Household Debt (FRED)</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  {#if v}
+                    {#if v.mortgage     != null}<span class="tip-edu-row"><span style="color:#1a6faf">●</span> Mortgage       <b>${v.mortgage.toFixed(2)}T</b></span>{/if}
+                    {#if v.creditCards  != null}<span class="tip-edu-row"><span style="color:#e63946">●</span> Credit Cards   <b>${v.creditCards.toFixed(2)}T</b></span>{/if}
+                    {#if v.studentLoans != null}<span class="tip-edu-row"><span style="color:#f4a261">●</span> Student Loans  <b>${v.studentLoans.toFixed(2)}T</b></span>{/if}
+                    {#if v.autoLoans    != null}<span class="tip-edu-row"><span style="color:#2a9d8f">●</span> Auto Loans     <b>${v.autoLoans.toFixed(2)}T</b></span>{/if}
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      <p class="source">
+        Source: FRED —
+        <a href={fredUrl('hhmsdodns')} target="_blank" rel="noopener">HHMSDODNS</a> ·
+        <a href={fredUrl('revolsl')} target="_blank" rel="noopener">REVOLSL</a> ·
+        <a href={fredUrl('sloas')} target="_blank" rel="noopener">SLOAS</a> ·
+        <a href={fredUrl('mvloas')} target="_blank" rel="noopener">MVLOAS</a>
+        · Run <code>python main.py --source nyfed</code> to upgrade to the NY Fed / Equifax chart with HELOC and medical debt
+      </p>
+    </div>
+    {/if}
+
+    <!-- Nonrevolving consumer credit (auto + student combined, current) -->
+    <div class="card">
+      <h2>Nonrevolving Consumer Credit</h2>
+      <p class="meta">Monthly · Not Seasonally Adjusted · Trillions of Dollars · Auto + Student combined · FRED G.19</p>
+      <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: '$T', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={nonrevsl} x="date" y="value" stroke="#6a4c93" strokeWidth={1.5} />
+        {#snippet overlay()}
+          <HTMLTooltip data={nonrevsl} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                <div class="tip" style:transform={tipTransform(datum)}>
+                  <span class="tip-label">Nonrevolving Credit</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-val">${datum.value.toFixed(2)}T</span>
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      <p class="source">Source: <a href={fredUrl('nonrevsl')} target="_blank" rel="noopener">FRED / NONREVSL</a></p>
+    </div>
+
+    <!-- Revolving consumer credit (credit cards) -->
+    <div class="card">
+      <h2>Revolving Consumer Credit (Credit Cards)</h2>
+      <p class="meta">Monthly · Not Seasonally Adjusted · Trillions of Dollars · FRED G.19</p>
+      <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: '$T', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={creditCards} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
+        {#snippet overlay()}
+          <HTMLTooltip data={creditCards} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                <div class="tip" style:transform={tipTransform(datum)}>
+                  <span class="tip-label">Credit Card Debt</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-val">${datum.value.toFixed(2)}T</span>
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      <p class="source">Source: <a href={fredUrl('revolsl')} target="_blank" rel="noopener">FRED / REVOLSL</a></p>
     </div>
 
   </section>

@@ -349,5 +349,113 @@
     "last_updated": "2026-05-28 07:42:46-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/W875RX1"
+  },
+  "hhmsdodns": {
+    "title": "Households and Nonprofit Organizations; One-to-Four-Family Residential Mortgages; Liability, Level",
+    "units": "Millions of U.S. Dollars",
+    "frequency": "Quarterly, End of Period",
+    "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+    "last_updated": "2026-06-11 21:22:14-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/HHMSDODNS"
+  },
+  "revolsl": {
+    "title": "Revolving Consumer Credit Owned and Securitized",
+    "units": "Millions of U.S. Dollars",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted",
+    "last_updated": "2026-06-05 14:02:14-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/REVOLSL"
+  },
+  "sloas": {
+    "title": "Student Loans Owned and Securitized (DISCONTINUED)",
+    "units": "Millions of Dollars",
+    "frequency": "Quarterly, End of Period",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "last_updated": "2025-02-07 14:10:57-06",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/SLOAS"
+  },
+  "mvloas": {
+    "title": "Motor Vehicle Loans Owned and Securitized (DISCONTINUED)",
+    "units": "Millions of Dollars",
+    "frequency": "Quarterly, End of Period",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "last_updated": "2025-04-07 14:02:05-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/MVLOAS"
+  },
+  "nonrevsl": {
+    "title": "Nonrevolving Consumer Credit Owned and Securitized",
+    "units": "Millions of U.S. Dollars",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted",
+    "last_updated": "2026-06-05 14:03:25-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/NONREVSL"
+  },
+  "nyfed_mortgage": {
+    "title": "NY Fed: Mortgage Debt Balance",
+    "units": "Millions of U.S. Dollars",
+    "frequency": "Quarterly",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "source": "NY Fed / Equifax Consumer Credit Panel",
+    "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
+    "last_updated": "2026-06-24"
+  },
+  "nyfed_he_revolving": {
+    "title": "NY Fed: Home Equity Revolving (HELOC) Balance",
+    "units": "Millions of U.S. Dollars",
+    "frequency": "Quarterly",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "source": "NY Fed / Equifax Consumer Credit Panel",
+    "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
+    "last_updated": "2026-06-24"
+  },
+  "nyfed_auto": {
+    "title": "NY Fed: Auto Loan Balance",
+    "units": "Millions of U.S. Dollars",
+    "frequency": "Quarterly",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "source": "NY Fed / Equifax Consumer Credit Panel",
+    "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
+    "last_updated": "2026-06-24"
+  },
+  "nyfed_credit_card": {
+    "title": "NY Fed: Credit Card Balance",
+    "units": "Millions of U.S. Dollars",
+    "frequency": "Quarterly",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "source": "NY Fed / Equifax Consumer Credit Panel",
+    "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
+    "last_updated": "2026-06-24"
+  },
+  "nyfed_student": {
+    "title": "NY Fed: Student Loan Balance",
+    "units": "Millions of U.S. Dollars",
+    "frequency": "Quarterly",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "source": "NY Fed / Equifax Consumer Credit Panel",
+    "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
+    "last_updated": "2026-06-24"
+  },
+  "nyfed_other": {
+    "title": "NY Fed: Other Debt Balance (incl. medical)",
+    "units": "Millions of U.S. Dollars",
+    "frequency": "Quarterly",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "source": "NY Fed / Equifax Consumer Credit Panel",
+    "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
+    "last_updated": "2026-06-24"
+  },
+  "nyfed_total": {
+    "title": "NY Fed: Total Household Debt Balance",
+    "units": "Millions of U.S. Dollars",
+    "frequency": "Quarterly",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "source": "NY Fed / Equifax Consumer Credit Panel",
+    "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
+    "last_updated": "2026-06-24"
   }
 }

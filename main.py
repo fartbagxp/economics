@@ -4,6 +4,7 @@ from src.cli import Cli
 from src.config import Config
 from src.derive import Deriver
 from src.fred import FredCollector
+from src.nyfed import NyFedCollector
 
 
 def main():
@@ -42,6 +43,13 @@ def main():
 
         if args.series:
             bls_collector.collect_series(args.series, args.series)
+
+    if args.source in ["nyfed", "all"]:
+        nyfed_collector = NyFedCollector(args.output)
+        try:
+            nyfed_collector.collect_all(quarter=getattr(args, "nyfed_quarter", None))
+        except Exception as e:
+            print(f"❌ NY Fed collection failed: {e}")
 
     print("\n📐 Computing derived statistics...")
     Deriver(args.output).derive_all()
