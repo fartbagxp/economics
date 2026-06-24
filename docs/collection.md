@@ -22,8 +22,9 @@ A FRED API key is free — register at [fred.stlouisfed.org/docs/api/api_key.htm
 
 ## Data Sources
 
-- **FRED (Federal Reserve Economic Data)**: CPI, GDP, Consumer Confidence, Unemployment
+- **FRED (Federal Reserve Economic Data)**: CPI, GDP, Consumer Confidence, Unemployment, Household Debt
 - **BLS (Bureau of Labor Statistics)**: Additional labor and economic statistics
+- **NY Fed Consumer Credit Panel / Equifax**: Household debt by category (mortgage, HELOC, auto, credit card, student, other)
 
 ## Data Collected
 
@@ -51,3 +52,45 @@ A FRED API key is free — register at [fred.stlouisfed.org/docs/api/api_key.htm
 - **LNS14024230**: Unemployment Rate - Ages 55 and over
 
 Raw data is saved to `data/raw/` as CSV files, with metadata stored in `data/metadata.json`.
+
+### Household Debt
+
+All series are stored in **millions of dollars** and displayed as **trillions** in the dashboard.
+
+| Series          | Description                                               | Frequency | Coverage                      |
+| --------------- | --------------------------------------------------------- | --------- | ----------------------------- |
+| **HHMSDODNS**   | Home Mortgages (1–4 family residential); Liability, Level | Quarterly | 1945–present                  |
+| **REVOLSL**     | Revolving Consumer Credit — primarily credit cards        | Monthly   | 1968–present                  |
+| **SLOAS**       | Student Loans Owned and Securitized                       | Quarterly | 2006–Q4 2024 *(discontinued)* |
+| **MVLOAS**      | Motor Vehicle Loans Owned and Securitized                 | Quarterly | 1943–Q4 2024 *(discontinued)* |
+| **NONREVSL**    | Nonrevolving Consumer Credit (auto + student combined)    | Monthly   | 1943–present                  |
+
+**Source**: Federal Reserve via FRED — [G.19 Consumer Credit](https://www.federalreserve.gov/releases/g19/) and [Z.1 Flow of Funds](https://www.federalreserve.gov/releases/z1/).
+
+**Note on medical debt**: There is no standalone FRED time series for medical debt. It is embedded in "Other" in the NY Fed Consumer Credit Panel (see below).
+
+---
+
+### NY Fed Household Debt and Credit (Equifax-sourced)
+
+Collected via `python main.py --source nyfed`.
+
+The NY Fed publishes a quarterly Excel workbook based on the **NY Fed Consumer Credit Panel**, a nationally representative 5% sample of Equifax credit bureau records. This is the most granular publicly available quarterly debt breakdown, including a separate "Other" category that captures medical debt, personal loans, and retail financing.
+
+**Report page**: [newyorkfed.org/microeconomics/hhdc](https://www.newyorkfed.org/microeconomics/hhdc)
+
+**File downloaded**: `HHD_C_Report_YYYYQn.xlsx` — the collector auto-detects the latest available quarter or accepts `--nyfed-quarter 2024Q4`.
+
+| Series                   | Description                                  | Coverage        |
+| ------------------------ | -------------------------------------------- | --------------- |
+| **nyfed_mortgage**       | Home mortgage balance                        | Q1 1999–present |
+| **nyfed_he_revolving**   | Home equity revolving / HELOC balance        | Q1 1999–present |
+| **nyfed_auto**           | Auto loan balance                            | Q1 1999–present |
+| **nyfed_credit_card**    | Credit card balance                          | Q1 1999–present |
+| **nyfed_student**        | Student loan balance                         | Q1 1999–present |
+| **nyfed_other**          | Other debt — incl. medical, personal, retail | Q1 1999–present |
+| **nyfed_total**          | Total household debt                         | Q1 1999–present |
+
+Values in Excel are in **trillions of dollars**; stored in `data/raw/` as **millions** (×10⁶) for consistency with FRED series. The viz divides by 10⁶ before displaying.
+
+The dashboard shows the NY Fed chart when data is present; otherwise falls back to the FRED-only chart.

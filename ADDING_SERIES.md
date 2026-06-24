@@ -32,12 +32,12 @@ This writes `data/raw/series_id.csv` and updates `data/metadata.json` automatica
 
 Add a `(series_id_lowercase, max_age_days)` tuple to `SERIES_MAX_AGE`. Pick the threshold based on release frequency:
 
-| Release cadence | Threshold |
-|----------------|-----------|
-| Weekly (e.g. jobless claims) | `21` |
-| Monthly, jobs report (BLS) | `60` |
-| Monthly, lagged (CPI, JOLTS) | `75` |
-| Quarterly (GDP) | `215` |
+| Release cadence               | Threshold |
+| ----------------------------- | --------- |
+| Weekly (e.g. jobless claims)  | `21`      |
+| Monthly, jobs report (BLS)    | `60`      |
+| Monthly, lagged (CPI, JOLTS)  | `75`      |
+| Quarterly (GDP)               | `215`     |
 
 Then verify:
 

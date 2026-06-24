@@ -8,21 +8,21 @@ Muted, desaturated tones throughout — nothing neon or overly saturated. Every 
 
 ## Anchor Colors
 
-| Role | Hex | Use |
-|---|---|---|
-| Blue (primary) | `#1a6faf` | Headline/official series |
-| Blue (mid) | `#457b9d` | Secondary blue series |
-| Blue (light) | `#74b3ce` | Core/tertiary variant of blue |
-| Teal (primary) | `#2a9d8f` | Output, PCE, spending |
-| Teal (light) | `#52b788` | Core/secondary teal variant |
-| Amber | `#f4a261` | Consumer-facing, disposable income |
-| Amber (bright) | `#ff9f43` | Core CPI, inflation |
-| Red (primary) | `#e63946` | Headline CPI, attention series |
-| Red (mid) | `#d62828` | Unemployment, strong emphasis |
-| Red (muted) | `#bc4749` | Long-term unemployment, softer red |
-| Coral | `#e07a5f` | Secondary unemployment |
-| Coral (light) | `#e76f51` | CPI level, softer emphasis |
-| Purple | `#6a4c93` | One-off series with no natural family |
+| Role            | Hex       | Use                                   |
+| --------------- | --------- | ------------------------------------- |
+| Blue (primary)  | `#1a6faf` | Headline/official series              |
+| Blue (mid)      | `#457b9d` | Secondary blue series                 |
+| Blue (light)    | `#74b3ce` | Core/tertiary variant of blue         |
+| Teal (primary)  | `#2a9d8f` | Output, PCE, spending                 |
+| Teal (light)    | `#52b788` | Core/secondary teal variant           |
+| Amber           | `#f4a261` | Consumer-facing, disposable income    |
+| Amber (bright)  | `#ff9f43` | Core CPI, inflation                   |
+| Red (primary)   | `#e63946` | Headline CPI, attention series        |
+| Red (mid)       | `#d62828` | Unemployment, strong emphasis         |
+| Red (muted)     | `#bc4749` | Long-term unemployment, softer red    |
+| Coral           | `#e07a5f` | Secondary unemployment                |
+| Coral (light)   | `#e76f51` | CPI level, softer emphasis            |
+| Purple          | `#6a4c93` | One-off series with no natural family |
 
 ## Structural Rules
 
@@ -38,16 +38,16 @@ Muted, desaturated tones throughout — nothing neon or overly saturated. Every 
 
 ## Backgrounds & Chrome
 
-| Element | Value |
-|---|---|
-| Page background | `#f8f9fa` |
-| Card background | `#fff` |
-| Card border | `#e5e7eb` |
-| Card border radius | `10px` |
-| Card box shadow | `0 1px 3px rgba(0,0,0,0.04)` |
-| Section label color | `#999` |
-| Meta/subtitle text | `#888` |
-| Body text | `#1a1a2e` |
+| Element             | Value                         |
+| ------------------- | ----------------------------- |
+| Page background     | `#f8f9fa`                     |
+| Card background     | `#fff`                        |
+| Card border         | `#e5e7eb`                     |
+| Card border radius  | `10px`                        |
+| Card box shadow     | `0 1px 3px rgba(0,0,0,0.04)` |
+| Section label color | `#999`                        |
+| Meta/subtitle text  | `#888`                        |
+| Body text           | `#1a1a2e`                     |
 
 ## Transfer Recipe
 

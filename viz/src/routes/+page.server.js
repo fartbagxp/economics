@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
 const RAW_SERIES = [
@@ -10,6 +10,13 @@ const RAW_SERIES = [
   'gdp', 'umcsent',
   'pi', 'w875rx1', 'dspi', 'pce', 'psave', 'psavert',
   'mich', 't5yie', 't10yie',
+  'hhmsdodns', 'revolsl', 'sloas', 'mvloas', 'nonrevsl',
+];
+
+// NY Fed series are optional — charts degrade gracefully if not yet collected
+const NYFED_SERIES = [
+  'nyfed_mortgage', 'nyfed_he_revolving', 'nyfed_auto',
+  'nyfed_credit_card', 'nyfed_student', 'nyfed_other', 'nyfed_total',
 ];
 
 const DERIVED_SERIES = [
@@ -33,6 +40,11 @@ function loadCsv(path) {
     .filter(Boolean);
 }
 
+function loadCsvOptional(path) {
+  if (!existsSync(path)) return [];
+  return loadCsv(path);
+}
+
 function loadMetadata() {
   const p = join(process.cwd(), '..', 'data', 'metadata.json');
   return JSON.parse(readFileSync(p, 'utf-8'));
@@ -43,8 +55,11 @@ export function load() {
   const raw = Object.fromEntries(
     RAW_SERIES.map((id) => [id, loadCsv(join(process.cwd(), '..', 'data', 'raw', `${id}.csv`))])
   );
+  const nyfed = Object.fromEntries(
+    NYFED_SERIES.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'raw', `${id}.csv`))])
+  );
   const derived = Object.fromEntries(
     DERIVED_SERIES.map((id) => [id, loadCsv(join(process.cwd(), '..', 'data', 'derived', `${id}.csv`))])
   );
-  return { series: { ...raw, ...derived }, metadata };
+  return { series: { ...raw, ...nyfed, ...derived }, metadata };
 }
