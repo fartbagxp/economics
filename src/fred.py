@@ -113,6 +113,8 @@ class FredCollector:
             "SLOAS": "Student Loans Owned and Securitized",
             "MVLOAS": "Motor Vehicle Loans Owned and Securitized",
             "NONREVSL": "Nonrevolving Consumer Credit (Auto + Student)",
+            # Energy
+            "DCOILBRENTEU": "Crude Oil Prices: Brent - Europe",
         }
 
         for series_id, name in series_map.items():

@@ -106,6 +106,15 @@
   const incomeML  = $derived(multiLine({ income: pi, disposable: dspi }));
   const inflExpML = $derived(multiLine({ mich: mich, b5y: t5yie, b10y: t10yie }));
 
+  // Energy
+  const oilCutoff = new Date('2000-01-01');
+  const brentSpot     = $derived(parse(data.series.dcoilbrenteu).filter((d) => d.date >= oilCutoff));
+  const brentFutures  = $derived(parse(data.series.brent_futures_curve));
+  const hasFutures    = $derived(brentFutures.length > 0);
+  const oilMidDate    = $derived(new Date((oilCutoff.getTime() + (hasFutures ? brentFutures[brentFutures.length - 1].date.getTime() : new Date().getTime())) / 2));
+  const today         = new Date();
+  const brentML       = $derived(hasFutures ? multiLine({ spot: brentSpot, futures: brentFutures }) : multiLine({ spot: brentSpot }));
+
   const cpiYoyML  = $derived(multiLine({ headline: cpi_yoy,     core: core_cpi_yoy }));
   const pceYoyML  = $derived(multiLine({ headline: pce_yoy,     core: core_pce_yoy }));
   const ppiYoyML  = $derived(multiLine({ headline: ppi_yoy,     core: core_ppi_yoy }));
@@ -1101,6 +1110,64 @@
         {/snippet}
       </Plot>
       <p class="source">Source: <a href={fredUrl('revolsl')} target="_blank" rel="noopener">FRED / REVOLSL</a></p>
+    </div>
+
+  </section>
+
+  <!-- ── Energy ──────────────────────────────────────────────── -->
+  <h3 class="section-label">Energy</h3>
+  <section class="grid">
+
+    <!-- Brent Crude Oil: historical + futures curve -->
+    <div class="card wide">
+      <h2>Brent Crude Oil Price{hasFutures ? ' & Futures Curve' : ''}</h2>
+      <p class="meta">
+        Daily · Not Seasonally Adjusted · USD per Barrel · ICE Brent
+        {#if hasFutures}
+           &nbsp;·&nbsp; <span class="legend-swatch" style="background:#c77b00"></span> Spot (historical) &nbsp;
+           <span class="legend-swatch dashed" style="border-color:#e8a000"></span> Futures curve
+        {/if}
+      </p>
+      <Plot height={300} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: 'USD/bbl', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        {#if hasFutures}
+          <!-- vertical rule marking today -->
+          <RuleY data={[]} />
+        {/if}
+        <Line data={brentSpot} x="date" y="value" stroke="#c77b00" strokeWidth={1.5} />
+        {#if hasFutures}
+          <Line data={brentFutures} x="date" y="value" stroke="#e8a000" strokeWidth={1.5} strokeDasharray="5,3" />
+        {/if}
+        {#snippet overlay()}
+          <HTMLTooltip data={brentML.all} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const v = brentML.byDate.get(datum.date.getTime())}
+                <div class="tip" style:transform={datum.date > oilMidDate ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
+                  <span class="tip-label">Brent Crude Oil</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  {#if hasFutures && v}
+                    {#if v.spot    != null}<span class="tip-edu-row"><span style="color:#c77b00">●</span> Spot    <b>${v.spot.toFixed(2)}/bbl</b></span>{/if}
+                    {#if v.futures != null}<span class="tip-edu-row"><span style="color:#e8a000">●</span> Futures <b>${v.futures.toFixed(2)}/bbl</b></span>{/if}
+                  {:else}
+                    <span class="tip-val">${datum.value.toFixed(2)}/bbl</span>
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      <p class="source">
+        Source: <a href={fredUrl('dcoilbrenteu')} target="_blank" rel="noopener">FRED / DCOILBRENTEU</a> (EIA, daily spot)
+        {#if hasFutures}
+          &nbsp;· Futures: WTI term structure (CL*.NYM) + live Brent-WTI spread
+        {:else}
+          &nbsp;· Run <code>python main.py --source oil</code> to add the current futures curve
+        {/if}
+      </p>
     </div>
 
   </section>

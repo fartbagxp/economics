@@ -11,6 +11,7 @@ const RAW_SERIES = [
   'pi', 'w875rx1', 'dspi', 'pce', 'psave', 'psavert',
   'mich', 't5yie', 't10yie',
   'hhmsdodns', 'revolsl', 'sloas', 'mvloas', 'nonrevsl',
+  'dcoilbrenteu',
 ];
 
 // NY Fed series are optional — charts degrade gracefully if not yet collected
@@ -18,6 +19,9 @@ const NYFED_SERIES = [
   'nyfed_mortgage', 'nyfed_he_revolving', 'nyfed_auto',
   'nyfed_credit_card', 'nyfed_student', 'nyfed_other', 'nyfed_total',
 ];
+
+// Oil futures curve is optional — populated by: python main.py --source oil
+const OIL_SERIES = ['brent_futures_curve'];
 
 const DERIVED_SERIES = [
   'cpiaucsl_mom', 'cpiaucsl_yoy',
@@ -58,8 +62,11 @@ export function load() {
   const nyfed = Object.fromEntries(
     NYFED_SERIES.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'raw', `${id}.csv`))])
   );
+  const oil = Object.fromEntries(
+    OIL_SERIES.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'raw', `${id}.csv`))])
+  );
   const derived = Object.fromEntries(
     DERIVED_SERIES.map((id) => [id, loadCsv(join(process.cwd(), '..', 'data', 'derived', `${id}.csv`))])
   );
-  return { series: { ...raw, ...nyfed, ...derived }, metadata };
+  return { series: { ...raw, ...nyfed, ...oil, ...derived }, metadata };
 }

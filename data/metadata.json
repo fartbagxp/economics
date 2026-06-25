@@ -457,5 +457,14 @@
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
     "last_updated": "2026-06-24"
+  },
+  "dcoilbrenteu": {
+    "title": "Crude Oil Prices: Brent - Europe",
+    "units": "Dollars per Barrel",
+    "frequency": "Daily",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "last_updated": "2026-06-24 14:40:22-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/DCOILBRENTEU"
   }
 }
