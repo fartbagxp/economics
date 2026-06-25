@@ -163,8 +163,8 @@
   <section class="grid">
 
     <!-- Unemployment Rate (U-3) -->
-    <div class="card">
-      <h2>Unemployment Rate (U-3)</h2>
+    <div class="card" id="unrate">
+      <h2>Unemployment Rate (U-3) <a class="anchor-link" href="#unrate">#</a></h2>
       <p class="meta">Monthly · Seasonally Adjusted · Percent · Official measure</p>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
@@ -189,8 +189,8 @@
     </div>
 
     <!-- U-6 Unemployment -->
-    <div class="card">
-      <h2>U-6 Unemployment Rate</h2>
+    <div class="card" id="u6rate">
+      <h2>U-6 Unemployment Rate <a class="anchor-link" href="#u6rate">#</a></h2>
       <p class="meta">Monthly · Seasonally Adjusted · Percent · Broadest measure</p>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
@@ -215,8 +215,8 @@
     </div>
 
     <!-- Long-term Unemployed — % of total -->
-    <div class="card">
-      <h2>Long-Term Unemployed (27+ Weeks)</h2>
+    <div class="card" id="ltunemp-pct">
+      <h2>Long-Term Unemployed (27+ Weeks) <a class="anchor-link" href="#ltunemp-pct">#</a></h2>
       <p class="meta">Monthly · Seasonally Adjusted · % of Total Unemployed</p>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
@@ -241,8 +241,8 @@
     </div>
 
     <!-- Long-term Unemployed — count -->
-    <div class="card">
-      <h2>Long-Term Unemployed — Count</h2>
+    <div class="card" id="ltunemp-count">
+      <h2>Long-Term Unemployed — Count <a class="anchor-link" href="#ltunemp-count">#</a></h2>
       <p class="meta">Monthly · Seasonally Adjusted · Thousands of Persons</p>
       <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: 'Thousands', grid: true }}>
         <Frame />
@@ -267,8 +267,8 @@
     </div>
 
     <!-- Labor Force Participation -->
-    <div class="card wide">
-      <h2>Labor Force Participation Rate</h2>
+    <div class="card wide" id="civpart">
+      <h2>Labor Force Participation Rate <a class="anchor-link" href="#civpart">#</a></h2>
       <p class="meta">Monthly · Seasonally Adjusted · Percent</p>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
@@ -292,8 +292,8 @@
     </div>
 
     <!-- LFPR Men -->
-    <div class="card">
-      <h2>Labor Force Participation — Men</h2>
+    <div class="card" id="lfpr-men">
+      <h2>Labor Force Participation — Men <a class="anchor-link" href="#lfpr-men">#</a></h2>
       <p class="meta">Monthly · Seasonally Adjusted · Percent</p>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
@@ -317,8 +317,8 @@
     </div>
 
     <!-- LFPR Women -->
-    <div class="card">
-      <h2>Labor Force Participation — Women</h2>
+    <div class="card" id="lfpr-women">
+      <h2>Labor Force Participation — Women <a class="anchor-link" href="#lfpr-women">#</a></h2>
       <p class="meta">Monthly · Seasonally Adjusted · Percent</p>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
@@ -342,8 +342,8 @@
     </div>
 
     <!-- LFPR by Educational Attainment -->
-    <div class="card wide">
-      <h2>Labor Force Participation by Educational Attainment (25+)</h2>
+    <div class="card wide" id="lfpr-edu">
+      <h2>Labor Force Participation by Educational Attainment (25+) <a class="anchor-link" href="#lfpr-edu">#</a></h2>
       <p class="meta">
         Monthly · Seasonally Adjusted · Percent · Data from Jan 1992 ·
         <span class="legend-swatch" style="background:#bc4749"></span> Less than HS &nbsp;
@@ -382,8 +382,8 @@
     </div>
 
     <!-- Initial Jobless Claims -->
-    <div class="card wide">
-      <h2>Initial Jobless Claims</h2>
+    <div class="card wide" id="icsa">
+      <h2>Initial Jobless Claims <a class="anchor-link" href="#icsa">#</a></h2>
       <p class="meta">Weekly · Seasonally Adjusted · Number of Claims</p>
       <Plot height={300} marginLeft={64} marginRight={10} x={{ type: 'time' }} y={{ label: 'Claims', grid: true }}>
         <Frame />
@@ -414,8 +414,8 @@
   <section class="grid">
 
     <!-- CPI -->
-    <div class="card">
-      <h2>Consumer Price Index (CPI)</h2>
+    <div class="card" id="cpi">
+      <h2>Consumer Price Index (CPI) <a class="anchor-link" href="#cpi">#</a></h2>
       <p class="meta">Monthly · Seasonally Adjusted · Index 1982–84=100</p>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: 'Index', grid: true }}>
         <Frame />
@@ -439,8 +439,8 @@
     </div>
 
     <!-- Consumer Sentiment -->
-    <div class="card">
-      <h2>Consumer Sentiment (U. Michigan)</h2>
+    <div class="card" id="umcsent">
+      <h2>Consumer Sentiment (U. Michigan) <a class="anchor-link" href="#umcsent">#</a></h2>
       <p class="meta">Monthly · Not Seasonally Adjusted · Index 1966:Q1=100</p>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: 'Index', grid: true }}>
         <Frame />
@@ -464,8 +464,8 @@
     </div>
 
     <!-- GDP — full width -->
-    <div class="card wide">
-      <h2>Gross Domestic Product</h2>
+    <div class="card wide" id="gdp">
+      <h2>Gross Domestic Product <a class="anchor-link" href="#gdp">#</a></h2>
       <p class="meta">Quarterly · SAAR · Billions of Dollars</p>
       <Plot height={200} marginLeft={56} marginRight={10} x={{ type: 'time' }} y={{ label: '$B', grid: true }}>
         <Frame />
@@ -496,8 +496,8 @@
   <p class="sub-label">Year-over-Year Change (%)</p>
   <section class="grid">
 
-    <div class="card">
-      <h2>CPI — Year-over-Year</h2>
+    <div class="card" id="cpi-yoy">
+      <h2>CPI — Year-over-Year <a class="anchor-link" href="#cpi-yoy">#</a></h2>
       <p class="meta">
         Monthly · SA ·
         <span class="legend-swatch" style="background:#e63946"></span> Headline &nbsp;
@@ -531,8 +531,8 @@
       <p class="source">Source: FRED — <a href={fredUrl('cpiaucsl')} target="_blank" rel="noopener">CPIAUCSL</a> · <a href={fredUrl('cpilfesl')} target="_blank" rel="noopener">CPILFESL</a></p>
     </div>
 
-    <div class="card">
-      <h2>PCE — Year-over-Year</h2>
+    <div class="card" id="pce-yoy">
+      <h2>PCE — Year-over-Year <a class="anchor-link" href="#pce-yoy">#</a></h2>
       <p class="meta">
         Monthly · SA ·
         <span class="legend-swatch" style="background:#2a9d8f"></span> Headline &nbsp;
@@ -566,8 +566,8 @@
       <p class="source">Source: FRED — <a href={fredUrl('pcepi')} target="_blank" rel="noopener">PCEPI</a> · <a href={fredUrl('pcepilfe')} target="_blank" rel="noopener">PCEPILFE</a></p>
     </div>
 
-    <div class="card wide">
-      <h2>PPI Final Demand — Year-over-Year</h2>
+    <div class="card wide" id="ppi-yoy">
+      <h2>PPI Final Demand — Year-over-Year <a class="anchor-link" href="#ppi-yoy">#</a></h2>
       <p class="meta">
         Monthly · SA · Data from Nov 2009 ·
         <span class="legend-swatch" style="background:#457b9d"></span> Headline &nbsp;
@@ -600,8 +600,8 @@
       <p class="source">Source: FRED — <a href={fredUrl('ppifid')} target="_blank" rel="noopener">PPIFID</a> · <a href={fredUrl('ppifes')} target="_blank" rel="noopener">PPIFES</a></p>
     </div>
 
-    <div class="card wide">
-      <h2>Core Inflation Comparison — Year-over-Year</h2>
+    <div class="card wide" id="core-yoy">
+      <h2>Core Inflation Comparison — Year-over-Year <a class="anchor-link" href="#core-yoy">#</a></h2>
       <p class="meta">
         Monthly · SA · Ex. Food &amp; Energy ·
         <span class="legend-swatch" style="background:#ff9f43"></span> Core CPI &nbsp;
@@ -643,8 +643,8 @@
   <p class="sub-label">Month-over-Month Change (%)</p>
   <section class="grid">
 
-    <div class="card">
-      <h2>CPI — Month-over-Month</h2>
+    <div class="card" id="cpi-mom">
+      <h2>CPI — Month-over-Month <a class="anchor-link" href="#cpi-mom">#</a></h2>
       <p class="meta">
         Monthly · SA ·
         <span class="legend-swatch" style="background:#e63946"></span> Headline &nbsp;
@@ -677,8 +677,8 @@
       <p class="source">Source: FRED — <a href={fredUrl('cpiaucsl')} target="_blank" rel="noopener">CPIAUCSL</a> · <a href={fredUrl('cpilfesl')} target="_blank" rel="noopener">CPILFESL</a></p>
     </div>
 
-    <div class="card">
-      <h2>PCE — Month-over-Month</h2>
+    <div class="card" id="pce-mom">
+      <h2>PCE — Month-over-Month <a class="anchor-link" href="#pce-mom">#</a></h2>
       <p class="meta">
         Monthly · SA ·
         <span class="legend-swatch" style="background:#2a9d8f"></span> Headline &nbsp;
@@ -711,8 +711,8 @@
       <p class="source">Source: FRED — <a href={fredUrl('pcepi')} target="_blank" rel="noopener">PCEPI</a> · <a href={fredUrl('pcepilfe')} target="_blank" rel="noopener">PCEPILFE</a></p>
     </div>
 
-    <div class="card wide">
-      <h2>PPI Final Demand — Month-over-Month</h2>
+    <div class="card wide" id="ppi-mom">
+      <h2>PPI Final Demand — Month-over-Month <a class="anchor-link" href="#ppi-mom">#</a></h2>
       <p class="meta">
         Monthly · SA · Data from Nov 2009 ·
         <span class="legend-swatch" style="background:#457b9d"></span> Headline &nbsp;
@@ -745,8 +745,8 @@
       <p class="source">Source: FRED — <a href={fredUrl('ppifid')} target="_blank" rel="noopener">PPIFID</a> · <a href={fredUrl('ppifes')} target="_blank" rel="noopener">PPIFES</a></p>
     </div>
 
-    <div class="card wide">
-      <h2>Core Inflation Comparison — Month-over-Month</h2>
+    <div class="card wide" id="core-mom">
+      <h2>Core Inflation Comparison — Month-over-Month <a class="anchor-link" href="#core-mom">#</a></h2>
       <p class="meta">
         Monthly · SA · Ex. Food &amp; Energy ·
         <span class="legend-swatch" style="background:#ff9f43"></span> Core CPI &nbsp;
@@ -789,8 +789,8 @@
   <section class="grid">
 
     <!-- Personal Income vs Disposable Income -->
-    <div class="card wide">
-      <h2>Personal Income &amp; Disposable Personal Income</h2>
+    <div class="card wide" id="income">
+      <h2>Personal Income &amp; Disposable Personal Income <a class="anchor-link" href="#income">#</a></h2>
       <p class="meta">
         Monthly · SAAR · Billions of Dollars ·
         <span class="legend-swatch" style="background:#1a6faf"></span> Personal Income &nbsp;
@@ -823,8 +823,8 @@
     </div>
 
     <!-- Real Personal Income ex. Transfers YoY -->
-    <div class="card wide">
-      <h2>Real Personal Income Excl. Transfer Receipts, YoY Change</h2>
+    <div class="card wide" id="real-pi">
+      <h2>Real Personal Income Excl. Transfer Receipts, YoY Change <a class="anchor-link" href="#real-pi">#</a></h2>
       <p class="meta">Monthly · Inflation-Adjusted · Excludes govt transfers (Social Security, unemployment, etc.)</p>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
@@ -849,8 +849,8 @@
     </div>
 
     <!-- Personal Consumption Expenditures -->
-    <div class="card wide">
-      <h2>Personal Consumption Expenditures</h2>
+    <div class="card wide" id="pce-level">
+      <h2>Personal Consumption Expenditures <a class="anchor-link" href="#pce-level">#</a></h2>
       <p class="meta">Monthly · SAAR · Billions of Dollars</p>
       <Plot height={220} marginLeft={64} marginRight={10} x={{ type: 'time' }} y={{ label: '$B', grid: true }}>
         <Frame />
@@ -874,8 +874,8 @@
     </div>
 
     <!-- Personal Savings Level -->
-    <div class="card">
-      <h2>Personal Saving</h2>
+    <div class="card" id="psave">
+      <h2>Personal Saving <a class="anchor-link" href="#psave">#</a></h2>
       <p class="meta">Monthly · SAAR · Billions of Dollars</p>
       <Plot height={220} marginLeft={64} marginRight={10} x={{ type: 'time' }} y={{ label: '$B', grid: true }}>
         <Frame />
@@ -900,8 +900,8 @@
     </div>
 
     <!-- Personal Savings Rate -->
-    <div class="card">
-      <h2>Personal Saving Rate</h2>
+    <div class="card" id="psavert">
+      <h2>Personal Saving Rate <a class="anchor-link" href="#psavert">#</a></h2>
       <p class="meta">Monthly · Seasonally Adjusted · Percent of Disposable Income</p>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
@@ -933,8 +933,8 @@
 
     <!-- NY Fed / Equifax: full breakdown incl. HELOC + Other (medical) -->
     {#if nyfedHasData}
-    <div class="card wide">
-      <h2>Household Debt by Category — NY Fed / Equifax</h2>
+    <div class="card wide" id="debt-nyfed">
+      <h2>Household Debt by Category — NY Fed / Equifax <a class="anchor-link" href="#debt-nyfed">#</a></h2>
       <p class="meta">
         Quarterly · Not Seasonally Adjusted · Trillions of Dollars · Q1 1999–present ·
         <span class="legend-swatch" style="background:#1a6faf"></span> Mortgage &nbsp;
@@ -984,8 +984,8 @@
     </div>
 
     <!-- NY Fed: Total household debt -->
-    <div class="card wide">
-      <h2>Total Household Debt — NY Fed / Equifax</h2>
+    <div class="card wide" id="debt-total">
+      <h2>Total Household Debt — NY Fed / Equifax <a class="anchor-link" href="#debt-total">#</a></h2>
       <p class="meta">Quarterly · Not Seasonally Adjusted · Trillions of Dollars · Q1 1999–present</p>
       <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: '$T', grid: true }}>
         <Frame />
@@ -1012,8 +1012,8 @@
     </div>
     {:else}
     <!-- Fallback: FRED-sourced combined debt chart shown until NY Fed data is collected -->
-    <div class="card wide">
-      <h2>Household Debt by Category — FRED</h2>
+    <div class="card wide" id="debt-fred">
+      <h2>Household Debt by Category — FRED <a class="anchor-link" href="#debt-fred">#</a></h2>
       <p class="meta">
         Quarterly / Monthly · Not Seasonally Adjusted · Trillions of Dollars ·
         <span class="legend-swatch" style="background:#1a6faf"></span> Mortgage &nbsp;
@@ -1061,8 +1061,8 @@
     {/if}
 
     <!-- Nonrevolving consumer credit (auto + student combined, current) -->
-    <div class="card">
-      <h2>Nonrevolving Consumer Credit</h2>
+    <div class="card" id="nonrevsl">
+      <h2>Nonrevolving Consumer Credit <a class="anchor-link" href="#nonrevsl">#</a></h2>
       <p class="meta">Monthly · Not Seasonally Adjusted · Trillions of Dollars · Auto + Student combined · FRED G.19</p>
       <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: '$T', grid: true }}>
         <Frame />
@@ -1087,8 +1087,8 @@
     </div>
 
     <!-- Revolving consumer credit (credit cards) -->
-    <div class="card">
-      <h2>Revolving Consumer Credit (Credit Cards)</h2>
+    <div class="card" id="revolsl">
+      <h2>Revolving Consumer Credit (Credit Cards) <a class="anchor-link" href="#revolsl">#</a></h2>
       <p class="meta">Monthly · Not Seasonally Adjusted · Trillions of Dollars · FRED G.19</p>
       <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: '$T', grid: true }}>
         <Frame />
@@ -1119,8 +1119,8 @@
   <section class="grid">
 
     <!-- Brent Crude Oil: historical + futures curve -->
-    <div class="card wide">
-      <h2>Brent Crude Oil Price{hasFutures ? ' & Futures Curve' : ''}</h2>
+    <div class="card wide" id="brent">
+      <h2>Brent Crude Oil Price{hasFutures ? ' & Futures Curve' : ''} <a class="anchor-link" href="#brent">#</a></h2>
       <p class="meta">
         Daily · Not Seasonally Adjusted · USD per Barrel · ICE Brent
         {#if hasFutures}
@@ -1177,8 +1177,8 @@
   <section class="grid">
 
     <!-- Inflation Expectations: Survey vs Market -->
-    <div class="card wide">
-      <h2>Inflation Expectations</h2>
+    <div class="card wide" id="infl-exp">
+      <h2>Inflation Expectations <a class="anchor-link" href="#infl-exp">#</a></h2>
       <p class="meta">
         <span class="legend-swatch" style="background:#e63946"></span> U. Michigan 1-Year (survey, monthly, NSA) &nbsp;
         <span class="legend-swatch" style="background:#457b9d"></span> 5-Year Breakeven (market-based, daily) &nbsp;
@@ -1366,5 +1366,26 @@
 
   .source a:hover {
     color: #666;
+  }
+
+  h2 .anchor-link {
+    opacity: 0;
+    margin-left: 0.35em;
+    color: #bbb;
+    font-weight: 400;
+    font-size: 0.82em;
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+  h2:hover .anchor-link,
+  h2 .anchor-link:focus {
+    opacity: 1;
+  }
+  h2 .anchor-link:hover {
+    color: #555;
+  }
+
+  .card {
+    scroll-margin-top: 1rem;
   }
 </style>
