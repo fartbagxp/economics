@@ -130,7 +130,7 @@
     "units": "Number",
     "frequency": "Weekly, Ending Saturday",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-18 07:34:22-05",
+    "last_updated": "2026-06-25 07:34:24-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/ICSA"
   },
@@ -139,7 +139,7 @@
     "units": "Number",
     "frequency": "Weekly, Ending Saturday",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-18 07:34:23-05",
+    "last_updated": "2026-06-25 07:34:24-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/CCSA"
   },
