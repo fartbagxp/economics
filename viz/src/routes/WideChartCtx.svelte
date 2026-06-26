@@ -3,13 +3,14 @@
 
   let { children } = $props();
 
-  // Set initialWidth to match the actual wide-card content width so the
-  // SVG is already at the right size on first paint (before bind:clientWidth fires).
-  // Wide cards fill: min(viewport, 1100px) - 48px main padding - 40px card padding - 2px card border.
-  // We only use this for *wide* charts (not half-column cards) to avoid overflow on narrow cards.
+  // Cards using this context have min-width: 600px, which forces the grid to overflow on
+  // mobile (matching the behaviour of sections that have regular half-column cards — those
+  // push 1fr tracks to 500px each, creating a 1020px-wide grid on mobile).
+  // The card's figure content width = max(min(viewport, 1100) - 90, 600 - 42) = max(…, 558).
+  // We start the SVG at that size so bind:clientWidth never needs to resize it.
   setPlotDefaults({
     initialWidth: typeof window !== 'undefined'
-      ? Math.min(window.innerWidth, 1100) - 90
+      ? Math.max(Math.min(window.innerWidth, 1100) - 90, 558)
       : 1000
   });
 </script>

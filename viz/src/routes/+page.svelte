@@ -1181,7 +1181,7 @@
   <section class="grid">
     <WideChartCtx>
     <!-- Brent Crude Oil: historical + futures curve -->
-    <div class="card wide" id="brent">
+    <div class="card wide" id="brent" style="min-width: 600px">
       <h2>Brent Crude Oil Price{hasFutures ? ' & Futures Curve' : ''} <a class="anchor-link" href="#brent">#</a></h2>
       <p class="meta">
         Daily · Not Seasonally Adjusted · USD per Barrel · ICE Brent
@@ -1242,7 +1242,7 @@
   <section class="grid">
     <WideChartCtx>
     <!-- Inflation Expectations: Survey vs Market -->
-    <div class="card wide" id="infl-exp">
+    <div class="card wide" id="infl-exp" style="min-width: 600px">
       <h2>Inflation Expectations <a class="anchor-link" href="#infl-exp">#</a></h2>
       <p class="meta">
         <span class="legend-swatch" style="background:#e63946"></span> U. Michigan 1-Year (survey, monthly, NSA) &nbsp;
