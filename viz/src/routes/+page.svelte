@@ -1,6 +1,7 @@
 <script>
   import { Plot, Line, RuleY, Rect, HTMLTooltip, Frame } from 'svelteplot';
   import LazyChart from './LazyChart.svelte';
+  import WideChartCtx from './WideChartCtx.svelte';
 
   let { data } = $props();
 
@@ -1178,7 +1179,7 @@
   <!-- ── Energy ──────────────────────────────────────────────── -->
   <h3 class="section-label">Energy</h3>
   <section class="grid">
-
+    <WideChartCtx>
     <!-- Brent Crude Oil: historical + futures curve -->
     <div class="card wide" id="brent">
       <h2>Brent Crude Oil Price{hasFutures ? ' & Futures Curve' : ''} <a class="anchor-link" href="#brent">#</a></h2>
@@ -1232,13 +1233,14 @@
         {/if}
       </p>
     </div>
+    </WideChartCtx>
 
   </section>
 
   <!-- ── Inflation Expectations ────────────────────────────────── -->
   <h3 class="section-label">Inflation Expectations</h3>
   <section class="grid">
-
+    <WideChartCtx>
     <!-- Inflation Expectations: Survey vs Market -->
     <div class="card wide" id="infl-exp">
       <h2>Inflation Expectations <a class="anchor-link" href="#infl-exp">#</a></h2>
@@ -1278,6 +1280,7 @@
       </LazyChart>
       <p class="source">Source: FRED — <a href={fredUrl('mich')} target="_blank" rel="noopener">MICH</a> · <a href={fredUrl('t5yie')} target="_blank" rel="noopener">T5YIE</a> · <a href={fredUrl('t10yie')} target="_blank" rel="noopener">T10YIE</a></p>
     </div>
+    </WideChartCtx>
 
   </section>
 </main>
