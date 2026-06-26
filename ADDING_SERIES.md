@@ -6,13 +6,13 @@ Four files to touch, in order.
 
 ## 1. Register in the collector
 
-**FRED series** — add to `series_map` in `src/fred.py` `collect_all()`:
+**FRED series**: add to `series_map` in `src/fred.py` `collect_all()`:
 
 ```python
 "SERIES_ID": "Human-readable name",
 ```
 
-**BLS or other source** — add a `collect_series()` call in the relevant collector (`src/bls.py`) or create a new collector class following the same pattern.
+**BLS or other source**: add a `collect_series()` call in the relevant collector (`src/bls.py`) or create a new collector class following the same pattern.
 
 ---
 
