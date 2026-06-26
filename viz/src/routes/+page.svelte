@@ -1,5 +1,6 @@
 <script>
   import { Plot, Line, RuleY, Rect, HTMLTooltip, Frame } from 'svelteplot';
+  import LazyChart from './LazyChart.svelte';
 
   let { data } = $props();
 
@@ -166,6 +167,7 @@
     <div class="card" id="unrate">
       <h2>Unemployment Rate (U-3) <a class="anchor-link" href="#unrate">#</a></h2>
       <p class="meta">Monthly · Seasonally Adjusted · Percent · Official measure</p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -185,6 +187,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: <a href={fredUrl('unrate')} target="_blank" rel="noopener">FRED / UNRATE</a></p>
     </div>
 
@@ -192,6 +195,7 @@
     <div class="card" id="u6rate">
       <h2>U-6 Unemployment Rate <a class="anchor-link" href="#u6rate">#</a></h2>
       <p class="meta">Monthly · Seasonally Adjusted · Percent · Broadest measure</p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -211,6 +215,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: <a href={fredUrl('u6rate')} target="_blank" rel="noopener">FRED / U6RATE</a></p>
     </div>
 
@@ -218,6 +223,7 @@
     <div class="card" id="ltunemp-pct">
       <h2>Long-Term Unemployed (27+ Weeks) <a class="anchor-link" href="#ltunemp-pct">#</a></h2>
       <p class="meta">Monthly · Seasonally Adjusted · % of Total Unemployed</p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -237,6 +243,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: <a href={fredUrl('lns13008397')} target="_blank" rel="noopener">FRED / LNS13008397</a></p>
     </div>
 
@@ -244,6 +251,7 @@
     <div class="card" id="ltunemp-count">
       <h2>Long-Term Unemployed — Count <a class="anchor-link" href="#ltunemp-count">#</a></h2>
       <p class="meta">Monthly · Seasonally Adjusted · Thousands of Persons</p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: 'Thousands', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -263,6 +271,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: <a href={fredUrl('uemp27ov')} target="_blank" rel="noopener">FRED / UEMP27OV</a></p>
     </div>
 
@@ -270,6 +279,7 @@
     <div class="card wide" id="civpart">
       <h2>Labor Force Participation Rate <a class="anchor-link" href="#civpart">#</a></h2>
       <p class="meta">Monthly · Seasonally Adjusted · Percent</p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
@@ -288,6 +298,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: <a href={fredUrl('civpart')} target="_blank" rel="noopener">FRED / CIVPART</a></p>
     </div>
 
@@ -295,6 +306,7 @@
     <div class="card" id="lfpr-men">
       <h2>Labor Force Participation — Men <a class="anchor-link" href="#lfpr-men">#</a></h2>
       <p class="meta">Monthly · Seasonally Adjusted · Percent</p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
@@ -313,6 +325,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: <a href={fredUrl('lns11300001')} target="_blank" rel="noopener">FRED / LNS11300001</a></p>
     </div>
 
@@ -320,6 +333,7 @@
     <div class="card" id="lfpr-women">
       <h2>Labor Force Participation — Women <a class="anchor-link" href="#lfpr-women">#</a></h2>
       <p class="meta">Monthly · Seasonally Adjusted · Percent</p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
@@ -338,6 +352,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: <a href={fredUrl('lns11300002')} target="_blank" rel="noopener">FRED / LNS11300002</a></p>
     </div>
 
@@ -351,6 +366,7 @@
         <span class="legend-swatch" style="background:#457b9d"></span> Some college / Associate &nbsp;
         <span class="legend-swatch" style="background:#2a9d8f"></span> Bachelor's and higher
       </p>
+      <LazyChart height={300}>
       <Plot height={300} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
@@ -378,6 +394,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: FRED — <a href={fredUrl('lns11327659')} target="_blank" rel="noopener">LNS11327659</a> · <a href={fredUrl('lns11327660')} target="_blank" rel="noopener">LNS11327660</a> · <a href={fredUrl('lns11327689')} target="_blank" rel="noopener">LNS11327689</a> · <a href={fredUrl('lns11327662')} target="_blank" rel="noopener">LNS11327662</a></p>
     </div>
 
@@ -385,6 +402,7 @@
     <div class="card wide" id="icsa">
       <h2>Initial Jobless Claims <a class="anchor-link" href="#icsa">#</a></h2>
       <p class="meta">Weekly · Seasonally Adjusted · Number of Claims</p>
+      <LazyChart height={300}>
       <Plot height={300} marginLeft={64} marginRight={10} x={{ type: 'time' }} y={{ label: 'Claims', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -404,6 +422,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: <a href={fredUrl('icsa')} target="_blank" rel="noopener">FRED / ICSA</a></p>
     </div>
 
@@ -417,6 +436,7 @@
     <div class="card" id="cpi">
       <h2>Consumer Price Index (CPI) <a class="anchor-link" href="#cpi">#</a></h2>
       <p class="meta">Monthly · Seasonally Adjusted · Index 1982–84=100</p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: 'Index', grid: true }}>
         <Frame />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
@@ -435,6 +455,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: <a href={fredUrl('cpiaucsl')} target="_blank" rel="noopener">FRED / CPIAUCSL</a></p>
     </div>
 
@@ -442,6 +463,7 @@
     <div class="card" id="umcsent">
       <h2>Consumer Sentiment (U. Michigan) <a class="anchor-link" href="#umcsent">#</a></h2>
       <p class="meta">Monthly · Not Seasonally Adjusted · Index 1966:Q1=100</p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: 'Index', grid: true }}>
         <Frame />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
@@ -460,6 +482,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: <a href={fredUrl('umcsent')} target="_blank" rel="noopener">FRED / UMCSENT</a></p>
     </div>
 
@@ -467,6 +490,7 @@
     <div class="card wide" id="gdp">
       <h2>Gross Domestic Product <a class="anchor-link" href="#gdp">#</a></h2>
       <p class="meta">Quarterly · SAAR · Billions of Dollars</p>
+      <LazyChart height={200}>
       <Plot height={200} marginLeft={56} marginRight={10} x={{ type: 'time' }} y={{ label: '$B', grid: true }}>
         <Frame />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
@@ -485,6 +509,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: <a href={fredUrl('gdp')} target="_blank" rel="noopener">FRED / GDP</a></p>
     </div>
 
@@ -503,6 +528,7 @@
         <span class="legend-swatch" style="background:#e63946"></span> Headline &nbsp;
         <span class="legend-swatch dashed" style="border-color:#ff9f43"></span> Core (ex. Food &amp; Energy)
       </p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -528,6 +554,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: FRED — <a href={fredUrl('cpiaucsl')} target="_blank" rel="noopener">CPIAUCSL</a> · <a href={fredUrl('cpilfesl')} target="_blank" rel="noopener">CPILFESL</a></p>
     </div>
 
@@ -538,6 +565,7 @@
         <span class="legend-swatch" style="background:#2a9d8f"></span> Headline &nbsp;
         <span class="legend-swatch dashed" style="border-color:#52b788"></span> Core — Fed's preferred
       </p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -563,6 +591,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: FRED — <a href={fredUrl('pcepi')} target="_blank" rel="noopener">PCEPI</a> · <a href={fredUrl('pcepilfe')} target="_blank" rel="noopener">PCEPILFE</a></p>
     </div>
 
@@ -573,6 +602,7 @@
         <span class="legend-swatch" style="background:#457b9d"></span> Headline &nbsp;
         <span class="legend-swatch dashed" style="border-color:#74b3ce"></span> Core (ex. Foods &amp; Energy)
       </p>
+      <LazyChart height={200}>
       <Plot height={200} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -597,6 +627,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: FRED — <a href={fredUrl('ppifid')} target="_blank" rel="noopener">PPIFID</a> · <a href={fredUrl('ppifes')} target="_blank" rel="noopener">PPIFES</a></p>
     </div>
 
@@ -608,6 +639,7 @@
         <span class="legend-swatch" style="background:#52b788"></span> Core PCE (Fed's preferred) &nbsp;
         <span class="legend-swatch" style="background:#74b3ce"></span> Core PPI
       </p>
+      <LazyChart height={200}>
       <Plot height={200} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -635,6 +667,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: FRED — <a href={fredUrl('cpilfesl')} target="_blank" rel="noopener">CPILFESL</a> · <a href={fredUrl('pcepilfe')} target="_blank" rel="noopener">PCEPILFE</a> · <a href={fredUrl('ppifes')} target="_blank" rel="noopener">PPIFES</a></p>
     </div>
 
@@ -650,6 +683,7 @@
         <span class="legend-swatch" style="background:#e63946"></span> Headline &nbsp;
         <span class="legend-swatch dashed" style="border-color:#ff9f43"></span> Core (ex. Food &amp; Energy)
       </p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -674,6 +708,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: FRED — <a href={fredUrl('cpiaucsl')} target="_blank" rel="noopener">CPIAUCSL</a> · <a href={fredUrl('cpilfesl')} target="_blank" rel="noopener">CPILFESL</a></p>
     </div>
 
@@ -684,6 +719,7 @@
         <span class="legend-swatch" style="background:#2a9d8f"></span> Headline &nbsp;
         <span class="legend-swatch dashed" style="border-color:#52b788"></span> Core — Fed's preferred
       </p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -708,6 +744,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: FRED — <a href={fredUrl('pcepi')} target="_blank" rel="noopener">PCEPI</a> · <a href={fredUrl('pcepilfe')} target="_blank" rel="noopener">PCEPILFE</a></p>
     </div>
 
@@ -718,6 +755,7 @@
         <span class="legend-swatch" style="background:#457b9d"></span> Headline &nbsp;
         <span class="legend-swatch dashed" style="border-color:#74b3ce"></span> Core (ex. Foods &amp; Energy)
       </p>
+      <LazyChart height={200}>
       <Plot height={200} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -742,6 +780,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: FRED — <a href={fredUrl('ppifid')} target="_blank" rel="noopener">PPIFID</a> · <a href={fredUrl('ppifes')} target="_blank" rel="noopener">PPIFES</a></p>
     </div>
 
@@ -753,6 +792,7 @@
         <span class="legend-swatch" style="background:#52b788"></span> Core PCE (Fed's preferred) &nbsp;
         <span class="legend-swatch" style="background:#74b3ce"></span> Core PPI
       </p>
+      <LazyChart height={200}>
       <Plot height={200} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -779,6 +819,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: FRED — <a href={fredUrl('cpilfesl')} target="_blank" rel="noopener">CPILFESL</a> · <a href={fredUrl('pcepilfe')} target="_blank" rel="noopener">PCEPILFE</a> · <a href={fredUrl('ppifes')} target="_blank" rel="noopener">PPIFES</a></p>
     </div>
 
@@ -796,6 +837,7 @@
         <span class="legend-swatch" style="background:#1a6faf"></span> Personal Income &nbsp;
         <span class="legend-swatch dashed" style="border-color:#f4a261"></span> Disposable Personal Income
       </p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={64} marginRight={10} x={{ type: 'time' }} y={{ label: '$B', grid: true }}>
         <Frame />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
@@ -819,6 +861,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: FRED — <a href={fredUrl('pi')} target="_blank" rel="noopener">PI</a> · <a href={fredUrl('dspi')} target="_blank" rel="noopener">DSPI</a></p>
     </div>
 
@@ -826,6 +869,7 @@
     <div class="card wide" id="real-pi">
       <h2>Real Personal Income Excl. Transfer Receipts, YoY Change <a class="anchor-link" href="#real-pi">#</a></h2>
       <p class="meta">Monthly · Inflation-Adjusted · Excludes govt transfers (Social Security, unemployment, etc.)</p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -845,6 +889,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: <a href={fredUrl('w875rx1')} target="_blank" rel="noopener">FRED / W875RX1</a></p>
     </div>
 
@@ -852,6 +897,7 @@
     <div class="card wide" id="pce-level">
       <h2>Personal Consumption Expenditures <a class="anchor-link" href="#pce-level">#</a></h2>
       <p class="meta">Monthly · SAAR · Billions of Dollars</p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={64} marginRight={10} x={{ type: 'time' }} y={{ label: '$B', grid: true }}>
         <Frame />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
@@ -870,6 +916,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: <a href={fredUrl('pce')} target="_blank" rel="noopener">FRED / PCE</a></p>
     </div>
 
@@ -877,6 +924,7 @@
     <div class="card" id="psave">
       <h2>Personal Saving <a class="anchor-link" href="#psave">#</a></h2>
       <p class="meta">Monthly · SAAR · Billions of Dollars</p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={64} marginRight={10} x={{ type: 'time' }} y={{ label: '$B', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -896,6 +944,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: <a href={fredUrl('psave')} target="_blank" rel="noopener">FRED / PSAVE</a></p>
     </div>
 
@@ -903,6 +952,7 @@
     <div class="card" id="psavert">
       <h2>Personal Saving Rate <a class="anchor-link" href="#psavert">#</a></h2>
       <p class="meta">Monthly · Seasonally Adjusted · Percent of Disposable Income</p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -922,6 +972,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: <a href={fredUrl('psavert')} target="_blank" rel="noopener">FRED / PSAVERT</a></p>
     </div>
 
@@ -944,6 +995,7 @@
         <span class="legend-swatch" style="background:#2a9d8f"></span> Auto Loan &nbsp;
         <span class="legend-swatch" style="background:#bc4749"></span> Other (incl. medical)
       </p>
+      <LazyChart height={340}>
       <Plot height={340} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: '$T', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -976,6 +1028,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">
         Source: <a href="https://www.newyorkfed.org/microeconomics/hhdc" target="_blank" rel="noopener">NY Fed Household Debt &amp; Credit Report</a>
         (NY Fed Consumer Credit Panel / Equifax) ·
@@ -987,6 +1040,7 @@
     <div class="card wide" id="debt-total">
       <h2>Total Household Debt — NY Fed / Equifax <a class="anchor-link" href="#debt-total">#</a></h2>
       <p class="meta">Quarterly · Not Seasonally Adjusted · Trillions of Dollars · Q1 1999–present</p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: '$T', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -1006,6 +1060,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">
         Source: <a href="https://www.newyorkfed.org/microeconomics/hhdc" target="_blank" rel="noopener">NY Fed / Equifax Consumer Credit Panel</a>
       </p>
@@ -1021,6 +1076,7 @@
         <span class="legend-swatch" style="background:#f4a261"></span> Student Loans (through Q4 2024) &nbsp;
         <span class="legend-swatch" style="background:#2a9d8f"></span> Auto Loans (through Q4 2024)
       </p>
+      <LazyChart height={320}>
       <Plot height={320} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: '$T', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -1049,6 +1105,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">
         Source: FRED —
         <a href={fredUrl('hhmsdodns')} target="_blank" rel="noopener">HHMSDODNS</a> ·
@@ -1064,6 +1121,7 @@
     <div class="card" id="nonrevsl">
       <h2>Nonrevolving Consumer Credit <a class="anchor-link" href="#nonrevsl">#</a></h2>
       <p class="meta">Monthly · Not Seasonally Adjusted · Trillions of Dollars · Auto + Student combined · FRED G.19</p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: '$T', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -1083,6 +1141,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: <a href={fredUrl('nonrevsl')} target="_blank" rel="noopener">FRED / NONREVSL</a></p>
     </div>
 
@@ -1090,6 +1149,7 @@
     <div class="card" id="revolsl">
       <h2>Revolving Consumer Credit (Credit Cards) <a class="anchor-link" href="#revolsl">#</a></h2>
       <p class="meta">Monthly · Not Seasonally Adjusted · Trillions of Dollars · FRED G.19</p>
+      <LazyChart height={220}>
       <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: '$T', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -1109,6 +1169,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: <a href={fredUrl('revolsl')} target="_blank" rel="noopener">FRED / REVOLSL</a></p>
     </div>
 
@@ -1128,6 +1189,7 @@
            <span class="legend-swatch dashed" style="border-color:#e8a000"></span> Futures curve
         {/if}
       </p>
+      <LazyChart height={300}>
       <Plot height={300} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: 'USD/bbl', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -1160,6 +1222,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">
         Source: <a href={fredUrl('dcoilbrenteu')} target="_blank" rel="noopener">FRED / DCOILBRENTEU</a> (EIA, daily spot)
         {#if hasFutures}
@@ -1184,6 +1247,7 @@
         <span class="legend-swatch" style="background:#457b9d"></span> 5-Year Breakeven (market-based, daily) &nbsp;
         <span class="legend-swatch dashed" style="border-color:#74b3ce"></span> 10-Year Breakeven (market-based, daily)
       </p>
+      <LazyChart height={280}>
       <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
@@ -1211,6 +1275,7 @@
           </HTMLTooltip>
         {/snippet}
       </Plot>
+      </LazyChart>
       <p class="source">Source: FRED — <a href={fredUrl('mich')} target="_blank" rel="noopener">MICH</a> · <a href={fredUrl('t5yie')} target="_blank" rel="noopener">T5YIE</a> · <a href={fredUrl('t10yie')} target="_blank" rel="noopener">T10YIE</a></p>
     </div>
 
