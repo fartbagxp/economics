@@ -1,4 +1,4 @@
-# Setup
+# Collection
 
 ## Prerequisites
 
@@ -18,13 +18,14 @@ Create a `.env` file with your FRED API key:
 FRED_API_TOKEN=your_fred_api_key
 ```
 
-A FRED API key is free — register at [fred.stlouisfed.org/docs/api/api_key.html](https://fred.stlouisfed.org/docs/api/api_key.html).
+A FRED API key is free. Register at [fred.stlouisfed.org/docs/api/api_key.html](https://fred.stlouisfed.org/docs/api/api_key.html).
 
 ## Data Sources
 
 - **FRED (Federal Reserve Economic Data)**: CPI, GDP, Consumer Confidence, Unemployment, Household Debt
 - **BLS (Bureau of Labor Statistics)**: Additional labor and economic statistics
 - **NY Fed Consumer Credit Panel / Equifax**: Household debt by category (mortgage, HELOC, auto, credit card, student, other)
+- **Yahoo Finance (via yfinance)**: Brent crude oil futures curve (estimated from WTI contracts + live Brent–WTI spread)
 
 ## Data Collected
 
@@ -73,9 +74,9 @@ All series are stored in **millions of dollars** and displayed as **trillions** 
 
 ### NY Fed Household Debt and Credit (Equifax-sourced)
 
-Collected via `python main.py --source nyfed`.
+Collected via `uv run python main.py --source nyfed`.
 
-The NY Fed publishes a quarterly Excel workbook based on the **NY Fed Consumer Credit Panel**, a nationally representative 5% sample of Equifax credit bureau records. This is the most granular publicly available quarterly debt breakdown, including a separate "Other" category that captures medical debt, personal loans, and retail financing.
+The NY Fed publishes a quarterly Excel workbook based on the NY Fed Consumer Credit Panel, a nationally representative 5% sample of Equifax credit bureau records. It has the most detailed public breakdown by debt category, including a separate "Other" that captures medical debt, personal loans, and retail financing.
 
 **Report page**: [newyorkfed.org/microeconomics/hhdc](https://www.newyorkfed.org/microeconomics/hhdc)
 

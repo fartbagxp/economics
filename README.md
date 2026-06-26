@@ -1,9 +1,9 @@
 # Economics
 
-US economic data collection and analysis project using FRED and BLS data sources.
+US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored as CSV in git, with derived metrics and an interactive SvelteKit dashboard.
 
-- [Setup](docs/setup.md) on how to run this repository.
-- [Collection](docs/collection.md) for the collection of datasets.
+- [Setup](docs/setup.md): how to run the repo
+- [Collection](docs/collection.md): what data is collected and where it comes from
 
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
