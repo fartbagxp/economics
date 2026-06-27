@@ -10,7 +10,9 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 [![Deploy Viz](https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/deploy-viz.yml?label=deploy%20viz&style=flat-square)](https://github.com/fartbagxp/economics/actions/workflows/deploy-viz.yml)
 [![Lint](https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/lint.yml?label=lint&style=flat-square)](https://github.com/fartbagxp/economics/actions/workflows/lint.yml)
 [![Live Dashboard](https://img.shields.io/badge/dashboard-live-brightgreen?style=flat-square)](https://fartbagxp.github.io/economics/)
-<!-- DATASET-COUNT -->![53 datasets](https://img.shields.io/badge/datasets-53-blue?style=flat-square)<!-- /DATASET-COUNT -->
+<!-- DATASET-COUNT -->
+![53 datasets](https://img.shields.io/badge/datasets-53-blue?style=flat-square)
+<!-- /DATASET-COUNT -->
 
 - [Setup](docs/setup.md): how to run the repo
 - [Collection](docs/collection.md): what data is collected and where it comes from
