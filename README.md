@@ -6,13 +6,13 @@
 
 US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored as CSV in git, with derived metrics and an interactive SvelteKit dashboard.
 
-[![Data Update](https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/update.yml?label=data%20update&style=flat-square)](https://github.com/fartbagxp/economics/actions/workflows/update.yml)
-[![Deploy Viz](https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/deploy-viz.yml?label=deploy%20viz&style=flat-square)](https://github.com/fartbagxp/economics/actions/workflows/deploy-viz.yml)
-[![Lint](https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/lint.yml?label=lint&style=flat-square)](https://github.com/fartbagxp/economics/actions/workflows/lint.yml)
-[![Live Dashboard](https://img.shields.io/badge/dashboard-live-brightgreen?style=flat-square)](https://fartbagxp.github.io/economics/)
-<!-- DATASET-COUNT -->
-![53 datasets](https://img.shields.io/badge/datasets-53-blue?style=flat-square)
-<!-- /DATASET-COUNT -->
+<p>
+  <a href="https://github.com/fartbagxp/economics/actions/workflows/update.yml"><img src="https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/update.yml?label=data%20update&style=flat-square" alt="Data Update"></a>
+  <a href="https://github.com/fartbagxp/economics/actions/workflows/deploy-viz.yml"><img src="https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/deploy-viz.yml?label=deploy%20viz&style=flat-square" alt="Deploy Viz"></a>
+  <a href="https://github.com/fartbagxp/economics/actions/workflows/lint.yml"><img src="https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/lint.yml?label=lint&style=flat-square" alt="Lint"></a>
+  <a href="https://fartbagxp.github.io/economics/"><img src="https://img.shields.io/badge/dashboard-live-brightgreen?style=flat-square" alt="Live Dashboard"></a>
+  <!-- DATASET-COUNT --><img src="https://img.shields.io/badge/datasets-53-blue?style=flat-square" alt="53 datasets"><!-- /DATASET-COUNT -->
+</p>
 
 - [Setup](docs/setup.md): how to run the repo
 - [Collection](docs/collection.md): what data is collected and where it comes from

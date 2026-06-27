@@ -15,7 +15,7 @@ DATASET_COUNT_RE = re.compile(
 
 def _dataset_count_badge(count: int) -> str:
     badge = f"https://img.shields.io/badge/datasets-{count}-blue?style=flat-square"
-    return f"<!-- DATASET-COUNT -->\n![{count} datasets]({badge})\n<!-- /DATASET-COUNT -->"
+    return f'<!-- DATASET-COUNT --><img src="{badge}" alt="{count} datasets"><!-- /DATASET-COUNT -->'
 
 
 def update_readme(readme_path: str = "README.md", data_dir: str = "data/raw"):
