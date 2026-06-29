@@ -12,6 +12,8 @@ const RAW_SERIES = [
   'mich', 't5yie', 't10yie',
   'hhmsdodns', 'revolsl', 'sloas', 'mvloas', 'nonrevsl',
   'dcoilbrenteu',
+  'gs2', 'gs10', 'gs20', 'gs30', 'fedfunds',
+  'dfedtaru', 'dfedtarl',
 ];
 
 // NY Fed series are optional — charts degrade gracefully if not yet collected

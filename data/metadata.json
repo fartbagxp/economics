@@ -466,5 +466,68 @@
     "last_updated": "2026-06-24 14:40:22-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/DCOILBRENTEU"
+  },
+  "gs10": {
+    "title": "Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis",
+    "units": "Percent",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "last_updated": "2026-06-01 15:17:15-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/GS10"
+  },
+  "gs20": {
+    "title": "Market Yield on U.S. Treasury Securities at 20-Year Constant Maturity, Quoted on an Investment Basis",
+    "units": "Percent",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "last_updated": "2026-06-01 15:18:11-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/GS20"
+  },
+  "gs30": {
+    "title": "Market Yield on U.S. Treasury Securities at 30-Year Constant Maturity, Quoted on an Investment Basis",
+    "units": "Percent",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "last_updated": "2026-06-01 15:17:18-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/GS30"
+  },
+  "fedfunds": {
+    "title": "Federal Funds Effective Rate",
+    "units": "Percent",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "last_updated": "2026-06-01 15:18:49-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/FEDFUNDS"
+  },
+  "dfedtaru": {
+    "title": "Federal Funds Target Range - Upper Limit",
+    "units": "Percent",
+    "frequency": "Daily, 7-Day",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "last_updated": "2026-06-28 07:02:12-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/DFEDTARU"
+  },
+  "dfedtarl": {
+    "title": "Federal Funds Target Range - Lower Limit",
+    "units": "Percent",
+    "frequency": "Daily, 7-Day",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "last_updated": "2026-06-28 07:02:12-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/DFEDTARL"
+  },
+  "gs2": {
+    "title": "Market Yield on U.S. Treasury Securities at 2-Year Constant Maturity, Quoted on an Investment Basis",
+    "units": "Percent",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "last_updated": "2026-06-01 15:17:59-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/GS2"
   }
 }
