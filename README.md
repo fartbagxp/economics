@@ -11,7 +11,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
   <a href="https://github.com/fartbagxp/economics/actions/workflows/deploy-viz.yml"><img src="https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/deploy-viz.yml?label=deploy%20viz&style=flat-square" alt="Deploy Viz"></a>
   <a href="https://github.com/fartbagxp/economics/actions/workflows/lint.yml"><img src="https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/lint.yml?label=lint&style=flat-square" alt="Lint"></a>
   <a href="https://fartbagxp.github.io/economics/"><img src="https://img.shields.io/badge/dashboard-live-brightgreen?style=flat-square" alt="Live Dashboard"></a>
-  <!-- DATASET-COUNT --><img src="https://img.shields.io/badge/datasets-53-blue?style=flat-square" alt="53 datasets"><!-- /DATASET-COUNT -->
+  <!-- DATASET-COUNT --><img src="https://img.shields.io/badge/datasets-60-blue?style=flat-square" alt="60 datasets"><!-- /DATASET-COUNT -->
 </p>
 
 - [Setup](docs/setup.md): how to run the repo
@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-06-27 18:34 UTC_
+_Last updated: 2026-06-29 01:48 UTC_
 
 _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 points (quarterly)._
 
