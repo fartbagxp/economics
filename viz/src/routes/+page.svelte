@@ -1,5 +1,5 @@
 <script>
-  import { Plot, Line, RuleY, Rect, HTMLTooltip, Frame } from 'svelteplot';
+  import { Plot, Line, RuleY, Rect, AreaY, HTMLTooltip, Frame } from 'svelteplot';
   import LazyChart from './LazyChart.svelte';
   import WideChartCtx from './WideChartCtx.svelte';
 
@@ -107,6 +107,24 @@
 
   const incomeML  = $derived(multiLine({ income: pi, disposable: dspi }));
   const inflExpML = $derived(multiLine({ mich: mich, b5y: t5yie, b10y: t10yie }));
+
+  // Interest rates
+  const ratesCutoff = new Date('1977-02-01');
+  const gs2       = $derived(parse(data.series.gs2).filter((d) => d.date >= ratesCutoff));
+  const gs10      = $derived(parse(data.series.gs10).filter((d) => d.date >= ratesCutoff));
+  const gs20      = $derived(parse(data.series.gs20).filter((d) => d.date >= ratesCutoff));
+  const gs30      = $derived(parse(data.series.gs30).filter((d) => d.date >= ratesCutoff));
+  const fedfunds  = $derived(parse(data.series.fedfunds).filter((d) => d.date >= ratesCutoff));
+  const ratesML   = $derived(multiLine({ fedfunds, gs2, gs10, gs20, gs30 }));
+  const ratesMid  = $derived(new Date((ratesCutoff.getTime() + new Date().getTime()) / 2));
+  const targetBand = $derived((() => {
+    const lowerMap = new Map(parse(data.series.dfedtarl).map((d) => [d.date.getTime(), d.value]));
+    return parse(data.series.dfedtaru).map((d) => ({
+      date: d.date,
+      upper: d.value,
+      lower: lowerMap.get(d.date.getTime()) ?? d.value,
+    }));
+  })());
 
   // Energy
   const oilCutoff = new Date('2000-01-01');
@@ -1279,6 +1297,60 @@
       </Plot>
       </LazyChart>
       <p class="source">Source: FRED — <a href={fredUrl('mich')} target="_blank" rel="noopener">MICH</a> · <a href={fredUrl('t5yie')} target="_blank" rel="noopener">T5YIE</a> · <a href={fredUrl('t10yie')} target="_blank" rel="noopener">T10YIE</a></p>
+    </div>
+    </WideChartCtx>
+
+  </section>
+
+  <!-- ── Interest Rates ───────────────────────────────────────── -->
+  <h3 class="section-label">Interest Rates</h3>
+  <section class="grid" style="grid-template-columns: minmax(500px, 1fr) minmax(500px, 1fr)">
+    <WideChartCtx>
+    <!-- Treasury Yields & Fed Funds Rate -->
+    <div class="card wide" id="interest-rates">
+      <h2>Treasury Yields &amp; Federal Funds Rate <a class="anchor-link" href="#interest-rates">#</a></h2>
+      <p class="meta">
+        <span class="legend-swatch" style="background:#6d6875"></span> Fed Funds Rate &nbsp;
+        <span class="legend-swatch" style="background:#6d6875; opacity:0.35; height:10px; border-radius:2px; border: 1.5px solid #6d6875"></span> Fed Target Range (since 2008) &nbsp;
+        <span class="legend-swatch" style="background:#f4a261"></span> 2-Year Treasury &nbsp;
+        <span class="legend-swatch" style="background:#e63946"></span> 10-Year Treasury &nbsp;
+        <span class="legend-swatch" style="background:#457b9d"></span> 20-Year Treasury &nbsp;
+        <span class="legend-swatch" style="background:#2a9d8f"></span> 30-Year Treasury
+      </p>
+      <LazyChart height={280}>
+      <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions.filter((r) => r.end >= ratesCutoff)} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <AreaY data={targetBand} x="date" y1="lower" y2="upper" fill="#6d6875" fillOpacity={0.15} stroke="none" />
+        <Line data={gs30} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
+        <Line data={gs20} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
+        <Line data={gs10} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
+        <Line data={gs2} x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
+        <Line data={fedfunds} x="date" y="value" stroke="#6d6875" strokeWidth={1.5} />
+        {#snippet overlay()}
+          <HTMLTooltip data={ratesML.all} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const v = ratesML.byDate.get(datum.date.getTime())}
+                <div class="tip" style:transform={datum.date > ratesMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
+                  <span class="tip-label">Interest Rates</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  {#if v}
+                    {#if v.fedfunds != null}<span class="tip-edu-row"><span style="color:#6d6875">●</span> Fed Funds &nbsp;<b>{v.fedfunds?.toFixed(2)}%</b></span>{/if}
+                    {#if v.gs2 != null}<span class="tip-edu-row"><span style="color:#f4a261">●</span> 2-Year &nbsp;<b>{v.gs2?.toFixed(2)}%</b></span>{/if}
+                    {#if v.gs10 != null}<span class="tip-edu-row"><span style="color:#e63946">●</span> 10-Year &nbsp;<b>{v.gs10?.toFixed(2)}%</b></span>{/if}
+                    {#if v.gs20 != null}<span class="tip-edu-row"><span style="color:#457b9d">●</span> 20-Year &nbsp;<b>{v.gs20?.toFixed(2)}%</b></span>{/if}
+                    {#if v.gs30 != null}<span class="tip-edu-row"><span style="color:#2a9d8f">●</span> 30-Year &nbsp;<b>{v.gs30?.toFixed(2)}%</b></span>{/if}
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      <p class="source">Source: FRED — <a href={fredUrl('fedfunds')} target="_blank" rel="noopener">FEDFUNDS</a> · <a href={fredUrl('dfedtaru')} target="_blank" rel="noopener">DFEDTARU</a> · <a href={fredUrl('dfedtarl')} target="_blank" rel="noopener">DFEDTARL</a> · <a href={fredUrl('gs2')} target="_blank" rel="noopener">GS2</a> · <a href={fredUrl('gs10')} target="_blank" rel="noopener">GS10</a> · <a href={fredUrl('gs20')} target="_blank" rel="noopener">GS20</a> · <a href={fredUrl('gs30')} target="_blank" rel="noopener">GS30</a></p>
     </div>
     </WideChartCtx>
 
