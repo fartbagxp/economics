@@ -5,6 +5,7 @@ import polars as pl
 
 INFLATION_SERIES = ["cpiaucsl", "cpilfesl", "pcepi", "pcepilfe", "ppifid", "ppifes"]
 INCOME_YOY_SERIES = ["w875rx1"]
+PAYROLL_SERIES = ["ces0000000001"]
 
 
 class Deriver:
@@ -39,10 +40,31 @@ class Deriver:
             .drop_nulls("value")
         )
 
+    def _diff(self, df, periods):
+        return (
+            df.with_columns(
+                (pl.col("value") - pl.col("value").shift(periods)).alias("value")
+            )
+            .slice(periods)
+            .drop_nulls("value")
+        )
+
+    def _rolling_mean(self, df, window):
+        return (
+            df.with_columns(pl.col("value").rolling_mean(window).alias("value"))
+            .drop_nulls("value")
+        )
+
     def derive_series(self, series_id):
         df = self._load(series_id)
         self._save(self._pct_change(df, 1), f"{series_id}_mom")
         self._save(self._pct_change(df, 12), f"{series_id}_yoy")
+
+    def derive_payrolls(self, series_id):
+        df = self._load(series_id)
+        change = self._diff(df, 1)
+        self._save(change, f"{series_id}_chg")
+        self._save(self._rolling_mean(change, 3), f"{series_id}_chg_3mo")
 
     def derive_all(self):
         for series_id in INFLATION_SERIES:
@@ -54,5 +76,10 @@ class Deriver:
             try:
                 df = self._load(series_id)
                 self._save(self._pct_change(df, 12), f"{series_id}_yoy")
+            except Exception as e:
+                print(f"❌ Error deriving {series_id}: {e}")
+        for series_id in PAYROLL_SERIES:
+            try:
+                self.derive_payrolls(series_id)
             except Exception as e:
                 print(f"❌ Error deriving {series_id}: {e}")

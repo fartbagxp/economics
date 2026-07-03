@@ -13,7 +13,7 @@ class BlsCollector:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.metadata_file = self.output_dir.parent / "metadata.json"
 
-    def save_metadata(self, series_id: str, name: str):
+    def save_metadata(self, series_id: str, name: str, units: str = "Value"):
         """Save or update metadata for a BLS series."""
         if self.metadata_file.exists():
             with open(self.metadata_file, "r") as f:
@@ -23,9 +23,9 @@ class BlsCollector:
 
         all_metadata[series_id.lower()] = {
             "title": name,
-            "units": "Value",
+            "units": units,
             "frequency": "Monthly",
-            "seasonal_adjustment": "",
+            "seasonal_adjustment": "Seasonally Adjusted",
             "last_updated": "",
             "source": "U.S. Bureau of Labor Statistics",
             "source_url": f"https://data.bls.gov/timeseries/{series_id.upper()}",
@@ -34,7 +34,7 @@ class BlsCollector:
         with open(self.metadata_file, "w") as f:
             json.dump(all_metadata, f, indent=2)
 
-    def collect_series(self, series_id: str, name: str):
+    def collect_series(self, series_id: str, name: str, units: str = "Value"):
         """Collect a single series from BLS."""
         print(f"📊 Fetching {name} ({series_id}) from BLS...")
         import requests
@@ -73,10 +73,22 @@ class BlsCollector:
                 filename = f"{series_id.lower()}.csv"
                 filepath = self.output_dir / filename
                 df.write_csv(filepath)
-                self.save_metadata(series_id, name)
+                self.save_metadata(series_id, name, units)
                 print(f"✅ Saved {filename} ({len(df)} rows)")
                 return df
             else:
                 print(f"❌ BLS API error: {json_data.get('message', 'Unknown error')}")
         else:
             print(f"❌ HTTP error: {response.status_code}")
+
+    def collect_all(self):
+        """Collect all default BLS economic indicators."""
+        series_map = {
+            "CES0000000001": ("Total Nonfarm Payroll Employment", "Thousands of Persons"),
+        }
+
+        for series_id, (name, units) in series_map.items():
+            try:
+                self.collect_series(series_id, name, units)
+            except Exception as e:
+                print(f"❌ Error fetching {series_id}: {e}")

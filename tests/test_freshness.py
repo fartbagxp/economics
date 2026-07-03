@@ -41,7 +41,7 @@ SERIES_MAX_AGE = [
     ("lns14000089", 60),
     ("lns14024230", 60),
     ("uemp27ov", 60),
-    ("lns13008397", 60),
+    ("lns13025703", 60),
     ("lns11300001", 60),
     ("lns11300002", 60),
     ("lns11327659", 60),
@@ -68,6 +68,16 @@ SERIES_MAX_AGE = [
     # Daily — TIPS-based breakeven rates
     ("t5yie", 21),
     ("t10yie", 21),
+    # Monthly — Fed funds & treasury constant maturity rates
+    ("fedfunds", 60),
+    ("gs2", 60),
+    ("gs10", 60),
+    ("gs20", 60),
+    ("gs30", 60),
+    # Daily — Fed funds target range (updates on FOMC decisions, but FRED
+    # republishes the unchanged value daily)
+    ("dfedtaru", 21),
+    ("dfedtarl", 21),
 ]
 
 # Must match RAW_SERIES in viz/src/routes/+page.server.js

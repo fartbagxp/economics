@@ -197,15 +197,6 @@
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/UEMP27OV"
   },
-  "lns13008397": {
-    "title": "Of Total Unemployed, Percent Unemployed Less Than 5 Weeks",
-    "units": "Percent",
-    "frequency": "Monthly",
-    "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-02 08:32:55-05",
-    "source": "FRED, Federal Reserve Bank of St. Louis",
-    "source_url": "https://fred.stlouisfed.org/series/LNS13008397"
-  },
   "jtshir": {
     "title": "Hires: Total Nonfarm",
     "units": "Rate",
@@ -472,7 +463,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-06-01 15:17:15-05",
+    "last_updated": "2026-07-01 15:16:36-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/GS10"
   },
@@ -481,7 +472,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-06-01 15:18:11-05",
+    "last_updated": "2026-07-01 15:16:36-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/GS20"
   },
@@ -490,7 +481,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-06-01 15:17:18-05",
+    "last_updated": "2026-07-01 15:16:24-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/GS30"
   },
@@ -499,7 +490,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-06-01 15:18:49-05",
+    "last_updated": "2026-07-01 15:16:34-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/FEDFUNDS"
   },
@@ -508,7 +499,7 @@
     "units": "Percent",
     "frequency": "Daily, 7-Day",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-06-28 07:02:12-05",
+    "last_updated": "2026-07-02 07:02:28-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/DFEDTARU"
   },
@@ -517,7 +508,7 @@
     "units": "Percent",
     "frequency": "Daily, 7-Day",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-06-28 07:02:12-05",
+    "last_updated": "2026-07-02 07:02:32-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/DFEDTARL"
   },
@@ -526,8 +517,17 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-06-01 15:17:59-05",
+    "last_updated": "2026-07-01 15:16:32-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/GS2"
+  },
+  "lns13025703": {
+    "title": "Of Total Unemployed, Percent Unemployed 27 Weeks & over",
+    "units": "Percent",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted",
+    "last_updated": "2026-07-02 08:32:52-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/LNS13025703"
   }
 }

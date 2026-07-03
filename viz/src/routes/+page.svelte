@@ -28,8 +28,11 @@
 
   const unrate       = $derived(parse(data.series.unrate).filter((d) => d.date >= cutoff));
   const u6rate       = $derived(parse(data.series.u6rate).filter((d) => d.date >= cutoff));
-  const ltunempPct   = $derived(parse(data.series.lns13008397).filter((d) => d.date >= cutoff));
+  const ltunempPct   = $derived(parse(data.series.lns13025703).filter((d) => d.date >= cutoff));
   const ltunempCount = $derived(parse(data.series.uemp27ov).filter((d) => d.date >= cutoff));
+  const payrollChg    = $derived(parse(data.series.ces0000000001_chg).filter((d) => d.date >= cutoff));
+  const payrollChg3mo = $derived(parse(data.series.ces0000000001_chg_3mo).filter((d) => d.date >= cutoff));
+  const payrollML = $derived(multiLine({ change: payrollChg, avg3mo: payrollChg3mo }));
   const civpart      = $derived(parse(data.series.civpart).filter((d) => d.date >= cutoff));
   const lfprMen      = $derived(parse(data.series.lns11300001).filter((d) => d.date >= cutoff));
   const lfprWomen    = $derived(parse(data.series.lns11300002).filter((d) => d.date >= cutoff));
@@ -168,6 +171,10 @@
     return `https://fred.stlouisfed.org/series/${id.toUpperCase()}`;
   }
 
+  function blsUrl(id) {
+    return `https://data.bls.gov/timeseries/${id.toUpperCase()}`;
+  }
+
 </script>
 
 <svelte:head>
@@ -263,7 +270,7 @@
         {/snippet}
       </Plot>
       </LazyChart>
-      <p class="source">Source: <a href={fredUrl('lns13008397')} target="_blank" rel="noopener">FRED / LNS13008397</a></p>
+      <p class="source">Source: <a href={fredUrl('lns13025703')} target="_blank" rel="noopener">FRED / LNS13025703</a></p>
     </div>
 
     <!-- Long-term Unemployed — count -->
@@ -292,6 +299,43 @@
       </Plot>
       </LazyChart>
       <p class="source">Source: <a href={fredUrl('uemp27ov')} target="_blank" rel="noopener">FRED / UEMP27OV</a></p>
+    </div>
+
+    <!-- Total Nonfarm Payrolls — Monthly Change -->
+    <div class="card wide" id="payrolls">
+      <h2>Total Nonfarm Payrolls — Monthly Change <a class="anchor-link" href="#payrolls">#</a></h2>
+      <p class="meta">
+        Monthly · Seasonally Adjusted · Thousands of Jobs ·
+        <span class="legend-swatch" style="background:#a8dadc"></span> Monthly Change &nbsp;
+        <span class="legend-swatch" style="background:#457b9d"></span> 3-Month Average
+      </p>
+      <LazyChart height={220}>
+      <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: 'Thousands', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={payrollChg} x="date" y="value" stroke="#a8dadc" strokeWidth={1.5} />
+        <Line data={payrollChg3mo} x="date" y="value" stroke="#457b9d" strokeWidth={2} />
+        {#snippet overlay()}
+          <HTMLTooltip data={payrollML.all} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const v = payrollML.byDate.get(datum.date.getTime())}
+                <div class="tip" style:transform={tipTransform(datum)}>
+                  <span class="tip-label">Nonfarm Payrolls — Change</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  {#if v}
+                    <span class="tip-edu-row"><span style="color:#a8dadc">●</span> Monthly  <b>{v.change?.toLocaleString('en-US', { maximumFractionDigits: 0 })}K</b></span>
+                    <span class="tip-edu-row"><span style="color:#457b9d">●</span> 3-Mo Avg <b>{v.avg3mo?.toLocaleString('en-US', { maximumFractionDigits: 0 })}K</b></span>
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      <p class="source">Source: <a href={blsUrl('ces0000000001')} target="_blank" rel="noopener">BLS / CES0000000001</a></p>
     </div>
 
     <!-- Labor Force Participation -->

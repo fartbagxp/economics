@@ -90,7 +90,7 @@ class FredCollector:
             "ICSA": "Initial Claims",
             "CCSA": "Continued Claims",
             "UEMP27OV": "Civilians Unemployed for 27 Weeks and Over",
-            "LNS13008397": "Long-Term Unemployed (27+ Weeks) as Percent of Total Unemployed",
+            "LNS13025703": "Long-Term Unemployed (27+ Weeks) as Percent of Total Unemployed",
             "JTSHIR": "Job Openings and Labor Turnover: Hires Rate",
             "LNS11300001": "Labor Force Participation Rate - Men",
             "LNS11300002": "Labor Force Participation Rate - Women",
@@ -115,6 +115,14 @@ class FredCollector:
             "NONREVSL": "Nonrevolving Consumer Credit (Auto + Student)",
             # Energy
             "DCOILBRENTEU": "Crude Oil Prices: Brent - Europe",
+            # Fed Funds & Treasury Rates
+            "FEDFUNDS": "Federal Funds Effective Rate",
+            "GS2": "2-Year Treasury Constant Maturity Rate",
+            "GS10": "10-Year Treasury Constant Maturity Rate",
+            "GS20": "20-Year Treasury Constant Maturity Rate",
+            "GS30": "30-Year Treasury Constant Maturity Rate",
+            "DFEDTARU": "Federal Funds Target Range - Upper Limit",
+            "DFEDTARL": "Federal Funds Target Range - Lower Limit",
         }
 
         for series_id, name in series_map.items():
