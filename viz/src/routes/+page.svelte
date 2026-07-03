@@ -305,12 +305,13 @@
     <div class="card wide" id="payrolls">
       <h2>Total Nonfarm Payrolls — Monthly Change <a class="anchor-link" href="#payrolls">#</a></h2>
       <p class="meta">
-        Monthly · Seasonally Adjusted · Thousands of Jobs ·
+        Monthly · Seasonally Adjusted · Thousands of Jobs · Y-axis uses a symlog scale so the
+        April 2020 COVID outlier (-20,469K) doesn't flatten normal month-to-month variation ·
         <span class="legend-swatch" style="background:#a8dadc"></span> Monthly Change &nbsp;
         <span class="legend-swatch" style="background:#457b9d"></span> 3-Month Average
       </p>
       <LazyChart height={220}>
-      <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: 'Thousands', grid: true }}>
+      <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: 'Thousands', grid: true, type: 'symlog' }}>
         <Frame />
         <RuleY data={[0]} />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
