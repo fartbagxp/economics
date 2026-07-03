@@ -34,16 +34,17 @@ class BlsCollector:
         with open(self.metadata_file, "w") as f:
             json.dump(all_metadata, f, indent=2)
 
-    def collect_series(self, series_id: str, name: str, units: str = "Value"):
-        """Collect a single series from BLS."""
-        print(f"📊 Fetching {name} ({series_id}) from BLS...")
+    def _fetch_year_range(self, series_id: str, start_year: int, end_year: int):
+        """Fetch one BLS API request. The public (unregistered) API silently
+        truncates any request spanning more than 10 years instead of erroring,
+        so callers must chunk requests into <=10-year windows."""
         import requests
 
         headers = {"Content-type": "application/json"}
         data = {
             "seriesid": [series_id],
-            "startyear": "1990",
-            "endyear": str(datetime.now().year),
+            "startyear": str(start_year),
+            "endyear": str(end_year),
         }
 
         response = requests.post(
@@ -52,34 +53,53 @@ class BlsCollector:
             headers=headers,
         )
 
-        if response.status_code == 200:
-            json_data = response.json()
-            if json_data["status"] == "REQUEST_SUCCEEDED":
-                series = json_data["Results"]["series"][0]["data"]
-
-                dates = []
-                values = []
-                for item in series:
-                    year = item["year"]
-                    period = item["period"]
-                    if period.startswith("M"):
-                        month = period[1:]
-                        date_str = f"{year}-{month}-01"
-                        dates.append(datetime.strptime(date_str, "%Y-%m-%d"))
-                        values.append(float(item["value"]))
-
-                df = pl.DataFrame({"date": dates, "value": values}).sort("date")
-
-                filename = f"{series_id.lower()}.csv"
-                filepath = self.output_dir / filename
-                df.write_csv(filepath)
-                self.save_metadata(series_id, name, units)
-                print(f"✅ Saved {filename} ({len(df)} rows)")
-                return df
-            else:
-                print(f"❌ BLS API error: {json_data.get('message', 'Unknown error')}")
-        else:
+        if response.status_code != 200:
             print(f"❌ HTTP error: {response.status_code}")
+            return []
+
+        json_data = response.json()
+        if json_data["status"] != "REQUEST_SUCCEEDED":
+            print(f"❌ BLS API error: {json_data.get('message', 'Unknown error')}")
+            return []
+
+        return json_data["Results"]["series"][0]["data"]
+
+    def collect_series(self, series_id: str, name: str, units: str = "Value"):
+        """Collect a single series from BLS, from 1990 to the current year."""
+        print(f"📊 Fetching {name} ({series_id}) from BLS...")
+
+        current_year = datetime.now().year
+        start_year = 1990
+        raw_items = []
+        year = start_year
+        while year <= current_year:
+            end_year = min(year + 9, current_year)
+            raw_items.extend(self._fetch_year_range(series_id, year, end_year))
+            year = end_year + 1
+
+        dates = []
+        values = []
+        for item in raw_items:
+            year = item["year"]
+            period = item["period"]
+            if period.startswith("M"):
+                month = period[1:]
+                date_str = f"{year}-{month}-01"
+                dates.append(datetime.strptime(date_str, "%Y-%m-%d"))
+                values.append(float(item["value"]))
+
+        if not dates:
+            print(f"❌ No data returned for {series_id}")
+            return None
+
+        df = pl.DataFrame({"date": dates, "value": values}).unique("date").sort("date")
+
+        filename = f"{series_id.lower()}.csv"
+        filepath = self.output_dir / filename
+        df.write_csv(filepath)
+        self.save_metadata(series_id, name, units)
+        print(f"✅ Saved {filename} ({len(df)} rows)")
+        return df
 
     def collect_all(self):
         """Collect all default BLS economic indicators."""
