@@ -52,7 +52,21 @@ A FRED API key is free. Register at [fred.stlouisfed.org/docs/api/api_key.html](
 - **LNS14000089**: Unemployment Rate - Ages 25-54
 - **LNS14024230**: Unemployment Rate - Ages 55 and over
 
+### Fed Funds & Treasury Rates
+
+- **FEDFUNDS**: Federal Funds Effective Rate (monthly)
+- **GS2, GS10, GS20, GS30**: Treasury Constant Maturity Rates — 2/10/20/30-Year (monthly)
+- **DFEDTARU, DFEDTARL**: Federal Funds Target Range — Upper/Lower Limit (daily)
+
 Raw data is saved to `data/raw/` as CSV files, with metadata stored in `data/metadata.json`.
+
+### Payrolls (BLS)
+
+Collected via `uv run python main.py --source bls` (fetched directly from the BLS public API, not mirrored through FRED).
+
+- **CES0000000001**: Total Nonfarm Payroll Employment (thousands of persons, seasonally adjusted)
+
+Two derived series are computed by `Deriver`: the month-over-month change in thousands (`ces0000000001_chg`) and its 3-month rolling average (`ces0000000001_chg_3mo`), since the initial print is volatile and gets revised.
 
 ### Household Debt
 

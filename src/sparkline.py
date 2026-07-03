@@ -71,6 +71,8 @@ def _fmt_change(val, units: str) -> str:
         return f"{sign}{val:.1f}pp"
     if "billion" in units.lower():
         return f"{sign}{val:.1f}B"
+    if "thousand" in units.lower():
+        return f"{sign}{val:,.0f}K"
     if "number" in units.lower():
         return f"{sign}{val:,.0f}"
     return f"{sign}{val:.2f}"
@@ -81,6 +83,8 @@ def _fmt_value(val, units: str) -> str:
         return f"{val:.1f}%"
     if "billion" in units.lower():
         return f"${val:,.1f}B"
+    if "thousand" in units.lower():
+        return f"{val:,.0f}K"
     if "number" in units.lower():
         return f"{val:,.0f}"
     return f"{val:.2f}"
@@ -123,6 +127,7 @@ def build_dashboard(data_dir: str = "data/raw") -> str:
             "Labor Market Overview",
             [
                 ("unrate", "Unemployment Rate (U-3)"),
+                ("ces0000000001", "Total Nonfarm Payrolls"),
                 ("civpart", "Labor Force Participation"),
                 ("icsa", "Initial Jobless Claims"),
                 ("ccsa", "Continued Claims"),

@@ -44,6 +44,8 @@ def main():
 
         if args.series:
             bls_collector.collect_series(args.series, args.series)
+        else:
+            bls_collector.collect_all()
 
     if args.source in ["nyfed", "all"]:
         nyfed_collector = NyFedCollector(args.output)
