@@ -529,5 +529,14 @@
     "last_updated": "2026-07-02 08:32:52-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/LNS13025703"
+  },
+  "ces0000000001": {
+    "title": "Total Nonfarm Payroll Employment",
+    "units": "Thousands of Persons",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted",
+    "last_updated": "",
+    "source": "U.S. Bureau of Labor Statistics",
+    "source_url": "https://data.bls.gov/timeseries/CES0000000001"
   }
 }

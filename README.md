@@ -11,7 +11,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
   <a href="https://github.com/fartbagxp/economics/actions/workflows/deploy-viz.yml"><img src="https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/deploy-viz.yml?label=deploy%20viz&style=flat-square" alt="Deploy Viz"></a>
   <a href="https://github.com/fartbagxp/economics/actions/workflows/lint.yml"><img src="https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/lint.yml?label=lint&style=flat-square" alt="Lint"></a>
   <a href="https://fartbagxp.github.io/economics/"><img src="https://img.shields.io/badge/dashboard-live-brightgreen?style=flat-square" alt="Live Dashboard"></a>
-  <!-- DATASET-COUNT --><img src="https://img.shields.io/badge/datasets-60-blue?style=flat-square" alt="60 datasets"><!-- /DATASET-COUNT -->
+  <!-- DATASET-COUNT --><img src="https://img.shields.io/badge/datasets-61-blue?style=flat-square" alt="61 datasets"><!-- /DATASET-COUNT -->
 </p>
 
 - [Setup](docs/setup.md): how to run the repo
@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-07-03 03:23 UTC_
+_Last updated: 2026-07-03 03:56 UTC_
 
 _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 points (quarterly)._
 
@@ -30,6 +30,7 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 | Indicator                 | Trend                      | Latest    | Chg (prev) | Chg (1Y) | As of      |
 | ------------------------- | -------------------------- | --------- | ---------- | -------- | ---------- |
 | Unemployment Rate (U-3)   | `▂▃▃▂▂▃▂▁▃▃▃▅▂▅▅▆█▆▅▆▅▅▅▃` | 4.2%      | -0.1pp     | -0.1pp   | 2026-06-01 |
+| Total Nonfarm Payrolls    | `▁▁▁▁▂▂▂▃▃▃▃▄▄▄▅▅▅▆▆▆▆▇▇█` | 130,783K  | +317K      | +3,188K  | 1999-12-01 |
 | Labor Force Participation | `▇███▆▆▆▇▆▆▇▆▅▅▅▆▆▆▄▃▃▂▂▁` | 61.5%     | -0.3pp     | -0.9pp   | 2026-06-01 |
 | Initial Jobless Claims    | `▄▄██▄▄▅▅▃▄▃▅▄▅▁▂▄▄▄▇█▇▅▅` | 215,000   | -1,000     | -16,000  | 2026-06-27 |
 | Continued Claims          | `▇▅▆▇▇▅█▆▆▄▅▂▄▄▂▁▂▁▂▁▂▃▄▄` | 1,814,000 | +2,000     | -140,000 | 2026-06-20 |
