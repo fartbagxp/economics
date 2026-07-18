@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-07-11 18:24 UTC_
+_Last updated: 2026-07-18 18:25 UTC_
 
 _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 points (quarterly)._
 
@@ -32,8 +32,8 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 | Unemployment Rate (U-3)   | `▂▃▃▂▂▃▂▁▃▃▃▅▂▅▅▆█▆▅▆▅▅▅▃` | 4.2%      | -0.1pp     | -0.1pp   | 2026-06-01 |
 | Total Nonfarm Payrolls    | `▁▁▁▂▂▄▃▄▄▅▅▅▅▅▅▄▄▄▅▄▆▆▇█` | 158,984K  | +57K       | +506K    | 2026-06-01 |
 | Labor Force Participation | `▇███▆▆▆▇▆▆▇▆▅▅▅▆▆▆▄▃▃▂▂▁` | 61.5%     | -0.3pp     | -0.9pp   | 2026-06-01 |
-| Initial Jobless Claims    | `▄██▄▄▅▅▃▄▃▅▄▅▁▂▄▄▄▇█▇▅▅▅` | 215,000   | -2,000     | -13,000  | 2026-07-04 |
-| Continued Claims          | `▅▆▇▇▅█▆▆▄▅▂▄▄▂▁▂▁▂▁▂▃▄▃▄` | 1,814,000 | +8,000     | -138,000 | 2026-06-27 |
+| Initial Jobless Claims    | `██▄▄▅▅▃▄▃▅▄▅▁▂▄▄▄▇█▇▅▅▅▄` | 208,000   | -8,000     | -13,000  | 2026-07-11 |
+| Continued Claims          | `▆▇▇▅█▆▆▄▅▂▄▄▂▁▂▁▂▁▂▃▄▃▄▃` | 1,805,000 | -16,000    | -144,000 | 2026-07-04 |
 
 ### Unemployment Measures (U1–U6)
 
@@ -60,6 +60,6 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 | Indicator                     | Trend                      | Latest     | Chg (prev) | Chg (1Y) | As of      |
 | ----------------------------- | -------------------------- | ---------- | ---------- | -------- | ---------- |
 | GDP                           | `▁▂▂▂▃▃▃▄▄▄▅▅▅▅▅▆▆▆▆▆▇▇▇█` | $31,865.7B | +443.2B    | +1823.6B | 2026-01-01 |
-| CPI (All Urban)               | `▁▁▁▁▁▁▂▂▂▃▃▃▃▃▄▄▄▅▅▅▅▆▇█` | 333.98     | +1.57      | +13.68   | 2026-05-01 |
+| CPI (All Urban)               | `▁▁▁▁▁▂▂▂▃▃▃▃▃▄▄▄▅▅▅▅▆▇█▇` | 332.57     | -1.41      | +11.95   | 2026-06-01 |
 | Consumer Sentiment (U. Mich.) | `▆▆▆▇▇▇█▇▅▃▂▂▄▅▄▃▃▂▂▃▃▃▂▁` | 44.80      | -5.00      | -7.40    | 2026-05-01 |
 <!-- ECONOMIC-DATA-END -->
