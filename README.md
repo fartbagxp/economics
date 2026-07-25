@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-07-18 18:25 UTC_
+_Last updated: 2026-07-25 18:25 UTC_
 
 _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 points (quarterly)._
 
@@ -32,8 +32,8 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 | Unemployment Rate (U-3)   | `▂▃▃▂▂▃▂▁▃▃▃▅▂▅▅▆█▆▅▆▅▅▅▃` | 4.2%      | -0.1pp     | -0.1pp   | 2026-06-01 |
 | Total Nonfarm Payrolls    | `▁▁▁▂▂▄▃▄▄▅▅▅▅▅▅▄▄▄▅▄▆▆▇█` | 158,984K  | +57K       | +506K    | 2026-06-01 |
 | Labor Force Participation | `▇███▆▆▆▇▆▆▇▆▅▅▅▆▆▆▄▃▃▂▂▁` | 61.5%     | -0.3pp     | -0.9pp   | 2026-06-01 |
-| Initial Jobless Claims    | `██▄▄▅▅▃▄▃▅▄▅▁▂▄▄▄▇█▇▅▅▅▄` | 208,000   | -8,000     | -13,000  | 2026-07-11 |
-| Continued Claims          | `▆▇▇▅█▆▆▄▅▂▄▄▂▁▂▁▂▁▂▃▄▃▄▃` | 1,805,000 | -16,000    | -144,000 | 2026-07-04 |
+| Initial Jobless Claims    | `█▄▄▅▅▃▄▃▆▄▅▁▂▅▄▅▇█▇▅▅▅▄▁` | 187,000   | -22,000    | -31,000  | 2026-07-18 |
+| Continued Claims          | `▇▇▅█▆▆▄▅▂▄▄▂▁▂▁▂▁▂▃▄▃▄▃▃` | 1,796,000 | -2,000     | -145,000 | 2026-07-11 |
 
 ### Unemployment Measures (U1–U6)
 
