@@ -3,9 +3,10 @@ Sanity checks for data freshness and viz coverage.
 
 Freshness thresholds are based on typical release lags per frequency:
   - Weekly (ICSA, CCSA): released every Thursday, expect data within 21 days
-  - Monthly (labor): observation date is the 1st of the month; data released up to
-    ~5 weeks later, so worst-case age just before the next release is ~56 days
-    (60-day threshold)
+  - Monthly (labor): observation date is the 1st of the month; released the first
+    Friday of the following month. Worst case is two adjacent 31-day months plus
+    a release as late as the 7th, e.g. Jul 1 -> Aug 1 (31) -> Sep 1 (31) -> Sep 7
+    release (7) = 69 days just before the next release (70-day threshold)
   - Monthly (CPI/PPI): BLS releases ~2-3 weeks after month end; 75-day threshold
   - Monthly (PCE/PI/Michigan): BEA/UMich releases at end of following month;
     worst-case age just before next release is ~88 days (90-day threshold)
@@ -29,25 +30,25 @@ SERIES_MAX_AGE = [
     ("icsa", 21),
     ("ccsa", 21),
     # Monthly
-    ("unrate", 60),
-    ("civpart", 60),
-    ("u1rate", 60),
-    ("u2rate", 60),
-    ("u4rate", 60),
-    ("u5rate", 60),
-    ("u6rate", 60),
-    ("lns14000012", 60),
-    ("lns14000036", 60),
-    ("lns14000089", 60),
-    ("lns14024230", 60),
-    ("uemp27ov", 60),
-    ("lns13025703", 60),
-    ("lns11300001", 60),
-    ("lns11300002", 60),
-    ("lns11327659", 60),
-    ("lns11327660", 60),
-    ("lns11327689", 60),
-    ("lns11327662", 60),
+    ("unrate", 70),
+    ("civpart", 70),
+    ("u1rate", 70),
+    ("u2rate", 70),
+    ("u4rate", 70),
+    ("u5rate", 70),
+    ("u6rate", 70),
+    ("lns14000012", 70),
+    ("lns14000036", 70),
+    ("lns14000089", 70),
+    ("lns14024230", 70),
+    ("uemp27ov", 70),
+    ("lns13025703", 70),
+    ("lns11300001", 70),
+    ("lns11300002", 70),
+    ("lns11327659", 70),
+    ("lns11327660", 70),
+    ("lns11327689", 70),
+    ("lns11327662", 70),
     ("jtshir", 95),
     ("cpiaucsl", 75),
     ("cpilfesl", 75),
@@ -69,11 +70,11 @@ SERIES_MAX_AGE = [
     ("t5yie", 21),
     ("t10yie", 21),
     # Monthly — Fed funds & treasury constant maturity rates
-    ("fedfunds", 60),
-    ("gs2", 60),
-    ("gs10", 60),
-    ("gs20", 60),
-    ("gs30", 60),
+    ("fedfunds", 70),
+    ("gs2", 70),
+    ("gs10", 70),
+    ("gs20", 70),
+    ("gs30", 70),
     # Daily — Fed funds target range (updates on FOMC decisions, but FRED
     # republishes the unchanged value daily)
     ("dfedtaru", 21),
