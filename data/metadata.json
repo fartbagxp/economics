@@ -13,7 +13,7 @@
     "units": "Billions of Dollars",
     "frequency": "Quarterly",
     "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
-    "last_updated": "2026-06-25 07:50:52-05",
+    "last_updated": "2026-07-30 10:07:52-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/GDP"
   },
@@ -22,7 +22,7 @@
     "units": "Index 1966:Q1=100",
     "frequency": "Monthly",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-06-26 12:22:18-05",
+    "last_updated": "2026-07-31 10:03:19-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/UMCSENT"
   },
@@ -130,7 +130,7 @@
     "units": "Number",
     "frequency": "Weekly, Ending Saturday",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-23 07:34:18-05",
+    "last_updated": "2026-07-30 07:36:19-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/ICSA"
   },
@@ -139,7 +139,7 @@
     "units": "Number",
     "frequency": "Weekly, Ending Saturday",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-23 07:34:17-05",
+    "last_updated": "2026-07-30 07:36:18-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/CCSA"
   },
@@ -157,7 +157,7 @@
     "units": "Index 2017=100",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-25 07:43:23-05",
+    "last_updated": "2026-07-30 12:01:34-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/PCEPI"
   },
@@ -166,7 +166,7 @@
     "units": "Index 2017=100",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-06-25 07:43:26-05",
+    "last_updated": "2026-07-30 12:01:26-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/PCEPILFE"
   },
@@ -265,7 +265,7 @@
     "units": "Billions of Dollars",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
-    "last_updated": "2026-06-25 07:43:20-05",
+    "last_updated": "2026-07-30 09:40:11-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/PI"
   },
@@ -274,7 +274,7 @@
     "units": "Billions of Dollars",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
-    "last_updated": "2026-06-25 07:43:28-05",
+    "last_updated": "2026-07-30 09:40:12-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/DSPI"
   },
@@ -283,7 +283,7 @@
     "units": "Billions of Dollars",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
-    "last_updated": "2026-06-25 07:43:22-05",
+    "last_updated": "2026-07-30 12:01:31-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/PCE"
   },
@@ -292,7 +292,7 @@
     "units": "Billions of Dollars",
     "frequency": "Quarterly",
     "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
-    "last_updated": "2026-06-25 07:50:39-05",
+    "last_updated": "2026-07-30 10:07:26-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/PSAVE"
   },
@@ -301,7 +301,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
-    "last_updated": "2026-06-25 07:43:23-05",
+    "last_updated": "2026-07-30 09:40:15-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/PSAVERT"
   },
@@ -310,7 +310,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-06-26 12:22:17-05",
+    "last_updated": "2026-07-31 10:03:19-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/MICH"
   },
@@ -319,7 +319,7 @@
     "units": "Percent",
     "frequency": "Daily",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-07-24 16:03:15-05",
+    "last_updated": "2026-07-31 16:03:29-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/T5YIE"
   },
@@ -328,7 +328,7 @@
     "units": "Percent",
     "frequency": "Daily",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-07-24 16:03:15-05",
+    "last_updated": "2026-07-31 16:03:30-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/T10YIE"
   },
@@ -337,7 +337,7 @@
     "units": "Billions of Chained 2017 Dollars",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
-    "last_updated": "2026-06-25 07:43:18-05",
+    "last_updated": "2026-07-30 12:01:18-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/W875RX1"
   },
@@ -393,7 +393,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-07-25"
+    "last_updated": "2026-08-01"
   },
   "nyfed_he_revolving": {
     "title": "NY Fed: Home Equity Revolving (HELOC) Balance",
@@ -402,7 +402,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-07-25"
+    "last_updated": "2026-08-01"
   },
   "nyfed_auto": {
     "title": "NY Fed: Auto Loan Balance",
@@ -411,7 +411,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-07-25"
+    "last_updated": "2026-08-01"
   },
   "nyfed_credit_card": {
     "title": "NY Fed: Credit Card Balance",
@@ -420,7 +420,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-07-25"
+    "last_updated": "2026-08-01"
   },
   "nyfed_student": {
     "title": "NY Fed: Student Loan Balance",
@@ -429,7 +429,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-07-25"
+    "last_updated": "2026-08-01"
   },
   "nyfed_other": {
     "title": "NY Fed: Other Debt Balance (incl. medical)",
@@ -438,7 +438,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-07-25"
+    "last_updated": "2026-08-01"
   },
   "nyfed_total": {
     "title": "NY Fed: Total Household Debt Balance",
@@ -447,14 +447,14 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-07-25"
+    "last_updated": "2026-08-01"
   },
   "dcoilbrenteu": {
     "title": "Crude Oil Prices: Brent - Europe",
     "units": "Dollars per Barrel",
     "frequency": "Daily",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-07-22 12:18:15-05",
+    "last_updated": "2026-07-29 12:17:18-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/DCOILBRENTEU"
   },
@@ -499,7 +499,7 @@
     "units": "Percent",
     "frequency": "Daily, 7-Day",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-07-25 07:01:12-05",
+    "last_updated": "2026-08-01 07:01:16-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/DFEDTARU"
   },
@@ -508,7 +508,7 @@
     "units": "Percent",
     "frequency": "Daily, 7-Day",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-07-25 07:01:12-05",
+    "last_updated": "2026-08-01 07:01:16-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/DFEDTARL"
   },

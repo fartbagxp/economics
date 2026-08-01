@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-07-25 18:25 UTC_
+_Last updated: 2026-08-01 20:47 UTC_
 
 _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 points (quarterly)._
 
@@ -32,8 +32,8 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 | Unemployment Rate (U-3)   | `▂▃▃▂▂▃▂▁▃▃▃▅▂▅▅▆█▆▅▆▅▅▅▃` | 4.2%      | -0.1pp     | -0.1pp   | 2026-06-01 |
 | Total Nonfarm Payrolls    | `▁▁▁▂▂▄▃▄▄▅▅▅▅▅▅▄▄▄▅▄▆▆▇█` | 158,984K  | +57K       | +506K    | 2026-06-01 |
 | Labor Force Participation | `▇███▆▆▆▇▆▆▇▆▅▅▅▆▆▆▄▃▃▂▂▁` | 61.5%     | -0.3pp     | -0.9pp   | 2026-06-01 |
-| Initial Jobless Claims    | `█▄▄▅▅▃▄▃▆▄▅▁▂▅▄▅▇█▇▅▅▅▄▁` | 187,000   | -22,000    | -31,000  | 2026-07-18 |
-| Continued Claims          | `▇▇▅█▆▆▄▅▂▄▄▂▁▂▁▂▁▂▃▄▃▄▃▃` | 1,796,000 | -2,000     | -145,000 | 2026-07-11 |
+| Initial Jobless Claims    | `▄▄▅▅▃▄▃▆▄▅▁▂▅▄▅▇█▇▅▅▅▄▁▂` | 197,000   | +9,000     | -22,000  | 2026-07-25 |
+| Continued Claims          | `▇▅█▆▆▄▅▂▄▄▂▁▂▁▂▁▂▃▄▃▄▃▂▂` | 1,782,000 | -7,000     | -154,000 | 2026-07-18 |
 
 ### Unemployment Measures (U1–U6)
 
@@ -59,7 +59,7 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 
 | Indicator                     | Trend                      | Latest     | Chg (prev) | Chg (1Y) | As of      |
 | ----------------------------- | -------------------------- | ---------- | ---------- | -------- | ---------- |
-| GDP                           | `▁▂▂▂▃▃▃▄▄▄▅▅▅▅▅▆▆▆▆▆▇▇▇█` | $31,865.7B | +443.2B    | +1823.6B | 2026-01-01 |
+| GDP                           | `▁▁▁▂▂▃▃▃▄▄▄▄▅▅▅▅▆▆▆▆▇▇▇█` | $32,475.2B | +609.5B    | +1989.5B | 2026-04-01 |
 | CPI (All Urban)               | `▁▁▁▁▁▂▂▂▃▃▃▃▃▄▄▄▅▅▅▅▆▇█▇` | 332.57     | -1.41      | +11.95   | 2026-06-01 |
-| Consumer Sentiment (U. Mich.) | `▆▆▆▇▇▇█▇▅▃▂▂▄▅▄▃▃▂▂▃▃▃▂▁` | 44.80      | -5.00      | -7.40    | 2026-05-01 |
+| Consumer Sentiment (U. Mich.) | `▆▆▇▇▇█▇▅▃▂▂▄▅▄▃▃▂▂▃▃▃▂▁▂` | 49.50      | +4.70      | -11.20   | 2026-06-01 |
 <!-- ECONOMIC-DATA-END -->
