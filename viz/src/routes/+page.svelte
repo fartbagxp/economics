@@ -108,6 +108,17 @@
   const nyfedML = $derived(multiLine({ mortgage: nyfedMortgage, heloc: nyfedHeloc, auto: nyfedAuto, creditCard: nyfedCreditCard, student: nyfedStudent, other: nyfedOther }));
   const nyfedMidDate = $derived(nyfedHasData ? new Date((nyfedCutoff.getTime() + new Date().getTime()) / 2) : midDate);
 
+  // NY Fed 90+ day delinquency rates (percent of balance, Q1 2003–present)
+  const dqMortgage   = $derived(parse(data.series.nyfed_delinq_mortgage));
+  const dqHeloc      = $derived(parse(data.series.nyfed_delinq_he_revolving));
+  const dqAuto       = $derived(parse(data.series.nyfed_delinq_auto));
+  const dqCreditCard = $derived(parse(data.series.nyfed_delinq_credit_card));
+  const dqStudent    = $derived(parse(data.series.nyfed_delinq_student));
+  const dqOther      = $derived(parse(data.series.nyfed_delinq_other));
+  const dqHasData    = $derived(dqCreditCard.length > 0);
+  const dqML = $derived(multiLine({ mortgage: dqMortgage, heloc: dqHeloc, auto: dqAuto, creditCard: dqCreditCard, student: dqStudent, other: dqOther }));
+  const dqMid = $derived(dqHasData ? new Date((dqCreditCard[0].date.getTime() + dqCreditCard[dqCreditCard.length - 1].date.getTime()) / 2) : midDate);
+
   const incomeML  = $derived(multiLine({ income: pi, disposable: dspi }));
   const inflExpML = $derived(multiLine({ mich: mich, b5y: t5yie, b10y: t10yie }));
 
@@ -1139,6 +1150,61 @@
         Source: <a href="https://www.newyorkfed.org/microeconomics/hhdc" target="_blank" rel="noopener">NY Fed / Equifax Consumer Credit Panel</a>
       </p>
     </div>
+
+    <!-- NY Fed: 90+ day delinquency rates by loan type -->
+    {#if dqHasData}
+    <div class="card wide" id="delinquency">
+      <h2>90+ Day Delinquency by Loan Type — NY Fed / Equifax <a class="anchor-link" href="#delinquency">#</a></h2>
+      <p class="meta">
+        Quarterly · Not Seasonally Adjusted · Percent of Balance · Q1 2003–present ·
+        <span class="legend-swatch" style="background:#e63946"></span> Credit Card &nbsp;
+        <span class="legend-swatch" style="background:#f4a261"></span> Student Loan &nbsp;
+        <span class="legend-swatch" style="background:#2a9d8f"></span> Auto Loan &nbsp;
+        <span class="legend-swatch" style="background:#1a6faf"></span> Mortgage &nbsp;
+        <span class="legend-swatch dashed" style="border-color:#457b9d"></span> HELOC &nbsp;
+        <span class="legend-swatch" style="background:#bc4749"></span> Other (incl. medical)
+      </p>
+      <LazyChart height={340}>
+      <Plot height={340} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '% of balance', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={dqHeloc}      x="date" y="value" stroke="#457b9d" strokeWidth={1.5} strokeDasharray="5,3" />
+        <Line data={dqOther}      x="date" y="value" stroke="#bc4749" strokeWidth={1.5} />
+        <Line data={dqMortgage}   x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
+        <Line data={dqAuto}       x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
+        <Line data={dqStudent}    x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
+        <Line data={dqCreditCard} x="date" y="value" stroke="#e63946" strokeWidth={2} />
+        {#snippet overlay()}
+          <HTMLTooltip data={dqML.all} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const v = dqML.byDate.get(datum.date.getTime())}
+                <div class="tip" style:transform={datum.date > dqMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
+                  <span class="tip-label">90+ Day Delinquency</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  {#if v}
+                    {#if v.creditCard != null}<span class="tip-edu-row"><span style="color:#e63946">●</span> Credit Card <b>{v.creditCard.toFixed(2)}%</b></span>{/if}
+                    {#if v.student    != null}<span class="tip-edu-row"><span style="color:#f4a261">●</span> Student     <b>{v.student.toFixed(2)}%</b></span>{/if}
+                    {#if v.auto       != null}<span class="tip-edu-row"><span style="color:#2a9d8f">●</span> Auto        <b>{v.auto.toFixed(2)}%</b></span>{/if}
+                    {#if v.mortgage   != null}<span class="tip-edu-row"><span style="color:#1a6faf">●</span> Mortgage    <b>{v.mortgage.toFixed(2)}%</b></span>{/if}
+                    {#if v.heloc      != null}<span class="tip-edu-row"><span style="color:#457b9d">●</span> HELOC       <b>{v.heloc.toFixed(2)}%</b></span>{/if}
+                    {#if v.other      != null}<span class="tip-edu-row"><span style="color:#bc4749">●</span> Other       <b>{v.other.toFixed(2)}%</b></span>{/if}
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      <p class="source">
+        Source: <a href="https://www.newyorkfed.org/microeconomics/hhdc" target="_blank" rel="noopener">NY Fed Household Debt &amp; Credit Report</a>
+        (NY Fed Consumer Credit Panel / Equifax) ·
+        Student-loan delinquency reporting was paused 2020–2024 under pandemic forbearance, so that series is artificially near zero for those years
+      </p>
+    </div>
+    {/if}
     {:else}
     <!-- Fallback: FRED-sourced combined debt chart shown until NY Fed data is collected -->
     <div class="card wide" id="debt-fred">
@@ -1398,6 +1464,45 @@
   <h3 class="section-label">Interest Rates</h3>
   <section class="grid" style="grid-template-columns: minmax(500px, 1fr) minmax(500px, 1fr)">
     <WideChartCtx>
+    <!-- Mortgage Rates -->
+    <div class="card wide" id="mortgage-rates">
+      <h2>30- &amp; 15-Year Fixed Mortgage Rates <a class="anchor-link" href="#mortgage-rates">#</a></h2>
+      <p class="meta">
+        Weekly · Not Seasonally Adjusted · Freddie Mac Primary Mortgage Market Survey &nbsp;·&nbsp;
+        <span class="legend-swatch" style="background:#e63946"></span> 30-Year Fixed &nbsp;
+        <span class="legend-swatch" style="background:#2a9d8f"></span> 15-Year Fixed
+      </p>
+      <LazyChart height={280}>
+      <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions.filter((r) => r.end >= ratesCutoff)} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={mort30} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
+        <Line data={mort15} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
+        {#snippet overlay()}
+          <HTMLTooltip data={mortML.all} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const v = mortML.byDate.get(datum.date.getTime())}
+                <div class="tip" style:transform={datum.date > ratesMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
+                  <span class="tip-label">Mortgage Rates</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  {#if v}
+                    {#if v.m30 != null}<span class="tip-edu-row"><span style="color:#e63946">●</span> 30-Year <b>{v.m30?.toFixed(2)}%</b></span>{/if}
+                    {#if v.m15 != null}<span class="tip-edu-row"><span style="color:#2a9d8f">●</span> 15-Year <b>{v.m15?.toFixed(2)}%</b></span>{/if}
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      <p class="source">Source: FRED — <a href={fredUrl('mortgage30us')} target="_blank" rel="noopener">MORTGAGE30US</a> · <a href={fredUrl('mortgage15us')} target="_blank" rel="noopener">MORTGAGE15US</a> (Freddie Mac PMMS)</p>
+    </div>
+    </WideChartCtx>
+
+    <WideChartCtx>
     <!-- Treasury Yields & Fed Funds Rate -->
     <div class="card wide" id="interest-rates">
       <h2>Treasury Yields &amp; Federal Funds Rate <a class="anchor-link" href="#interest-rates">#</a></h2>
@@ -1443,45 +1548,6 @@
       </Plot>
       </LazyChart>
       <p class="source">Source: FRED — <a href={fredUrl('fedfunds')} target="_blank" rel="noopener">FEDFUNDS</a> · <a href={fredUrl('dfedtaru')} target="_blank" rel="noopener">DFEDTARU</a> · <a href={fredUrl('dfedtarl')} target="_blank" rel="noopener">DFEDTARL</a> · <a href={fredUrl('gs2')} target="_blank" rel="noopener">GS2</a> · <a href={fredUrl('gs10')} target="_blank" rel="noopener">GS10</a> · <a href={fredUrl('gs20')} target="_blank" rel="noopener">GS20</a> · <a href={fredUrl('gs30')} target="_blank" rel="noopener">GS30</a></p>
-    </div>
-    </WideChartCtx>
-
-    <WideChartCtx>
-    <!-- Mortgage Rates -->
-    <div class="card wide" id="mortgage-rates">
-      <h2>30- &amp; 15-Year Fixed Mortgage Rates <a class="anchor-link" href="#mortgage-rates">#</a></h2>
-      <p class="meta">
-        Weekly · Not Seasonally Adjusted · Freddie Mac Primary Mortgage Market Survey &nbsp;·&nbsp;
-        <span class="legend-swatch" style="background:#e63946"></span> 30-Year Fixed &nbsp;
-        <span class="legend-swatch" style="background:#2a9d8f"></span> 15-Year Fixed
-      </p>
-      <LazyChart height={280}>
-      <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
-        <Frame />
-        <RuleY data={[0]} />
-        <Rect data={recessions.filter((r) => r.end >= ratesCutoff)} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
-        <Line data={mort30} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
-        <Line data={mort15} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
-        {#snippet overlay()}
-          <HTMLTooltip data={mortML.all} x="date" y="value">
-            {#snippet children({ datum })}
-              {#if datum}
-                {@const v = mortML.byDate.get(datum.date.getTime())}
-                <div class="tip" style:transform={datum.date > ratesMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
-                  <span class="tip-label">Mortgage Rates</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
-                  {#if v}
-                    {#if v.m30 != null}<span class="tip-edu-row"><span style="color:#e63946">●</span> 30-Year <b>{v.m30?.toFixed(2)}%</b></span>{/if}
-                    {#if v.m15 != null}<span class="tip-edu-row"><span style="color:#2a9d8f">●</span> 15-Year <b>{v.m15?.toFixed(2)}%</b></span>{/if}
-                  {/if}
-                </div>
-              {/if}
-            {/snippet}
-          </HTMLTooltip>
-        {/snippet}
-      </Plot>
-      </LazyChart>
-      <p class="source">Source: FRED — <a href={fredUrl('mortgage30us')} target="_blank" rel="noopener">MORTGAGE30US</a> · <a href={fredUrl('mortgage15us')} target="_blank" rel="noopener">MORTGAGE15US</a> (Freddie Mac PMMS)</p>
     </div>
     </WideChartCtx>
 
