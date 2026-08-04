@@ -25,6 +25,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Raw series stored as
 - `uv run python main.py --source fred` - Collect all FRED data
 - `uv run python main.py --source bls` - Collect BLS data
 - `uv run python main.py --source nyfed` - Collect NY Fed household debt data
+- `uv run python main.py --source gscpi` - Collect NY Fed Global Supply Chain Pressure Index
 - `uv run python main.py --source oil` - Collect Brent crude oil futures curve
 - `uv run python main.py --source all` - Collect from all sources
 - `uv run python main.py --source fred --series CPIAUCSL` - Collect specific series
@@ -79,6 +80,11 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Raw series stored as
 - Downloads the NY Fed quarterly household debt Excel workbook
 - Extracts per-category balances (mortgage, HELOC, auto, credit card, student, other/medical)
 - Saves as CSV in millions of dollars to match FRED series units
+
+**src/gscpi.py (GscpiCollector):**
+
+- Downloads the NY Fed Global Supply Chain Pressure Index workbook (legacy .xls, parsed with xlrd)
+- Saves monthly index values (standard deviations from average) since 1998
 
 **src/oil.py (OilCollector):**
 
@@ -151,7 +157,13 @@ See `docs/collection.md` for the full catalog. Key series:
 
 **Household Debt (NY Fed/Equifax):** nyfed_mortgage, nyfed_auto, nyfed_credit_card, nyfed_student, nyfed_other, nyfed_total
 
+**Delinquency (NY Fed/Equifax):** nyfed_delinq_* — percent of balance 90+ days delinquent per loan type (mortgage, HELOC, auto, credit_card, student, other, total)
+
+**Mortgage Rates:** MORTGAGE30US, MORTGAGE15US (Freddie Mac PMMS weekly; stored downsampled — weekly last 5 years, monthly before)
+
 **Commodities:** Brent crude oil futures curve (estimated from WTI via Yahoo Finance)
+
+**Supply Chain:** gscpi — NY Fed Global Supply Chain Pressure Index (monthly, std devs from average)
 
 **Derived:** YoY inflation rates for CPI/PCE/PPI series, income YoY growth
 

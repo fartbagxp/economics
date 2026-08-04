@@ -108,6 +108,17 @@
   const nyfedML = $derived(multiLine({ mortgage: nyfedMortgage, heloc: nyfedHeloc, auto: nyfedAuto, creditCard: nyfedCreditCard, student: nyfedStudent, other: nyfedOther }));
   const nyfedMidDate = $derived(nyfedHasData ? new Date((nyfedCutoff.getTime() + new Date().getTime()) / 2) : midDate);
 
+  // NY Fed 90+ day delinquency rates (percent of balance, Q1 2003–present)
+  const dqMortgage   = $derived(parse(data.series.nyfed_delinq_mortgage));
+  const dqHeloc      = $derived(parse(data.series.nyfed_delinq_he_revolving));
+  const dqAuto       = $derived(parse(data.series.nyfed_delinq_auto));
+  const dqCreditCard = $derived(parse(data.series.nyfed_delinq_credit_card));
+  const dqStudent    = $derived(parse(data.series.nyfed_delinq_student));
+  const dqOther      = $derived(parse(data.series.nyfed_delinq_other));
+  const dqHasData    = $derived(dqCreditCard.length > 0);
+  const dqML = $derived(multiLine({ mortgage: dqMortgage, heloc: dqHeloc, auto: dqAuto, creditCard: dqCreditCard, student: dqStudent, other: dqOther }));
+  const dqMid = $derived(dqHasData ? new Date((dqCreditCard[0].date.getTime() + dqCreditCard[dqCreditCard.length - 1].date.getTime()) / 2) : midDate);
+
   const incomeML  = $derived(multiLine({ income: pi, disposable: dspi }));
   const inflExpML = $derived(multiLine({ mich: mich, b5y: t5yie, b10y: t10yie }));
 
@@ -137,6 +148,16 @@
   const oilMidDate    = $derived(new Date((oilCutoff.getTime() + (hasFutures ? brentFutures[brentFutures.length - 1].date.getTime() : new Date().getTime())) / 2));
   const today         = new Date();
   const brentML       = $derived(hasFutures ? multiLine({ spot: brentSpot, futures: brentFutures }) : multiLine({ spot: brentSpot }));
+
+  // Supply chain — populated after running: python main.py --source gscpi
+  const gscpi        = $derived(parse(data.series.gscpi));
+  const gscpiHasData = $derived(gscpi.length > 0);
+  const gscpiMid     = $derived(gscpiHasData ? new Date((gscpi[0].date.getTime() + gscpi[gscpi.length - 1].date.getTime()) / 2) : midDate);
+
+  // Mortgage rates (Freddie Mac PMMS, weekly; stored sparse — monthly before the last 5 years)
+  const mort30 = $derived(parse(data.series.mortgage30us).filter((d) => d.date >= ratesCutoff));
+  const mort15 = $derived(parse(data.series.mortgage15us).filter((d) => d.date >= ratesCutoff));
+  const mortML = $derived(multiLine({ m30: mort30, m15: mort15 }));
 
   const cpiYoyML  = $derived(multiLine({ headline: cpi_yoy,     core: core_cpi_yoy }));
   const pceYoyML  = $derived(multiLine({ headline: pce_yoy,     core: core_pce_yoy }));
@@ -1129,6 +1150,61 @@
         Source: <a href="https://www.newyorkfed.org/microeconomics/hhdc" target="_blank" rel="noopener">NY Fed / Equifax Consumer Credit Panel</a>
       </p>
     </div>
+
+    <!-- NY Fed: 90+ day delinquency rates by loan type -->
+    {#if dqHasData}
+    <div class="card wide" id="delinquency">
+      <h2>90+ Day Delinquency by Loan Type — NY Fed / Equifax <a class="anchor-link" href="#delinquency">#</a></h2>
+      <p class="meta">
+        Quarterly · Not Seasonally Adjusted · Percent of Balance · Q1 2003–present ·
+        <span class="legend-swatch" style="background:#e63946"></span> Credit Card &nbsp;
+        <span class="legend-swatch" style="background:#f4a261"></span> Student Loan &nbsp;
+        <span class="legend-swatch" style="background:#2a9d8f"></span> Auto Loan &nbsp;
+        <span class="legend-swatch" style="background:#1a6faf"></span> Mortgage &nbsp;
+        <span class="legend-swatch dashed" style="border-color:#457b9d"></span> HELOC &nbsp;
+        <span class="legend-swatch" style="background:#bc4749"></span> Other (incl. medical)
+      </p>
+      <LazyChart height={340}>
+      <Plot height={340} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '% of balance', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={dqHeloc}      x="date" y="value" stroke="#457b9d" strokeWidth={1.5} strokeDasharray="5,3" />
+        <Line data={dqOther}      x="date" y="value" stroke="#bc4749" strokeWidth={1.5} />
+        <Line data={dqMortgage}   x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
+        <Line data={dqAuto}       x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
+        <Line data={dqStudent}    x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
+        <Line data={dqCreditCard} x="date" y="value" stroke="#e63946" strokeWidth={2} />
+        {#snippet overlay()}
+          <HTMLTooltip data={dqML.all} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const v = dqML.byDate.get(datum.date.getTime())}
+                <div class="tip" style:transform={datum.date > dqMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
+                  <span class="tip-label">90+ Day Delinquency</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  {#if v}
+                    {#if v.creditCard != null}<span class="tip-edu-row"><span style="color:#e63946">●</span> Credit Card <b>{v.creditCard.toFixed(2)}%</b></span>{/if}
+                    {#if v.student    != null}<span class="tip-edu-row"><span style="color:#f4a261">●</span> Student     <b>{v.student.toFixed(2)}%</b></span>{/if}
+                    {#if v.auto       != null}<span class="tip-edu-row"><span style="color:#2a9d8f">●</span> Auto        <b>{v.auto.toFixed(2)}%</b></span>{/if}
+                    {#if v.mortgage   != null}<span class="tip-edu-row"><span style="color:#1a6faf">●</span> Mortgage    <b>{v.mortgage.toFixed(2)}%</b></span>{/if}
+                    {#if v.heloc      != null}<span class="tip-edu-row"><span style="color:#457b9d">●</span> HELOC       <b>{v.heloc.toFixed(2)}%</b></span>{/if}
+                    {#if v.other      != null}<span class="tip-edu-row"><span style="color:#bc4749">●</span> Other       <b>{v.other.toFixed(2)}%</b></span>{/if}
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      <p class="source">
+        Source: <a href="https://www.newyorkfed.org/microeconomics/hhdc" target="_blank" rel="noopener">NY Fed Household Debt &amp; Credit Report</a>
+        (NY Fed Consumer Credit Panel / Equifax) ·
+        Student-loan delinquency reporting was paused 2020–2024 under pandemic forbearance, so that series is artificially near zero for those years
+      </p>
+    </div>
+    {/if}
     {:else}
     <!-- Fallback: FRED-sourced combined debt chart shown until NY Fed data is collected -->
     <div class="card wide" id="debt-fred">
@@ -1300,6 +1376,43 @@
 
   </section>
 
+  <!-- ── Supply Chain ─────────────────────────────────────────── -->
+  {#if gscpiHasData}
+  <h3 class="section-label">Supply Chain</h3>
+  <section class="grid" style="grid-template-columns: minmax(500px, 1fr) minmax(500px, 1fr)">
+    <WideChartCtx>
+    <!-- NY Fed Global Supply Chain Pressure Index -->
+    <div class="card wide" id="gscpi">
+      <h2>Global Supply Chain Pressure Index (GSCPI) <a class="anchor-link" href="#gscpi">#</a></h2>
+      <p class="meta">Monthly · Standard Deviations from Historical Average · 0 = normal pressure</p>
+      <LazyChart height={280}>
+      <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: 'σ from avg', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={gscpi} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
+        {#snippet overlay()}
+          <HTMLTooltip data={gscpi} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                <div class="tip" style:transform={datum.date > gscpiMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
+                  <span class="tip-label">Supply Chain Pressure</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-val">{datum.value > 0 ? '+' : ''}{datum.value.toFixed(2)}σ</span>
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      <p class="source">Source: <a href="https://www.newyorkfed.org/research/policy/gscpi" target="_blank" rel="noopener">NY Fed / Global Supply Chain Pressure Index</a></p>
+    </div>
+    </WideChartCtx>
+
+  </section>
+  {/if}
+
   <!-- ── Inflation Expectations ────────────────────────────────── -->
   <h3 class="section-label">Inflation Expectations</h3>
   <section class="grid" style="grid-template-columns: minmax(500px, 1fr) minmax(500px, 1fr)">
@@ -1350,6 +1463,45 @@
   <!-- ── Interest Rates ───────────────────────────────────────── -->
   <h3 class="section-label">Interest Rates</h3>
   <section class="grid" style="grid-template-columns: minmax(500px, 1fr) minmax(500px, 1fr)">
+    <WideChartCtx>
+    <!-- Mortgage Rates -->
+    <div class="card wide" id="mortgage-rates">
+      <h2>30- &amp; 15-Year Fixed Mortgage Rates <a class="anchor-link" href="#mortgage-rates">#</a></h2>
+      <p class="meta">
+        Weekly · Not Seasonally Adjusted · Freddie Mac Primary Mortgage Market Survey &nbsp;·&nbsp;
+        <span class="legend-swatch" style="background:#e63946"></span> 30-Year Fixed &nbsp;
+        <span class="legend-swatch" style="background:#2a9d8f"></span> 15-Year Fixed
+      </p>
+      <LazyChart height={280}>
+      <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions.filter((r) => r.end >= ratesCutoff)} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={mort30} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
+        <Line data={mort15} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
+        {#snippet overlay()}
+          <HTMLTooltip data={mortML.all} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const v = mortML.byDate.get(datum.date.getTime())}
+                <div class="tip" style:transform={datum.date > ratesMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
+                  <span class="tip-label">Mortgage Rates</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>
+                  {#if v}
+                    {#if v.m30 != null}<span class="tip-edu-row"><span style="color:#e63946">●</span> 30-Year <b>{v.m30?.toFixed(2)}%</b></span>{/if}
+                    {#if v.m15 != null}<span class="tip-edu-row"><span style="color:#2a9d8f">●</span> 15-Year <b>{v.m15?.toFixed(2)}%</b></span>{/if}
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      <p class="source">Source: FRED — <a href={fredUrl('mortgage30us')} target="_blank" rel="noopener">MORTGAGE30US</a> · <a href={fredUrl('mortgage15us')} target="_blank" rel="noopener">MORTGAGE15US</a> (Freddie Mac PMMS)</p>
+    </div>
+    </WideChartCtx>
+
     <WideChartCtx>
     <!-- Treasury Yields & Fed Funds Rate -->
     <div class="card wide" id="interest-rates">

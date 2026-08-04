@@ -4,6 +4,7 @@ from src.cli import Cli
 from src.config import Config
 from src.derive import Deriver
 from src.fred import FredCollector
+from src.gscpi import GscpiCollector
 from src.nyfed import NyFedCollector
 from src.oil import OilCollector
 
@@ -53,6 +54,13 @@ def main():
             nyfed_collector.collect_all(quarter=getattr(args, "nyfed_quarter", None))
         except Exception as e:
             print(f"❌ NY Fed collection failed: {e}")
+
+    if args.source in ["gscpi", "all"]:
+        gscpi_collector = GscpiCollector(args.output)
+        try:
+            gscpi_collector.collect_all()
+        except Exception as e:
+            print(f"❌ GSCPI collection failed: {e}")
 
     if args.source in ["oil", "all"]:
         oil_collector = OilCollector(args.output)
