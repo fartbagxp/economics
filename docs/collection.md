@@ -58,6 +58,13 @@ A FRED API key is free. Register at [fred.stlouisfed.org/docs/api/api_key.html](
 - **GS2, GS10, GS20, GS30**: Treasury Constant Maturity Rates — 2/10/20/30-Year (monthly)
 - **DFEDTARU, DFEDTARL**: Federal Funds Target Range — Upper/Lower Limit (daily)
 
+### Mortgage Rates
+
+- **MORTGAGE30US**: 30-Year Fixed Rate Mortgage Average (Freddie Mac Primary Mortgage Market Survey, weekly since 1971)
+- **MORTGAGE15US**: 15-Year Fixed Rate Mortgage Average (Freddie Mac PMMS, weekly since 1991)
+
+Both are stored **downsampled**: full weekly resolution for the last 5 years, first observation of each month before that (see `SPARSE_SERIES` in `src/fred.py`). This keeps each CSV under ~30 KB while preserving the long-term shape for plotting.
+
 Raw data is saved to `data/raw/` as CSV files, with metadata stored in `data/metadata.json`.
 
 ### Payrolls (BLS)
@@ -107,5 +114,27 @@ The NY Fed publishes a quarterly Excel workbook based on the NY Fed Consumer Cre
 | **nyfed_total**          | Total household debt                         | Q1 1999–present |
 
 Values in Excel are in **trillions of dollars**; stored in `data/raw/` as **millions** (×10⁶) for consistency with FRED series. The viz divides by 10⁶ before displaying.
+
+The same workbook's "Page 12 Data" sheet provides **percent of balance 90+ days delinquent by loan type**, stored in percent:
+
+| Series                          | Description                             | Coverage        |
+| ------------------------------- | --------------------------------------- | --------------- |
+| **nyfed_delinq_mortgage**       | Mortgage balance 90+ days delinquent    | Q1 2003–present |
+| **nyfed_delinq_he_revolving**   | HELOC balance 90+ days delinquent       | Q1 2003–present |
+| **nyfed_delinq_auto**           | Auto loan balance 90+ days delinquent   | Q1 2003–present |
+| **nyfed_delinq_credit_card**    | Credit card balance 90+ days delinquent | Q1 2003–present |
+| **nyfed_delinq_student**        | Student loan balance 90+ days delinquent — artificially low 2020–2024 while pandemic forbearance paused delinquency reporting | Q1 2003–present |
+| **nyfed_delinq_other**          | Other debt balance 90+ days delinquent  | Q1 2003–present |
+| **nyfed_delinq_total**          | All debt balance 90+ days delinquent    | Q1 2003–present |
+
+---
+
+### NY Fed Global Supply Chain Pressure Index (GSCPI)
+
+Collected via `uv run python main.py --source gscpi`.
+
+- **gscpi**: Monthly composite of global transportation costs (Baltic Dry, Harpex, airfreight) and PMI subcomponents (delivery times, backlogs, purchased inventories) across seven economies. Units are standard deviations from the historical average (0 = normal pressure). Coverage: January 1998–present, updated ~4th business day of each month.
+
+**Source page**: [newyorkfed.org/research/policy/gscpi](https://www.newyorkfed.org/research/policy/gscpi). The download URL ends in `.xlsx` but the file is a legacy `.xls` workbook — parsed with `xlrd`. Month-end observation labels are stored as first-of-month dates for consistency with FRED monthly series.
 
 The dashboard shows the NY Fed chart when data is present; otherwise falls back to the FRED-only chart.

@@ -159,6 +159,25 @@ def build_dashboard(data_dir: str = "data/raw") -> str:
                 ("gdp", "GDP"),
                 ("cpiaucsl", "CPI (All Urban)"),
                 ("umcsent", "Consumer Sentiment (U. Mich.)"),
+                ("gscpi", "Supply Chain Pressure (GSCPI)"),
+            ],
+        ),
+        (
+            "Mortgage Rates",
+            [
+                ("mortgage30us", "30-Year Fixed"),
+                ("mortgage15us", "15-Year Fixed"),
+            ],
+        ),
+        (
+            "Household Credit — 90+ Day Delinquency (% of balance)",
+            [
+                ("nyfed_delinq_credit_card", "Credit Cards"),
+                ("nyfed_delinq_auto", "Auto Loans"),
+                ("nyfed_delinq_student", "Student Loans"),
+                ("nyfed_delinq_mortgage", "Mortgages"),
+                ("nyfed_delinq_he_revolving", "HELOC"),
+                ("nyfed_delinq_total", "All Debt"),
             ],
         ),
     ]

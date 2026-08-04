@@ -1,8 +1,28 @@
+from datetime import timedelta
 from pathlib import Path
 import json
 
 import polars as pl
 from fredapi import Fred
+
+
+# High-frequency series where full history is more resolution than a line chart
+# needs: keep every observation from the last 5 years, and only the first
+# observation of each month before that.
+SPARSE_SERIES = {"MORTGAGE30US", "MORTGAGE15US"}
+
+
+def thin_history(df: pl.DataFrame, recent_years: int = 5) -> pl.DataFrame:
+    """Downsample old history to monthly while keeping recent data at full resolution."""
+    cutoff = df["date"].max() - timedelta(days=recent_years * 365)
+    older = (
+        df.filter(pl.col("date") < cutoff)
+        .group_by(pl.col("date").dt.strftime("%Y-%m").alias("ym"), maintain_order=True)
+        .first()
+        .select(["date", "value"])
+    )
+    recent = df.filter(pl.col("date") >= cutoff)
+    return pl.concat([older, recent])
 
 
 class FredCollector:
@@ -56,6 +76,9 @@ class FredCollector:
             print(f"⚠️  Could not fetch metadata: {e}")
 
         df = pl.DataFrame({"date": data.index.to_list(), "value": data.to_list()})
+
+        if series_id.upper() in SPARSE_SERIES:
+            df = thin_history(df)
 
         filename = f"{series_id.lower()}.csv"
         filepath = self.output_dir / filename
@@ -123,6 +146,9 @@ class FredCollector:
             "GS30": "30-Year Treasury Constant Maturity Rate",
             "DFEDTARU": "Federal Funds Target Range - Upper Limit",
             "DFEDTARL": "Federal Funds Target Range - Lower Limit",
+            # Mortgage Rates (Freddie Mac Primary Mortgage Market Survey, weekly)
+            "MORTGAGE30US": "30-Year Fixed Rate Mortgage Average",
+            "MORTGAGE15US": "15-Year Fixed Rate Mortgage Average",
         }
 
         for series_id, name in series_map.items():

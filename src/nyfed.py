@@ -5,16 +5,20 @@ Data source: Federal Reserve Bank of New York, Consumer Credit Panel (based on E
 Report: Household Debt and Credit — quarterly Excel workbook published at
 https://www.newyorkfed.org/microeconomics/hhdc
 
-The workbook sheet "Page 3 Data" contains total debt balances by category in
-trillions of dollars going back to Q1 1999. Categories:
-  Mortgage, HE Revolving (HELOC), Auto Loan, Credit Card, Student Loan, Other
+Two sheets are extracted:
+
+- "Page 3 Data" — total debt balances by category in trillions of dollars going
+  back to Q1 1999. Categories: Mortgage, HE Revolving (HELOC), Auto Loan,
+  Credit Card, Student Loan, Other.
+- "Page 12 Data" — percent of balance 90+ days delinquent by loan type going
+  back to Q1 2003. Columns: MORTGAGE, HELOC, AUTO, CC, STUDENT LOAN, OTHER, ALL.
 
 "Other" is a catch-all that includes medical debt, personal loans, and retail
 financing — it is the only publicly available proxy for medical debt at this
 time granularity.
 
-Output CSV files use millions of dollars (consistent with FRED series) so the
-viz layer can treat all debt series uniformly.
+Balance CSVs use millions of dollars (consistent with FRED series) so the
+viz layer can treat all debt series uniformly. Delinquency CSVs are in percent.
 """
 
 from datetime import date
@@ -29,9 +33,8 @@ import requests
 BASE_URL = "https://www.newyorkfed.org/medialibrary/interactives/householdcredit/data/xls"
 FILENAME_PATTERN = "HHD_C_Report_{year}Q{quarter}.xlsx"
 
-SHEET_NAME = "Page 3 Data"
-
-# Output CSV names → column name in the Excel sheet (case-insensitive prefix match)
+# Output CSV names → column name in the Excel sheet (exact match preferred,
+# case-insensitive substring as fallback)
 SERIES = {
     "nyfed_mortgage":    "Mortgage",
     "nyfed_he_revolving": "HE Revolving",
@@ -42,14 +45,54 @@ SERIES = {
     "nyfed_total":       "Total",
 }
 
+DELINQ_SERIES = {
+    "nyfed_delinq_mortgage":     "MORTGAGE",
+    "nyfed_delinq_he_revolving": "HELOC",
+    "nyfed_delinq_auto":         "AUTO",
+    "nyfed_delinq_credit_card":  "CC",
+    "nyfed_delinq_student":      "STUDENT LOAN",
+    "nyfed_delinq_other":        "OTHER",
+    "nyfed_delinq_total":        "ALL",
+}
+
+# Sheet configs: how to locate each sheet and scale its values
+BALANCE_SHEET = {
+    "name_pattern": r"page.?3\b",
+    "title_hint": "Total Debt Balance",
+    "series_map": SERIES,
+    # Values are in trillions → convert to millions
+    "scale": 1_000_000,
+}
+DELINQ_SHEET = {
+    "name_pattern": r"page.?12\b",
+    "title_hint": "90+ Days Delinquent by Loan Type",
+    "series_map": DELINQ_SERIES,
+    # Values are already in percent
+    "scale": 1,
+}
+
+_NYFED_COMMON = {
+    "frequency": "Quarterly",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "source": "NY Fed / Equifax Consumer Credit Panel",
+    "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
+}
+
 METADATA = {
-    "nyfed_mortgage":     {"title": "NY Fed: Mortgage Debt Balance",             "units": "Millions of U.S. Dollars", "frequency": "Quarterly", "seasonal_adjustment": "Not Seasonally Adjusted", "source": "NY Fed / Equifax Consumer Credit Panel", "source_url": "https://www.newyorkfed.org/microeconomics/hhdc"},
-    "nyfed_he_revolving": {"title": "NY Fed: Home Equity Revolving (HELOC) Balance", "units": "Millions of U.S. Dollars", "frequency": "Quarterly", "seasonal_adjustment": "Not Seasonally Adjusted", "source": "NY Fed / Equifax Consumer Credit Panel", "source_url": "https://www.newyorkfed.org/microeconomics/hhdc"},
-    "nyfed_auto":         {"title": "NY Fed: Auto Loan Balance",                 "units": "Millions of U.S. Dollars", "frequency": "Quarterly", "seasonal_adjustment": "Not Seasonally Adjusted", "source": "NY Fed / Equifax Consumer Credit Panel", "source_url": "https://www.newyorkfed.org/microeconomics/hhdc"},
-    "nyfed_credit_card":  {"title": "NY Fed: Credit Card Balance",               "units": "Millions of U.S. Dollars", "frequency": "Quarterly", "seasonal_adjustment": "Not Seasonally Adjusted", "source": "NY Fed / Equifax Consumer Credit Panel", "source_url": "https://www.newyorkfed.org/microeconomics/hhdc"},
-    "nyfed_student":      {"title": "NY Fed: Student Loan Balance",              "units": "Millions of U.S. Dollars", "frequency": "Quarterly", "seasonal_adjustment": "Not Seasonally Adjusted", "source": "NY Fed / Equifax Consumer Credit Panel", "source_url": "https://www.newyorkfed.org/microeconomics/hhdc"},
-    "nyfed_other":        {"title": "NY Fed: Other Debt Balance (incl. medical)", "units": "Millions of U.S. Dollars", "frequency": "Quarterly", "seasonal_adjustment": "Not Seasonally Adjusted", "source": "NY Fed / Equifax Consumer Credit Panel", "source_url": "https://www.newyorkfed.org/microeconomics/hhdc"},
-    "nyfed_total":        {"title": "NY Fed: Total Household Debt Balance",       "units": "Millions of U.S. Dollars", "frequency": "Quarterly", "seasonal_adjustment": "Not Seasonally Adjusted", "source": "NY Fed / Equifax Consumer Credit Panel", "source_url": "https://www.newyorkfed.org/microeconomics/hhdc"},
+    "nyfed_mortgage":     {"title": "NY Fed: Mortgage Debt Balance",             "units": "Millions of U.S. Dollars", **_NYFED_COMMON},
+    "nyfed_he_revolving": {"title": "NY Fed: Home Equity Revolving (HELOC) Balance", "units": "Millions of U.S. Dollars", **_NYFED_COMMON},
+    "nyfed_auto":         {"title": "NY Fed: Auto Loan Balance",                 "units": "Millions of U.S. Dollars", **_NYFED_COMMON},
+    "nyfed_credit_card":  {"title": "NY Fed: Credit Card Balance",               "units": "Millions of U.S. Dollars", **_NYFED_COMMON},
+    "nyfed_student":      {"title": "NY Fed: Student Loan Balance",              "units": "Millions of U.S. Dollars", **_NYFED_COMMON},
+    "nyfed_other":        {"title": "NY Fed: Other Debt Balance (incl. medical)", "units": "Millions of U.S. Dollars", **_NYFED_COMMON},
+    "nyfed_total":        {"title": "NY Fed: Total Household Debt Balance",       "units": "Millions of U.S. Dollars", **_NYFED_COMMON},
+    "nyfed_delinq_mortgage":     {"title": "NY Fed: Mortgage Balance 90+ Days Delinquent",      "units": "Percent of Balance", **_NYFED_COMMON},
+    "nyfed_delinq_he_revolving": {"title": "NY Fed: HELOC Balance 90+ Days Delinquent",         "units": "Percent of Balance", **_NYFED_COMMON},
+    "nyfed_delinq_auto":         {"title": "NY Fed: Auto Loan Balance 90+ Days Delinquent",     "units": "Percent of Balance", **_NYFED_COMMON},
+    "nyfed_delinq_credit_card":  {"title": "NY Fed: Credit Card Balance 90+ Days Delinquent",   "units": "Percent of Balance", **_NYFED_COMMON},
+    "nyfed_delinq_student":      {"title": "NY Fed: Student Loan Balance 90+ Days Delinquent",  "units": "Percent of Balance", **_NYFED_COMMON},
+    "nyfed_delinq_other":        {"title": "NY Fed: Other Debt Balance 90+ Days Delinquent",    "units": "Percent of Balance", **_NYFED_COMMON},
+    "nyfed_delinq_total":        {"title": "NY Fed: All Debt Balance 90+ Days Delinquent",      "units": "Percent of Balance", **_NYFED_COMMON},
 }
 
 
@@ -117,57 +160,66 @@ class NyFedCollector:
         r.raise_for_status()
         return r.content
 
-    def _parse_workbook(self, content: bytes) -> pl.DataFrame:
-        """Parse the 'Page 3 Data' sheet and return a tidy DataFrame."""
-        import io
-        from openpyxl import load_workbook
-
-        wb = load_workbook(io.BytesIO(content), data_only=True)
-
-        # Find the right sheet — name varies slightly across report vintages
-        sheet = None
+    def _find_sheet(self, wb, name_pattern: str, title_hint: str):
+        """Locate a data sheet by name pattern, falling back to a title search."""
         for name in wb.sheetnames:
-            if re.search(r"page.?3", name, re.IGNORECASE) or re.search(r"total.?balance", name, re.IGNORECASE):
-                sheet = wb[name]
-                break
-        if sheet is None:
-            # Fall back: first sheet that has "Mortgage" in any cell of row 1–5
-            for name in wb.sheetnames:
-                ws = wb[name]
-                header_text = " ".join(
-                    str(ws.cell(r, c).value or "")
-                    for r in range(1, 6)
-                    for c in range(1, 15)
-                )
-                if "Mortgage" in header_text:
-                    sheet = ws
-                    break
+            if re.search(name_pattern, name, re.IGNORECASE):
+                return wb[name]
+        # Fall back: first worksheet whose top rows contain the title hint
+        for name in wb.sheetnames:
+            ws = wb[name]
+            if not hasattr(ws, "iter_rows"):  # skip chartsheets
+                continue
+            header_text = " ".join(
+                str(ws.cell(r, c).value or "")
+                for r in range(1, 6)
+                for c in range(1, 15)
+            )
+            if title_hint.lower() in header_text.lower():
+                return ws
+        return None
+
+    def _parse_sheet(self, wb, config: dict) -> pl.DataFrame:
+        """Parse a quarterly data sheet into a tidy DataFrame per its config."""
+        series_map = config["series_map"]
+        sheet = self._find_sheet(wb, config["name_pattern"], config["title_hint"])
         if sheet is None:
             available = ", ".join(wb.sheetnames)
-            raise RuntimeError(f"Could not locate debt-balance sheet. Available sheets: {available}")
+            raise RuntimeError(
+                f"Could not locate sheet matching '{config['title_hint']}'. Available sheets: {available}"
+            )
 
         # Read all rows into a list-of-lists
         rows = [[cell.value for cell in row] for row in sheet.iter_rows()]
 
-        # Locate header row (contains "Mortgage")
+        # Locate header row (contains at least half the expected column labels)
         header_idx = None
         for i, row in enumerate(rows):
-            row_text = " ".join(str(v or "") for v in row)
-            if "Mortgage" in row_text and "Total" in row_text:
+            cells = [str(v or "").strip() for v in row]
+            hits = sum(
+                any(label.lower() == c.lower() or label.lower() in c.lower() for c in cells)
+                for label in series_map.values()
+            )
+            if hits >= len(series_map) / 2:
                 header_idx = i
                 break
         if header_idx is None:
-            raise RuntimeError("Could not find header row with 'Mortgage' and 'Total'")
+            raise RuntimeError(f"Could not find header row for '{config['title_hint']}'")
 
         headers = [str(v or "").strip() for v in rows[header_idx]]
 
-        # Map column names → indices
+        # Map column names → indices; exact match wins over substring match
         col_map = {}
-        for series_key, col_label in SERIES.items():
+        for series_key, col_label in series_map.items():
             for idx, h in enumerate(headers):
-                if col_label.lower() in h.lower():
+                if col_label.lower() == h.lower():
                     col_map[series_key] = idx
                     break
+            else:
+                for idx, h in enumerate(headers):
+                    if col_label.lower() in h.lower():
+                        col_map[series_key] = idx
+                        break
 
         # Find date column (first column that looks like a quarter label e.g. "99:Q1")
         date_col = 0  # usually column 0
@@ -186,8 +238,7 @@ class NyFedCollector:
                 try:
                     val = row[col_idx]
                     if val is not None:
-                        # Values are in trillions → convert to millions (*1e6)
-                        record[series_key] = float(val) * 1_000_000
+                        record[series_key] = float(val) * config["scale"]
                 except (TypeError, ValueError):
                     pass
             records.append(record)
@@ -208,6 +259,17 @@ class NyFedCollector:
         with open(self.metadata_file, "w") as f:
             json.dump(all_meta, f, indent=2)
 
+    def _write_series(self, df: pl.DataFrame, series_map: dict):
+        for series_key in series_map:
+            if series_key not in df.columns:
+                print(f"⚠️  Column missing for {series_key}, skipping")
+                continue
+            out = df.select(["date", series_key]).rename({series_key: "value"}).drop_nulls()
+            filepath = self.output_dir / f"{series_key}.csv"
+            out.write_csv(filepath)
+            self.save_metadata(series_key)
+            print(f"✅ Saved {series_key}.csv ({len(out)} rows, {out['date'].min()} to {out['date'].max()})")
+
     def collect_all(self, quarter: str = None):
         if quarter:
             m = re.match(r"(\d{4})Q(\d)", quarter.upper())
@@ -222,21 +284,21 @@ class NyFedCollector:
 
         print(f"📊 NY Fed Household Debt Report — {label}")
         content = self._download_workbook(url)
-        df = self._parse_workbook(content)
 
-        if df.is_empty():
-            print("❌ Parsed DataFrame is empty — check sheet structure")
-            return
+        import io
+        from openpyxl import load_workbook
+        wb = load_workbook(io.BytesIO(content), data_only=True)
 
-        for series_key in SERIES:
-            if series_key not in df.columns:
-                print(f"⚠️  Column missing for {series_key}, skipping")
+        for config in (BALANCE_SHEET, DELINQ_SHEET):
+            try:
+                df = self._parse_sheet(wb, config)
+            except RuntimeError as e:
+                print(f"❌ {e}")
                 continue
-            out = df.select(["date", series_key]).rename({series_key: "value"}).drop_nulls()
-            filepath = self.output_dir / f"{series_key}.csv"
-            out.write_csv(filepath)
-            self.save_metadata(series_key)
-            print(f"✅ Saved {series_key}.csv ({len(out)} rows, {out['date'].min()} to {out['date'].max()})")
+            if df.is_empty():
+                print(f"❌ Parsed DataFrame for '{config['title_hint']}' is empty — check sheet structure")
+                continue
+            self._write_series(df, config["series_map"])
 
 
 def _parse_quarter_date(raw: str) -> str | None:

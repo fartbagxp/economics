@@ -11,7 +11,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
   <a href="https://github.com/fartbagxp/economics/actions/workflows/deploy-viz.yml"><img src="https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/deploy-viz.yml?label=deploy%20viz&style=flat-square" alt="Deploy Viz"></a>
   <a href="https://github.com/fartbagxp/economics/actions/workflows/lint.yml"><img src="https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/lint.yml?label=lint&style=flat-square" alt="Lint"></a>
   <a href="https://fartbagxp.github.io/economics/"><img src="https://img.shields.io/badge/dashboard-live-brightgreen?style=flat-square" alt="Live Dashboard"></a>
-  <!-- DATASET-COUNT --><img src="https://img.shields.io/badge/datasets-61-blue?style=flat-square" alt="61 datasets"><!-- /DATASET-COUNT -->
+  <!-- DATASET-COUNT --><img src="https://img.shields.io/badge/datasets-71-blue?style=flat-square" alt="71 datasets"><!-- /DATASET-COUNT -->
 </p>
 
 - [Setup](docs/setup.md): how to run the repo
@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-08-01 20:47 UTC_
+_Last updated: 2026-08-04 02:48 UTC_
 
 _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 points (quarterly)._
 
@@ -62,4 +62,23 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 | GDP                           | `▁▁▁▂▂▃▃▃▄▄▄▄▅▅▅▅▆▆▆▆▇▇▇█` | $32,475.2B | +609.5B    | +1989.5B | 2026-04-01 |
 | CPI (All Urban)               | `▁▁▁▁▁▂▂▂▃▃▃▃▃▄▄▄▅▅▅▅▆▇█▇` | 332.57     | -1.41      | +11.95   | 2026-06-01 |
 | Consumer Sentiment (U. Mich.) | `▆▆▇▇▇█▇▅▃▂▂▄▅▄▃▃▂▂▃▃▃▂▁▂` | 49.50      | +4.70      | -11.20   | 2026-06-01 |
+| Supply Chain Pressure (GSCPI) | `▂▂▂▁▁▁▁▂▁▁▃▂▂▁▂▁▁▄▃▃▄█▇▆` | 1.25       | -0.56      | +1.15    | 2026-06-01 |
+
+### Mortgage Rates
+
+| Indicator     | Trend                      | Latest | WoW    | YoY (52w) | As of      |
+| ------------- | -------------------------- | ------ | ------ | --------- | ---------- |
+| 30-Year Fixed | `▁▁▁▂▃▅▅▅▄▃▄▅▄▆▆▆▆▆▆▅▆▆▇█` | 6.7%   | +0.1pp | -0.1pp    | 2026-07-30 |
+| 15-Year Fixed | `▁▁▁▂▂▅▅▄▄▃▃▄▄▆▆▅▅▅▅▅▅▆▇█` | 6.0%   | +0.1pp | +0.2pp    | 2026-07-30 |
+
+### Household Credit — 90+ Day Delinquency (% of balance)
+
+| Indicator     | Trend                      | Latest | QoQ    | YoY (4q) | As of      |
+| ------------- | -------------------------- | ------ | ------ | -------- | ---------- |
+| Credit Cards  | `▃▃▃▄▃▂▁▂▁▁▁▁▁▃▃▄▅▅▅▆▆▇▇█` | 13.1%  | +0.4pp | +0.8pp   | 2026-03-01 |
+| Auto Loans    | `▅▅▄▄▃▂▁▂▁▁▁▁▁▁▂▃▃▄▅▅▅▅▆█` | 5.6%   | +0.4pp | +0.6pp   | 2026-03-01 |
+| Student Loans | `▅▅▅▅▄▄▄▃▃▃▁▁▁▁▁▁▁▁▁▆▇▇▇█` | 10.3%  | +0.8pp | +2.6pp   | 2026-03-01 |
+| Mortgages     | `▅▄▃▃▁▁▁▁▂▁▁▁▁▂▂▃▂▄▄▅▅▅▆█` | 1.1%   | +0.2pp | +0.2pp   | 2026-03-01 |
+| HELOC         | `█▇▆▇▆▆▄▄▅▆▅▄▃▃▃▂▁▁▂▅▄▄▄▅` | 0.9%   | +0.1pp | +0.1pp   | 2026-03-01 |
+| All Debt      | `▅▄▄▄▃▂▂▂▂▁▁▁▁▁▂▂▂▃▃▆▆▆▇█` | 3.4%   | +0.2pp | +0.5pp   | 2026-03-01 |
 <!-- ECONOMIC-DATA-END -->

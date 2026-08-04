@@ -79,6 +79,20 @@ SERIES_MAX_AGE = [
     # republishes the unchanged value daily)
     ("dfedtaru", 21),
     ("dfedtarl", 21),
+    # Monthly — NY Fed GSCPI, released ~4th business day of the following month
+    ("gscpi", 75),
+    # Weekly — Freddie Mac Primary Mortgage Market Survey (released Thursdays)
+    ("mortgage30us", 21),
+    ("mortgage15us", 21),
+    # Quarterly — NY Fed 90+ day delinquency rates; report lags quarter end by
+    # ~2.5 months and the observation date is the quarter's last month
+    ("nyfed_delinq_mortgage", 215),
+    ("nyfed_delinq_he_revolving", 215),
+    ("nyfed_delinq_auto", 215),
+    ("nyfed_delinq_credit_card", 215),
+    ("nyfed_delinq_student", 215),
+    ("nyfed_delinq_other", 215),
+    ("nyfed_delinq_total", 215),
 ]
 
 # Must match RAW_SERIES in viz/src/routes/+page.server.js
@@ -90,6 +104,8 @@ VIZ_RAW_SERIES = [
     "cpiaucsl",
     "gdp",
     "umcsent",
+    "mortgage30us",
+    "mortgage15us",
 ]
 
 # Must match DERIVED_SERIES in viz/src/routes/+page.server.js
