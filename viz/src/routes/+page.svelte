@@ -2,6 +2,7 @@
   import { Plot, Line, RuleY, Rect, AreaY, HTMLTooltip, Frame } from 'svelteplot';
   import LazyChart from './LazyChart.svelte';
   import WideChartCtx from './WideChartCtx.svelte';
+  import RecessionHover from './RecessionHover.svelte';
 
   let { data } = $props();
 
@@ -169,11 +170,35 @@
   const coreMomML = $derived(multiLine({ cpi: core_cpi_mom, pce: core_pce_mom, ppi: core_ppi_mom }));
 
   const recessions = [
-    { start: new Date('1990-07-01'), end: new Date('1991-03-01') },
-    { start: new Date('2001-03-01'), end: new Date('2001-11-01') },
-    { start: new Date('2007-12-01'), end: new Date('2009-06-01') },
-    { start: new Date('2020-02-01'), end: new Date('2020-04-01') }
+    { start: new Date('1990-07-01'), end: new Date('1991-03-01'), label: 'Early-1990s recession' },
+    { start: new Date('2001-03-01'), end: new Date('2001-11-01'), label: 'Dot-com recession' },
+    { start: new Date('2007-12-01'), end: new Date('2009-06-01'), label: 'Great Recession' },
+    { start: new Date('2020-02-01'), end: new Date('2020-04-01'), label: 'COVID-19 recession' }
   ].filter((r) => r.end >= cutoff);
+
+  // Point-in-time markers surfaced in tooltips only — no extra ink on the charts
+  const events = [
+    { month: '2008-09', label: 'Lehman Brothers collapse' },
+    { month: '2011-08', label: 'S&P downgrades U.S. credit rating' },
+    { month: '2015-12', label: 'Fed liftoff from zero rates' },
+    { month: '2022-03', label: 'Fed tightening cycle begins' },
+    { month: '2023-03', label: 'SVB / regional-bank stress' },
+    { month: '2026-04', label: 'Strait of Hormuz shutdown' },
+  ];
+
+  // Recession band / event annotations for the hovered date, shown inside the
+  // existing line tooltips so no second hover layer is needed
+  function annotationsFor(date) {
+    const notes = [];
+    for (const r of recessions) {
+      if (date >= r.start && date <= r.end) notes.push(`${r.label} (${fmt(r.start)} – ${fmt(r.end)})`);
+    }
+    const ym = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+    for (const e of events) {
+      if (e.month === ym) notes.push(e.label);
+    }
+    return notes;
+  }
 
   function tipTransform(datum) {
     if (!datum) return 'translate(8px, -50%)';
@@ -220,13 +245,13 @@
         <RuleY data={[0]} />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={unrate} x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={unrate} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Unemployment Rate (U-3)</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   <span class="tip-val">{datum.value.toFixed(1)}%</span>
                 </div>
               {/if}
@@ -248,13 +273,13 @@
         <RuleY data={[0]} />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={u6rate} x="date" y="value" stroke="#6a4c93" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={u6rate} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">U-6 Unemployment</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   <span class="tip-val">{datum.value.toFixed(1)}%</span>
                 </div>
               {/if}
@@ -276,13 +301,13 @@
         <RuleY data={[0]} />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={ltunempPct} x="date" y="value" stroke="#d62828" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={ltunempPct} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Long-Term Unemployed</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   <span class="tip-val">{datum.value.toFixed(1)}%</span>
                 </div>
               {/if}
@@ -304,13 +329,13 @@
         <RuleY data={[0]} />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={ltunempCount} x="date" y="value" stroke="#e07a5f" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={ltunempCount} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Long-Term Unemployed</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   <span class="tip-val">{datum.value.toLocaleString('en-US', { maximumFractionDigits: 0 })}K</span>
                 </div>
               {/if}
@@ -338,14 +363,14 @@
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={payrollChg} x="date" y="value" stroke="#a8dadc" strokeWidth={1.5} />
         <Line data={payrollChg3mo} x="date" y="value" stroke="#457b9d" strokeWidth={2} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={payrollML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = payrollML.byDate.get(datum.date.getTime())}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Nonfarm Payrolls — Change</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
                     <span class="tip-edu-row"><span style="color:#a8dadc">●</span> Monthly  <b>{v.change?.toLocaleString('en-US', { maximumFractionDigits: 0 })}K</b></span>
                     <span class="tip-edu-row"><span style="color:#457b9d">●</span> 3-Mo Avg <b>{v.avg3mo?.toLocaleString('en-US', { maximumFractionDigits: 0 })}K</b></span>
@@ -369,13 +394,13 @@
         <Frame />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={civpart} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={civpart} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Labor Force Participation</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   <span class="tip-val">{datum.value.toFixed(1)}%</span>
                 </div>
               {/if}
@@ -396,13 +421,13 @@
         <Frame />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={lfprMen} x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={lfprMen} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">LFPR Men</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   <span class="tip-val">{datum.value.toFixed(1)}%</span>
                 </div>
               {/if}
@@ -423,13 +448,13 @@
         <Frame />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={lfprWomen} x="date" y="value" stroke="#e76f51" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={lfprWomen} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">LFPR Women</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   <span class="tip-val">{datum.value.toFixed(1)}%</span>
                 </div>
               {/if}
@@ -459,14 +484,14 @@
         <Line data={lfprHsOnly}   x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
         <Line data={lfprSomeCol}  x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
         <Line data={lfprBachPlus} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={eduAllPoints} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 {@const edu = eduByDate.get(datum.date.getTime())}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">LFPR by Education (25+)</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if edu}
                     <span class="tip-edu-row"><span style="color:#2a9d8f">●</span> Bach+    <b>{edu.bachPlus?.toFixed(1)}%</b></span>
                     <span class="tip-edu-row"><span style="color:#457b9d">●</span> Some col <b>{edu.someCol?.toFixed(1)}%</b></span>
@@ -493,13 +518,13 @@
         <RuleY data={[0]} />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={icsa} x="date" y="value" stroke="#bc4749" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={icsa} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Initial Claims</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   <span class="tip-val">{datum.value.toLocaleString('en-US', { maximumFractionDigits: 0 })}</span>
                 </div>
               {/if}
@@ -526,13 +551,13 @@
         <Frame />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={cpiaucsl} x="date" y="value" stroke="#e76f51" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={cpiaucsl} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">CPI</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   <span class="tip-val">{datum.value.toFixed(2)}</span>
                 </div>
               {/if}
@@ -553,13 +578,13 @@
         <Frame />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={umcsent} x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={umcsent} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Consumer Sentiment</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   <span class="tip-val">{datum.value.toFixed(1)}</span>
                 </div>
               {/if}
@@ -580,13 +605,13 @@
         <Frame />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={gdp} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={gdp} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">GDP</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   <span class="tip-val">${datum.value.toLocaleString('en-US', { maximumFractionDigits: 0 })}B</span>
                 </div>
               {/if}
@@ -621,14 +646,14 @@
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={core_cpi_yoy} x="date" y="value" stroke="#ff9f43" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={cpi_yoy} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={cpiYoyML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = cpiYoyML.byDate.get(datum.date.getTime())}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">CPI YoY</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
                     <span class="tip-edu-row"><span style="color:#e63946">●</span> Headline <b>{v.headline?.toFixed(2)}%</b></span>
                     <span class="tip-edu-row"><span style="color:#ff9f43">●</span> Core     <b>{v.core?.toFixed(2)}%</b></span>
@@ -658,14 +683,14 @@
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={core_pce_yoy} x="date" y="value" stroke="#52b788" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={pce_yoy} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={pceYoyML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = pceYoyML.byDate.get(datum.date.getTime())}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">PCE YoY</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
                     <span class="tip-edu-row"><span style="color:#2a9d8f">●</span> Headline <b>{v.headline?.toFixed(2)}%</b></span>
                     <span class="tip-edu-row"><span style="color:#52b788">●</span> Core     <b>{v.core?.toFixed(2)}%</b></span>
@@ -694,14 +719,14 @@
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={core_ppi_yoy} x="date" y="value" stroke="#74b3ce" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={ppi_yoy} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={ppiYoyML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = ppiYoyML.byDate.get(datum.date.getTime())}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">PPI YoY</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
                     <span class="tip-edu-row"><span style="color:#457b9d">●</span> Headline <b>{v.headline?.toFixed(2)}%</b></span>
                     <span class="tip-edu-row"><span style="color:#74b3ce">●</span> Core     <b>{v.core?.toFixed(2)}%</b></span>
@@ -733,14 +758,14 @@
         <Line data={core_cpi_yoy} x="date" y="value" stroke="#ff9f43" strokeWidth={1.5} />
         <Line data={core_pce_yoy} x="date" y="value" stroke="#52b788" strokeWidth={1.5} />
         <Line data={core_ppi_yoy} x="date" y="value" stroke="#74b3ce" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={coreYoyML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = coreYoyML.byDate.get(datum.date.getTime())}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Core Inflation YoY</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
                     <span class="tip-edu-row"><span style="color:#ff9f43">●</span> Core CPI <b>{v.cpi?.toFixed(2)}%</b></span>
                     <span class="tip-edu-row"><span style="color:#52b788">●</span> Core PCE <b>{v.pce?.toFixed(2)}%</b></span>
@@ -775,14 +800,14 @@
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={core_cpi_mom} x="date" y="value" stroke="#ff9f43" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={cpi_mom} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={cpiMomML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = cpiMomML.byDate.get(datum.date.getTime())}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">CPI MoM</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
                     <span class="tip-edu-row"><span style="color:#e63946">●</span> Headline <b>{v.headline?.toFixed(2)}%</b></span>
                     <span class="tip-edu-row"><span style="color:#ff9f43">●</span> Core     <b>{v.core?.toFixed(2)}%</b></span>
@@ -811,14 +836,14 @@
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={core_pce_mom} x="date" y="value" stroke="#52b788" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={pce_mom} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={pceMomML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = pceMomML.byDate.get(datum.date.getTime())}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">PCE MoM</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
                     <span class="tip-edu-row"><span style="color:#2a9d8f">●</span> Headline <b>{v.headline?.toFixed(2)}%</b></span>
                     <span class="tip-edu-row"><span style="color:#52b788">●</span> Core     <b>{v.core?.toFixed(2)}%</b></span>
@@ -847,14 +872,14 @@
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={core_ppi_mom} x="date" y="value" stroke="#74b3ce" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={ppi_mom} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={ppiMomML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = ppiMomML.byDate.get(datum.date.getTime())}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">PPI MoM</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
                     <span class="tip-edu-row"><span style="color:#457b9d">●</span> Headline <b>{v.headline?.toFixed(2)}%</b></span>
                     <span class="tip-edu-row"><span style="color:#74b3ce">●</span> Core     <b>{v.core?.toFixed(2)}%</b></span>
@@ -885,14 +910,14 @@
         <Line data={core_cpi_mom} x="date" y="value" stroke="#ff9f43" strokeWidth={1.5} />
         <Line data={core_pce_mom} x="date" y="value" stroke="#52b788" strokeWidth={1.5} />
         <Line data={core_ppi_mom} x="date" y="value" stroke="#74b3ce" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={coreMomML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = coreMomML.byDate.get(datum.date.getTime())}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Core Inflation MoM</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
                     <span class="tip-edu-row"><span style="color:#ff9f43">●</span> Core CPI <b>{v.cpi?.toFixed(2)}%</b></span>
                     <span class="tip-edu-row"><span style="color:#52b788">●</span> Core PCE <b>{v.pce?.toFixed(2)}%</b></span>
@@ -928,14 +953,14 @@
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={dspi} x="date" y="value" stroke="#f4a261" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={pi} x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={incomeML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = incomeML.byDate.get(datum.date.getTime())}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Income</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
                     <span class="tip-edu-row"><span style="color:#1a6faf">●</span> Personal Income &nbsp;<b>${v.income?.toLocaleString('en-US', { maximumFractionDigits: 0 })}B</b></span>
                     <span class="tip-edu-row"><span style="color:#f4a261">●</span> Disposable &nbsp;<b>${v.disposable?.toLocaleString('en-US', { maximumFractionDigits: 0 })}B</b></span>
@@ -960,13 +985,13 @@
         <RuleY data={[0]} />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={w875rx1_yoy} x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={w875rx1_yoy} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Real PI ex. Transfers</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   <span class="tip-val">{datum.value.toFixed(2)}%</span>
                 </div>
               {/if}
@@ -987,13 +1012,13 @@
         <Frame />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={pce} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={pce} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">PCE</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   <span class="tip-val">${datum.value.toLocaleString('en-US', { maximumFractionDigits: 0 })}B</span>
                 </div>
               {/if}
@@ -1015,13 +1040,13 @@
         <RuleY data={[0]} />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={psave} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={psave} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Personal Saving</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   <span class="tip-val">${datum.value.toLocaleString('en-US', { maximumFractionDigits: 0 })}B</span>
                 </div>
               {/if}
@@ -1043,13 +1068,13 @@
         <RuleY data={[0]} />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={psavert} x="date" y="value" stroke="#6a4c93" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={psavert} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Personal Saving Rate</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   <span class="tip-val">{datum.value.toFixed(1)}%</span>
                 </div>
               {/if}
@@ -1091,14 +1116,14 @@
         <Line data={nyfedStudent}    x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
         <Line data={nyfedAuto}       x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
         <Line data={nyfedMortgage}   x="date" y="value" stroke="#1a6faf" strokeWidth={2} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={nyfedML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = nyfedML.byDate.get(datum.date.getTime())}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Household Debt (NY Fed)</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
                     {#if v.mortgage   != null}<span class="tip-edu-row"><span style="color:#1a6faf">●</span> Mortgage    <b>${v.mortgage.toFixed(2)}T</b></span>{/if}
                     {#if v.auto       != null}<span class="tip-edu-row"><span style="color:#2a9d8f">●</span> Auto        <b>${v.auto.toFixed(2)}T</b></span>{/if}
@@ -1131,13 +1156,13 @@
         <RuleY data={[0]} />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={nyfedTotal} x="date" y="value" stroke="#1a1a2e" strokeWidth={2} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={nyfedTotal} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Total Household Debt</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   <span class="tip-val">${datum.value.toFixed(2)}T</span>
                 </div>
               {/if}
@@ -1175,14 +1200,14 @@
         <Line data={dqAuto}       x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
         <Line data={dqStudent}    x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
         <Line data={dqCreditCard} x="date" y="value" stroke="#e63946" strokeWidth={2} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={dqML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = dqML.byDate.get(datum.date.getTime())}
                 <div class="tip" style:transform={datum.date > dqMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
                   <span class="tip-label">90+ Day Delinquency</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
                     {#if v.creditCard != null}<span class="tip-edu-row"><span style="color:#e63946">●</span> Credit Card <b>{v.creditCard.toFixed(2)}%</b></span>{/if}
                     {#if v.student    != null}<span class="tip-edu-row"><span style="color:#f4a261">●</span> Student     <b>{v.student.toFixed(2)}%</b></span>{/if}
@@ -1225,14 +1250,14 @@
         <Line data={studentLoans} x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
         <Line data={creditCards}  x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
         <Line data={mortgage}     x="date" y="value" stroke="#1a6faf" strokeWidth={2} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={debtML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = debtML.byDate.get(datum.date.getTime())}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Household Debt (FRED)</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
                     {#if v.mortgage     != null}<span class="tip-edu-row"><span style="color:#1a6faf">●</span> Mortgage       <b>${v.mortgage.toFixed(2)}T</b></span>{/if}
                     {#if v.creditCards  != null}<span class="tip-edu-row"><span style="color:#e63946">●</span> Credit Cards   <b>${v.creditCards.toFixed(2)}T</b></span>{/if}
@@ -1267,13 +1292,13 @@
         <RuleY data={[0]} />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={nonrevsl} x="date" y="value" stroke="#6a4c93" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={nonrevsl} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Nonrevolving Credit</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   <span class="tip-val">${datum.value.toFixed(2)}T</span>
                 </div>
               {/if}
@@ -1295,13 +1320,13 @@
         <RuleY data={[0]} />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={creditCards} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={creditCards} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Credit Card Debt</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   <span class="tip-val">${datum.value.toFixed(2)}T</span>
                 </div>
               {/if}
@@ -1342,14 +1367,14 @@
         {#if hasFutures}
           <Line data={brentFutures} x="date" y="value" stroke="#e8a000" strokeWidth={1.5} strokeDasharray="5,3" />
         {/if}
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={brentML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = brentML.byDate.get(datum.date.getTime())}
                 <div class="tip" style:transform={datum.date > oilMidDate ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
                   <span class="tip-label">Brent Crude Oil</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if hasFutures && v}
                     {#if v.spot    != null}<span class="tip-edu-row"><span style="color:#c77b00">●</span> Spot    <b>${v.spot.toFixed(2)}/bbl</b></span>{/if}
                     {#if v.futures != null}<span class="tip-edu-row"><span style="color:#e8a000">●</span> Futures <b>${v.futures.toFixed(2)}/bbl</b></span>{/if}
@@ -1391,13 +1416,13 @@
         <RuleY data={[0]} />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={gscpi} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={gscpi} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 <div class="tip" style:transform={datum.date > gscpiMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
                   <span class="tip-label">Supply Chain Pressure</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   <span class="tip-val">{datum.value > 0 ? '+' : ''}{datum.value.toFixed(2)}σ</span>
                 </div>
               {/if}
@@ -1434,14 +1459,14 @@
         <Line data={t10yie} x="date" y="value" stroke="#74b3ce" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={t5yie} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
         <Line data={mich} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={inflExpML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = inflExpML.byDate.get(datum.date.getTime())}
                 <div class="tip" style:transform={tipTransform(datum)}>
                   <span class="tip-label">Inflation Expectations</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
                     {#if v.mich != null}<span class="tip-edu-row"><span style="color:#e63946">●</span> UMich 1Y &nbsp;<b>{v.mich?.toFixed(1)}%</b></span>{/if}
                     {#if v.b5y != null}<span class="tip-edu-row"><span style="color:#457b9d">●</span> 5Y Breakeven <b>{v.b5y?.toFixed(2)}%</b></span>{/if}
@@ -1479,14 +1504,14 @@
         <Rect data={recessions.filter((r) => r.end >= ratesCutoff)} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
         <Line data={mort30} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
         <Line data={mort15} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={mortML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = mortML.byDate.get(datum.date.getTime())}
                 <div class="tip" style:transform={datum.date > ratesMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
                   <span class="tip-label">Mortgage Rates</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
                     {#if v.m30 != null}<span class="tip-edu-row"><span style="color:#e63946">●</span> 30-Year <b>{v.m30?.toFixed(2)}%</b></span>{/if}
                     {#if v.m15 != null}<span class="tip-edu-row"><span style="color:#2a9d8f">●</span> 15-Year <b>{v.m15?.toFixed(2)}%</b></span>{/if}
@@ -1525,14 +1550,14 @@
         <Line data={gs10} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
         <Line data={gs2} x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
         <Line data={fedfunds} x="date" y="value" stroke="#6d6875" strokeWidth={1.5} />
-        {#snippet overlay()}
+        {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={ratesML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = ratesML.byDate.get(datum.date.getTime())}
                 <div class="tip" style:transform={datum.date > ratesMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
                   <span class="tip-label">Interest Rates</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
                     {#if v.fedfunds != null}<span class="tip-edu-row"><span style="color:#6d6875">●</span> Fed Funds &nbsp;<b>{v.fedfunds?.toFixed(2)}%</b></span>{/if}
                     {#if v.gs2 != null}<span class="tip-edu-row"><span style="color:#f4a261">●</span> 2-Year &nbsp;<b>{v.gs2?.toFixed(2)}%</b></span>{/if}
@@ -1673,6 +1698,16 @@
   :global(.tip-date) {
     font-size: 0.78rem;
     opacity: 0.85;
+  }
+
+  :global(.tip-note) {
+    font-size: 0.72rem;
+    font-style: italic;
+    opacity: 0.7;
+    margin-top: 0.2rem;
+    padding-top: 0.2rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    max-width: 16rem;
   }
 
   :global(.tip-val) {
