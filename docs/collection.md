@@ -27,7 +27,7 @@ A FRED API key is free. Register at [fred.stlouisfed.org/docs/api/api_key.html](
 - **NY Fed Consumer Credit Panel / Equifax**: Household debt by category (mortgage, HELOC, auto, credit card, student, other)
 - **Yahoo Finance (via yfinance)**: Brent crude oil futures curve (estimated from WTI contracts + live Brent–WTI spread)
 - **USDA Food and Nutrition Service**: SNAP national participation (persons)
-- **CMS (Centers for Medicare & Medicaid Services)**: Medicare national total enrollment
+- **CMS (Centers for Medicare & Medicaid Services)**: Medicare national total enrollment, Medicaid & CHIP national total enrollment
 
 ## Data Collected
 
@@ -158,5 +158,15 @@ Collected via `uv run python main.py --source medicare`.
 - **medicare_total_enrollment**: National count of total Medicare beneficiaries (Original Medicare + Medicare Advantage/other plans) with hospital/medical coverage, monthly. Coverage: January 2013–present.
 
 **Source page**: [data.cms.gov — Medicare Monthly Enrollment](https://data.cms.gov/summary-statistics-on-beneficiary-enrollment/medicare-and-medicaid-reports/medicare-monthly-enrollment). Pulled from the dataset's public API, filtered to `BENE_GEO_LVL=National` and the `TOT_BENES` column; annual-average rows (`MONTH=Year`) are excluded.
+
+---
+
+### Medicaid & CHIP Enrollment (CMS)
+
+Collected via `uv run python main.py --source medicaid`.
+
+- **medicaid_chip_enrollment**: National count of Medicaid + CHIP enrollees, summed across all states and DC, monthly. Coverage: September 2013 (single month), then June 2017–present — states did not consistently report this indicator at monthly granularity in between.
+
+**Source page**: [medicaid.gov — Medicaid & CHIP Enrollment Data](https://www.medicaid.gov/medicaid/national-medicaid-chip-program-information/medicaid-chip-enrollment-data). Pulled from the CMS Performance Indicator dataset via its stable `data.medicaid.gov` datastore API (the underlying CSV is republished under a new dated filename each month, so the API — keyed by dataset id, not filename — is used instead). Each state reports one row per month, sometimes both a preliminary ("P") and a later final ("Y") report for the same period; the final report is preferred when both exist, since the preliminary one is often revised significantly.
 
 The dashboard shows the NY Fed chart when data is present; otherwise falls back to the FRED-only chart.

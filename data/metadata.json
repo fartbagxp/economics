@@ -646,5 +646,14 @@
     "source": "CMS Medicare Monthly Enrollment",
     "source_url": "https://data.cms.gov/summary-statistics-on-beneficiary-enrollment/medicare-and-medicaid-reports/medicare-monthly-enrollment",
     "last_updated": "2026-08-07"
+  },
+  "medicaid_chip_enrollment": {
+    "title": "Medicaid & CHIP: Total Enrollment (National)",
+    "units": "Persons",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "source": "CMS Performance Indicator Dataset",
+    "source_url": "https://www.medicaid.gov/medicaid/national-medicaid-chip-program-information/medicaid-chip-enrollment-data",
+    "last_updated": "2026-08-07"
   }
 }

@@ -156,13 +156,16 @@
   const gscpiMid     = $derived(gscpiHasData ? new Date((gscpi[0].date.getTime() + gscpi[gscpi.length - 1].date.getTime()) / 2) : midDate);
 
   // Social program enrollment (millions) — populated after running:
-  // python main.py --source snap / python main.py --source medicare
-  const snapPersons     = $derived(parse(data.series.snap_persons).map((d) => ({ ...d, value: d.value / 1e6 })));
+  // python main.py --source snap / --source medicare / --source medicaid
+  const snapPersons      = $derived(parse(data.series.snap_persons).map((d) => ({ ...d, value: d.value / 1e6 })));
   const medicareEnrolled = $derived(parse(data.series.medicare_total_enrollment).map((d) => ({ ...d, value: d.value / 1e6 })));
+  const medicaidEnrolled = $derived(parse(data.series.medicaid_chip_enrollment).map((d) => ({ ...d, value: d.value / 1e6 })));
   const snapHasData     = $derived(snapPersons.length > 0);
   const medicareHasData = $derived(medicareEnrolled.length > 0);
+  const medicaidHasData = $derived(medicaidEnrolled.length > 0);
   const snapMid     = $derived(snapHasData ? new Date((snapPersons[0].date.getTime() + snapPersons[snapPersons.length - 1].date.getTime()) / 2) : midDate);
   const medicareMid = $derived(medicareHasData ? new Date((medicareEnrolled[0].date.getTime() + medicareEnrolled[medicareEnrolled.length - 1].date.getTime()) / 2) : midDate);
+  const medicaidMid = $derived(medicaidHasData ? new Date((medicaidEnrolled[0].date.getTime() + medicaidEnrolled[medicaidEnrolled.length - 1].date.getTime()) / 2) : midDate);
 
   // Mortgage rates (Freddie Mac PMMS, weekly; stored sparse — monthly before the last 5 years)
   const mort30 = $derived(parse(data.series.mortgage30us).filter((d) => d.date >= ratesCutoff));
@@ -1454,7 +1457,7 @@
   {/if}
 
   <!-- ── Social Programs ──────────────────────────────────────── -->
-  {#if snapHasData || medicareHasData}
+  {#if snapHasData || medicareHasData || medicaidHasData}
   <h3 class="section-label">Social Programs</h3>
   <section class="grid" style="grid-template-columns: minmax(500px, 1fr) minmax(500px, 1fr)">
     <WideChartCtx>
@@ -1513,6 +1516,35 @@
       </Plot>
       </LazyChart>
       <p class="source">Source: <a href="https://data.cms.gov/summary-statistics-on-beneficiary-enrollment/medicare-and-medicaid-reports/medicare-monthly-enrollment" target="_blank" rel="noopener">CMS Medicare Monthly Enrollment</a></p>
+    </div>
+    {/if}
+
+    {#if medicaidHasData}
+    <!-- Medicaid & CHIP enrollment -->
+    <div class="card wide" id="medicaid">
+      <h2>Medicaid &amp; CHIP Enrollment <a class="anchor-link" href="#medicaid">#</a></h2>
+      <p class="meta">Monthly · Millions of Enrollees · Gap 2013–2017 in source data</p>
+      <LazyChart height={280}>
+      <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: 'Millions', grid: true }}>
+        <Frame />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={medicaidEnrolled} x="date" y="value" stroke="#6d597a" strokeWidth={1.5} />
+        {#snippet overlay()}<RecessionHover bands={recessions} />
+          <HTMLTooltip data={medicaidEnrolled} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                <div class="tip" style:transform={datum.date > medicaidMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
+                  <span class="tip-label">Medicaid &amp; CHIP Enrollment</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
+                  <span class="tip-val">{datum.value.toFixed(1)}M</span>
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      <p class="source">Source: <a href="https://www.medicaid.gov/medicaid/national-medicaid-chip-program-information/medicaid-chip-enrollment-data" target="_blank" rel="noopener">CMS Performance Indicator Dataset</a></p>
     </div>
     {/if}
     </WideChartCtx>

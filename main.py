@@ -5,6 +5,7 @@ from src.config import Config
 from src.derive import Deriver
 from src.fred import FredCollector
 from src.gscpi import GscpiCollector
+from src.medicaid import MedicaidCollector
 from src.medicare import MedicareCollector
 from src.nyfed import NyFedCollector
 from src.oil import OilCollector
@@ -84,6 +85,13 @@ def main():
             medicare_collector.collect_all()
         except Exception as e:
             print(f"❌ Medicare collection failed: {e}")
+
+    if args.source in ["medicaid", "all"]:
+        medicaid_collector = MedicaidCollector(args.output)
+        try:
+            medicaid_collector.collect_all()
+        except Exception as e:
+            print(f"❌ Medicaid collection failed: {e}")
 
     print("\n📐 Computing derived statistics...")
     Deriver(args.output).derive_all()

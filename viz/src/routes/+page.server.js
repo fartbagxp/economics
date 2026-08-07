@@ -36,8 +36,8 @@ const GSCPI_SERIES = ['gscpi'];
 const BLS_SERIES = ['ces0000000001'];
 
 // Social program enrollment is optional — populated by:
-// python main.py --source snap / python main.py --source medicare
-const SOCIAL_SERIES = ['snap_persons', 'medicare_total_enrollment'];
+// python main.py --source snap / --source medicare / --source medicaid
+const SOCIAL_SERIES = ['snap_persons', 'medicare_total_enrollment', 'medicaid_chip_enrollment'];
 
 const DERIVED_SERIES = [
   'cpiaucsl_mom', 'cpiaucsl_yoy',

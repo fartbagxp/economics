@@ -29,6 +29,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Raw series stored as
 - `uv run python main.py --source oil` - Collect Brent crude oil futures curve
 - `uv run python main.py --source snap` - Collect USDA SNAP national participation data
 - `uv run python main.py --source medicare` - Collect CMS Medicare national total enrollment
+- `uv run python main.py --source medicaid` - Collect CMS Medicaid & CHIP national total enrollment
 - `uv run python main.py --source all` - Collect from all sources
 - `uv run python main.py --source fred --series CPIAUCSL` - Collect specific series
 
@@ -104,6 +105,12 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Raw series stored as
 - Fetches national monthly Medicare enrollment from the CMS data.cms.gov public API
 - Saves `medicare_total_enrollment.csv`; covers January 2013–present
 
+**src/medicaid.py (MedicaidCollector):**
+
+- Fetches state-level monthly Medicaid & CHIP enrollment from the CMS Performance Indicator dataset via the data.medicaid.gov datastore API (stable dataset id, not a dated filename)
+- Prefers each state's final report over its preliminary one, then sums nationally
+- Saves `medicaid_chip_enrollment.csv`; covers September 2013 and June 2017–present (gap in between)
+
 **src/derive.py (Deriver):**
 
 - Computes derived series from raw CSVs (YoY inflation, income growth)
@@ -178,7 +185,7 @@ See `docs/collection.md` for the full catalog. Key series:
 
 **Supply Chain:** gscpi — NY Fed Global Supply Chain Pressure Index (monthly, std devs from average)
 
-**Social Programs:** snap_persons (USDA, national SNAP participants, monthly since Oct 1988), medicare_total_enrollment (CMS, national Medicare beneficiaries, monthly since Jan 2013)
+**Social Programs:** snap_persons (USDA, national SNAP participants, monthly since Oct 1988), medicare_total_enrollment (CMS, national Medicare beneficiaries, monthly since Jan 2013), medicaid_chip_enrollment (CMS, national Medicaid+CHIP enrollees, monthly since Jun 2017 with a Sep 2013 data point)
 
 **Derived:** YoY inflation rates for CPI/PCE/PPI series, income YoY growth
 

@@ -6,7 +6,7 @@ class Cli:
         parser = argparse.ArgumentParser(description="Collect US economic data")
         parser.add_argument(
             "--source",
-            choices=["fred", "bls", "nyfed", "gscpi", "oil", "snap", "medicare", "all"],
+            choices=["fred", "bls", "nyfed", "gscpi", "oil", "snap", "medicare", "medicaid", "all"],
             default="all",
             help="Data source to collect from",
         )
