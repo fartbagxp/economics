@@ -5,8 +5,10 @@ from src.config import Config
 from src.derive import Deriver
 from src.fred import FredCollector
 from src.gscpi import GscpiCollector
+from src.medicare import MedicareCollector
 from src.nyfed import NyFedCollector
 from src.oil import OilCollector
+from src.snap import SnapCollector
 
 
 def main():
@@ -68,6 +70,20 @@ def main():
             oil_collector.collect_all()
         except Exception as e:
             print(f"❌ Oil collection failed: {e}")
+
+    if args.source in ["snap", "all"]:
+        snap_collector = SnapCollector(args.output)
+        try:
+            snap_collector.collect_all()
+        except Exception as e:
+            print(f"❌ SNAP collection failed: {e}")
+
+    if args.source in ["medicare", "all"]:
+        medicare_collector = MedicareCollector(args.output)
+        try:
+            medicare_collector.collect_all()
+        except Exception as e:
+            print(f"❌ Medicare collection failed: {e}")
 
     print("\n📐 Computing derived statistics...")
     Deriver(args.output).derive_all()

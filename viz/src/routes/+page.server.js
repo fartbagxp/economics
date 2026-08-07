@@ -35,6 +35,10 @@ const GSCPI_SERIES = ['gscpi'];
 // Payrolls are optional — populated by: python main.py --source bls
 const BLS_SERIES = ['ces0000000001'];
 
+// Social program enrollment is optional — populated by:
+// python main.py --source snap / python main.py --source medicare
+const SOCIAL_SERIES = ['snap_persons', 'medicare_total_enrollment'];
+
 const DERIVED_SERIES = [
   'cpiaucsl_mom', 'cpiaucsl_yoy',
   'cpilfesl_mom', 'cpilfesl_yoy',
@@ -86,11 +90,14 @@ export function load() {
   const gscpi = Object.fromEntries(
     GSCPI_SERIES.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'raw', `${id}.csv`))])
   );
+  const social = Object.fromEntries(
+    SOCIAL_SERIES.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'raw', `${id}.csv`))])
+  );
   const derived = Object.fromEntries(
     DERIVED_SERIES.map((id) => [id, loadCsv(join(process.cwd(), '..', 'data', 'derived', `${id}.csv`))])
   );
   const derivedOptional = Object.fromEntries(
     DERIVED_SERIES_OPTIONAL.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'derived', `${id}.csv`))])
   );
-  return { series: { ...raw, ...nyfed, ...oil, ...bls, ...gscpi, ...derived, ...derivedOptional }, metadata };
+  return { series: { ...raw, ...nyfed, ...oil, ...bls, ...gscpi, ...social, ...derived, ...derivedOptional }, metadata };
 }

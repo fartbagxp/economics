@@ -155,6 +155,15 @@
   const gscpiHasData = $derived(gscpi.length > 0);
   const gscpiMid     = $derived(gscpiHasData ? new Date((gscpi[0].date.getTime() + gscpi[gscpi.length - 1].date.getTime()) / 2) : midDate);
 
+  // Social program enrollment (millions) — populated after running:
+  // python main.py --source snap / python main.py --source medicare
+  const snapPersons     = $derived(parse(data.series.snap_persons).map((d) => ({ ...d, value: d.value / 1e6 })));
+  const medicareEnrolled = $derived(parse(data.series.medicare_total_enrollment).map((d) => ({ ...d, value: d.value / 1e6 })));
+  const snapHasData     = $derived(snapPersons.length > 0);
+  const medicareHasData = $derived(medicareEnrolled.length > 0);
+  const snapMid     = $derived(snapHasData ? new Date((snapPersons[0].date.getTime() + snapPersons[snapPersons.length - 1].date.getTime()) / 2) : midDate);
+  const medicareMid = $derived(medicareHasData ? new Date((medicareEnrolled[0].date.getTime() + medicareEnrolled[medicareEnrolled.length - 1].date.getTime()) / 2) : midDate);
+
   // Mortgage rates (Freddie Mac PMMS, weekly; stored sparse — monthly before the last 5 years)
   const mort30 = $derived(parse(data.series.mortgage30us).filter((d) => d.date >= ratesCutoff));
   const mort15 = $derived(parse(data.series.mortgage15us).filter((d) => d.date >= ratesCutoff));
@@ -183,14 +192,19 @@
     { month: '2015-12', label: 'Fed liftoff from zero rates' },
     { month: '2022-03', label: 'Fed tightening cycle begins' },
     { month: '2023-03', label: 'SVB / regional-bank stress' },
-    { month: '2026-04', label: 'Strait of Hormuz shutdown' },
+  ];
+
+  // Oil-specific shaded band — only surfaced on the Brent crude chart, since this
+  // is a supply-side/geopolitical event rather than a broad macroeconomic one
+  const oilBands = [
+    { start: new Date('2026-04-01'), end: new Date('2026-05-01'), label: 'Strait of Hormuz shutdown' },
   ];
 
   // Recession band / event annotations for the hovered date, shown inside the
   // existing line tooltips so no second hover layer is needed
-  function annotationsFor(date) {
+  function annotationsFor(date, extraBands = []) {
     const notes = [];
-    for (const r of recessions) {
+    for (const r of [...recessions, ...extraBands]) {
       if (date >= r.start && date <= r.end) notes.push(`${r.label} (${fmt(r.start)} – ${fmt(r.end)})`);
     }
     const ym = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
@@ -1359,6 +1373,7 @@
         <Frame />
         <RuleY data={[0]} />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Rect data={oilBands} x1="start" x2="end" fill="#c77b00" fillOpacity={0.12} stroke="none" />
         {#if hasFutures}
           <!-- vertical rule marking today -->
           <RuleY data={[]} />
@@ -1367,14 +1382,14 @@
         {#if hasFutures}
           <Line data={brentFutures} x="date" y="value" stroke="#e8a000" strokeWidth={1.5} strokeDasharray="5,3" />
         {/if}
-        {#snippet overlay()}<RecessionHover bands={recessions} />
+        {#snippet overlay()}<RecessionHover bands={[...recessions, ...oilBands]} />
           <HTMLTooltip data={brentML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = brentML.byDate.get(datum.date.getTime())}
                 <div class="tip" style:transform={datum.date > oilMidDate ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
                   <span class="tip-label">Brent Crude Oil</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date, oilBands) as note}<span class="tip-note">{note}</span>{/each}
                   {#if hasFutures && v}
                     {#if v.spot    != null}<span class="tip-edu-row"><span style="color:#c77b00">●</span> Spot    <b>${v.spot.toFixed(2)}/bbl</b></span>{/if}
                     {#if v.futures != null}<span class="tip-edu-row"><span style="color:#e8a000">●</span> Futures <b>${v.futures.toFixed(2)}/bbl</b></span>{/if}
@@ -1433,6 +1448,73 @@
       </LazyChart>
       <p class="source">Source: <a href="https://www.newyorkfed.org/research/policy/gscpi" target="_blank" rel="noopener">NY Fed / Global Supply Chain Pressure Index</a></p>
     </div>
+    </WideChartCtx>
+
+  </section>
+  {/if}
+
+  <!-- ── Social Programs ──────────────────────────────────────── -->
+  {#if snapHasData || medicareHasData}
+  <h3 class="section-label">Social Programs</h3>
+  <section class="grid" style="grid-template-columns: minmax(500px, 1fr) minmax(500px, 1fr)">
+    <WideChartCtx>
+    {#if snapHasData}
+    <!-- SNAP participation -->
+    <div class="card wide" id="snap">
+      <h2>SNAP Participants <a class="anchor-link" href="#snap">#</a></h2>
+      <p class="meta">Monthly · Millions of Persons</p>
+      <LazyChart height={280}>
+      <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: 'Millions', grid: true }}>
+        <Frame />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={snapPersons} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
+        {#snippet overlay()}<RecessionHover bands={recessions} />
+          <HTMLTooltip data={snapPersons} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                <div class="tip" style:transform={datum.date > snapMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
+                  <span class="tip-label">SNAP Participants</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
+                  <span class="tip-val">{datum.value.toFixed(1)}M</span>
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      <p class="source">Source: <a href="https://www.fna.usda.gov/pd/supplemental-nutrition-assistance-program-snap" target="_blank" rel="noopener">USDA Food and Nutrition Service</a></p>
+    </div>
+    {/if}
+
+    {#if medicareHasData}
+    <!-- Medicare enrollment -->
+    <div class="card wide" id="medicare">
+      <h2>Medicare Enrollment <a class="anchor-link" href="#medicare">#</a></h2>
+      <p class="meta">Monthly · Millions of Beneficiaries</p>
+      <LazyChart height={280}>
+      <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: 'Millions', grid: true }}>
+        <Frame />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={medicareEnrolled} x="date" y="value" stroke="#e76f51" strokeWidth={1.5} />
+        {#snippet overlay()}<RecessionHover bands={recessions} />
+          <HTMLTooltip data={medicareEnrolled} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                <div class="tip" style:transform={datum.date > medicareMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
+                  <span class="tip-label">Medicare Enrollment</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
+                  <span class="tip-val">{datum.value.toFixed(1)}M</span>
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      <p class="source">Source: <a href="https://data.cms.gov/summary-statistics-on-beneficiary-enrollment/medicare-and-medicaid-reports/medicare-monthly-enrollment" target="_blank" rel="noopener">CMS Medicare Monthly Enrollment</a></p>
+    </div>
+    {/if}
     </WideChartCtx>
 
   </section>
