@@ -11,7 +11,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
   <a href="https://github.com/fartbagxp/economics/actions/workflows/deploy-viz.yml"><img src="https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/deploy-viz.yml?label=deploy%20viz&style=flat-square" alt="Deploy Viz"></a>
   <a href="https://github.com/fartbagxp/economics/actions/workflows/lint.yml"><img src="https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/lint.yml?label=lint&style=flat-square" alt="Lint"></a>
   <a href="https://fartbagxp.github.io/economics/"><img src="https://img.shields.io/badge/dashboard-live-brightgreen?style=flat-square" alt="Live Dashboard"></a>
-  <!-- DATASET-COUNT --><img src="https://img.shields.io/badge/datasets-71-blue?style=flat-square" alt="71 datasets"><!-- /DATASET-COUNT -->
+  <!-- DATASET-COUNT --><img src="https://img.shields.io/badge/datasets-74-blue?style=flat-square" alt="74 datasets"><!-- /DATASET-COUNT -->
 </p>
 
 - [Setup](docs/setup.md): how to run the repo
@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-08-07 13:07 UTC_
+_Last updated: 2026-08-07 16:09 UTC_
 
 _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 points (quarterly)._
 
@@ -29,9 +29,9 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 
 | Indicator                 | Trend                      | Latest    | Chg (prev) | Chg (1Y) | As of      |
 | ------------------------- | -------------------------- | --------- | ---------- | -------- | ---------- |
-| Unemployment Rate (U-3)   | `▂▃▃▂▂▃▂▁▃▃▃▅▂▅▅▆█▆▅▆▅▅▅▃` | 4.2%      | -0.1pp     | -0.1pp   | 2026-06-01 |
+| Unemployment Rate (U-3)   | `▃▃▂▂▃▂▁▃▃▃▅▂▅▅▆█▆▅▆▅▅▅▃▂` | 4.1%      | -0.1pp     | +0.0pp   | 2026-07-01 |
 | Total Nonfarm Payrolls    | `▁▁▂▃▄▄▄▄▅▅▅▅▅▅▅▅▅▆▅▆▇▇█▇` | 158,858K  | -23K       | +316K    | 2026-07-01 |
-| Labor Force Participation | `▇███▆▆▆▇▆▆▇▆▅▅▅▆▆▆▄▃▃▂▂▁` | 61.5%     | -0.3pp     | -0.9pp   | 2026-06-01 |
+| Labor Force Participation | `███▆▆▆▇▆▆▇▆▅▅▅▆▆▆▄▄▃▃▃▁▁` | 61.4%     | -0.1pp     | -0.9pp   | 2026-07-01 |
 | Initial Jobless Claims    | `▄▅▅▃▄▃▅▄▅▁▂▄▄▄▇█▇▅▅▅▄▁▂▂` | 199,000   | +1,000     | -27,000  | 2026-08-01 |
 | Continued Claims          | `▅█▆▆▄▅▂▄▄▂▁▂▁▂▁▂▃▄▃▄▃▂▂▃` | 1,801,000 | +24,000    | -162,000 | 2026-07-25 |
 
@@ -39,21 +39,21 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 
 | Indicator                  | Trend                      | Latest | MoM    | YoY (12m) | As of      |
 | -------------------------- | -------------------------- | ------ | ------ | --------- | ---------- |
-| U-1: 15+ Weeks Unemployed  | `▁▃▃▃▅▅▃▁▁▁▃▁▃█▅██████▅██` | 1.8%   | +0.0pp | +0.3pp    | 2026-06-01 |
-| U-2: Job Losers            | `▁█▄▁▄▄▁▁▄▁▄▄▁▄▄██▄██▄█▄▁` | 1.9%   | -0.1pp | -0.1pp    | 2026-06-01 |
-| U-3: Official Rate         | `▂▃▃▂▂▃▂▁▃▃▃▅▂▅▅▆█▆▅▆▅▅▅▃` | 4.2%   | -0.1pp | -0.1pp    | 2026-06-01 |
-| U-4: + Discouraged Workers | `▁▃▂▁▁▂▂▂▂▃▂▃▃▃▄▅█▄▄▄▃▄▄▃` | 4.5%   | -0.1pp | +0.0pp    | 2026-06-01 |
-| U-5: + Marginally Attached | `▁▃▂▂▂▃▂▁▃▃▃▃▃▄▅▆█▅▄▅▅▅▅▄` | 5.2%   | -0.1pp | +0.1pp    | 2026-06-01 |
-| U-6: + Part-Time Economic  | `▁▃▃▂▂▂▂▁▄▃▃▃▂▃▄▄█▆▄▃▄▅▄▃` | 7.9%   | -0.2pp | +0.1pp    | 2026-06-01 |
+| U-1: 15+ Weeks Unemployed  | `▃▃▃▅▅▃▁▁▁▃▁▃█▅██████▅██▅` | 1.7%   | -0.1pp | +0.1pp    | 2026-07-01 |
+| U-2: Job Losers            | `█▄▁▄▄▁▁▄▁▄▄▁▄▄██▄██▄█▄▁▄` | 2.0%   | +0.1pp | +0.1pp    | 2026-07-01 |
+| U-3: Official Rate         | `▃▃▂▂▃▂▁▃▃▃▅▂▅▅▆█▆▅▆▅▅▅▃▂` | 4.1%   | -0.1pp | +0.0pp    | 2026-07-01 |
+| U-4: + Discouraged Workers | `▃▂▁▁▂▂▂▂▃▂▃▃▃▄▅█▄▄▄▃▄▄▃▂` | 4.4%   | -0.1pp | -0.1pp    | 2026-07-01 |
+| U-5: + Marginally Attached | `▃▂▂▂▃▂▁▃▃▃▃▃▄▅▆█▅▄▅▅▅▅▄▃` | 5.1%   | -0.1pp | +0.0pp    | 2026-07-01 |
+| U-6: + Part-Time Economic  | `▂▂▂▂▂▁▁▃▃▂▂▂▃▄▄█▆▄▃▃▅▄▃▃` | 7.9%   | +0.0pp | +0.2pp    | 2026-07-01 |
 
 ### Unemployment by Age
 
 | Indicator  | Trend                      | Latest | MoM    | YoY (12m) | As of      |
 | ---------- | -------------------------- | ------ | ------ | --------- | ---------- |
-| Ages 16–19 | `▁▂▄▄▄▂▁▁▂▄▂▃▅▆▄▃█▇▃▅▃▅▅▅` | 14.6%  | -0.1pp | +1.2pp    | 2026-06-01 |
-| Ages 20–24 | `▃▄▄▂▄▄▃▅▅▃▅▅▅▄██▅▅▂▃▁▃▃▂` | 7.1%   | -0.1pp | -1.1pp    | 2026-06-01 |
-| Ages 25–54 | `▅▇▅▂▂▄▅▃▄▂▃▂▁▄▄▇█▄█▇▇▇▆▆` | 4.6%   | -0.1pp | +0.5pp    | 2026-06-01 |
-| Ages 55+   | `▁▅▃▁▂▃▅▃▂▂▅▃▃▂▂▆▅▃▆██▃▃▁` | 2.8%   | -0.2pp | -0.2pp    | 2026-06-01 |
+| Ages 16–19 | `▂▄▄▄▂▁▁▂▄▂▃▅▆▄▃█▇▃▅▃▅▅▅▁` | 12.1%  | -2.5pp | -2.4pp    | 2026-07-01 |
+| Ages 20–24 | `▄▄▂▄▄▃▅▅▃▅▅▅▄██▅▅▂▃▁▃▃▂▂` | 7.1%   | +0.0pp | -1.1pp    | 2026-07-01 |
+| Ages 25–54 | `▇▅▂▂▄▅▃▄▂▃▂▁▄▄▇█▄█▇▇▇▆▆▆` | 4.6%   | +0.0pp | +0.8pp    | 2026-07-01 |
+| Ages 55+   | `▅▃▁▂▃▅▃▂▂▅▃▃▂▂▆▅▃▆██▃▃▁▅` | 3.1%   | +0.3pp | +0.1pp    | 2026-07-01 |
 
 ### Economy
 

@@ -31,7 +31,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-02 08:31:40-05",
+    "last_updated": "2026-08-07 08:31:41-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/UNRATE"
   },
@@ -40,7 +40,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-02 08:33:20-05",
+    "last_updated": "2026-08-07 08:33:20-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/CIVPART"
   },
@@ -49,7 +49,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-02 08:31:35-05",
+    "last_updated": "2026-08-07 08:31:36-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/U6RATE"
   },
@@ -58,7 +58,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-02 08:31:36-05",
+    "last_updated": "2026-08-07 08:31:35-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/U5RATE"
   },
@@ -67,7 +67,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-02 08:31:36-05",
+    "last_updated": "2026-08-07 08:31:37-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/U4RATE"
   },
@@ -76,7 +76,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-02 08:31:35-05",
+    "last_updated": "2026-08-07 08:31:43-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/U2RATE"
   },
@@ -85,7 +85,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-02 08:31:43-05",
+    "last_updated": "2026-08-07 08:31:45-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/U1RATE"
   },
@@ -94,7 +94,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-02 08:33:02-05",
+    "last_updated": "2026-08-07 08:32:57-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/LNS14000012"
   },
@@ -103,7 +103,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-02 08:32:50-05",
+    "last_updated": "2026-08-07 08:32:51-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/LNS14000036"
   },
@@ -112,7 +112,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-02 08:33:11-05",
+    "last_updated": "2026-08-07 08:32:50-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/LNS14000089"
   },
@@ -121,7 +121,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-02 08:32:55-05",
+    "last_updated": "2026-08-07 08:32:45-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/LNS14024230"
   },
@@ -193,7 +193,7 @@
     "units": "Thousands of Persons",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-02 08:31:35-05",
+    "last_updated": "2026-08-07 08:31:39-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/UEMP27OV"
   },
@@ -211,7 +211,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-02 08:33:19-05",
+    "last_updated": "2026-08-07 08:33:08-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/LNS11300001"
   },
@@ -220,7 +220,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-02 08:33:12-05",
+    "last_updated": "2026-08-07 08:33:12-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/LNS11300002"
   },
@@ -229,7 +229,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-02 08:33:18-05",
+    "last_updated": "2026-08-07 08:33:16-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/LNS11327659"
   },
@@ -238,7 +238,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-02 08:33:09-05",
+    "last_updated": "2026-08-07 08:33:07-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/LNS11327660"
   },
@@ -247,7 +247,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-02 08:33:09-05",
+    "last_updated": "2026-08-07 08:33:08-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/LNS11327689"
   },
@@ -256,7 +256,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-02 08:33:24-05",
+    "last_updated": "2026-08-07 08:33:04-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/LNS11327662"
   },
@@ -526,7 +526,7 @@
     "units": "Percent",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-07-02 08:32:52-05",
+    "last_updated": "2026-08-07 08:33:00-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/LNS13025703"
   },
