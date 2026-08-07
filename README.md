@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-08-04 16:33 UTC_
+_Last updated: 2026-08-07 13:07 UTC_
 
 _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 points (quarterly)._
 
@@ -30,10 +30,10 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 | Indicator                 | Trend                      | Latest    | Chg (prev) | Chg (1Y) | As of      |
 | ------------------------- | -------------------------- | --------- | ---------- | -------- | ---------- |
 | Unemployment Rate (U-3)   | `▂▃▃▂▂▃▂▁▃▃▃▅▂▅▅▆█▆▅▆▅▅▅▃` | 4.2%      | -0.1pp     | -0.1pp   | 2026-06-01 |
-| Total Nonfarm Payrolls    | `▁▁▁▂▂▄▃▄▄▅▅▅▅▅▅▄▄▄▅▄▆▆▇█` | 158,984K  | +57K       | +506K    | 2026-06-01 |
+| Total Nonfarm Payrolls    | `▁▁▂▃▄▄▄▄▅▅▅▅▅▅▅▅▅▆▅▆▇▇█▇` | 158,858K  | -23K       | +316K    | 2026-07-01 |
 | Labor Force Participation | `▇███▆▆▆▇▆▆▇▆▅▅▅▆▆▆▄▃▃▂▂▁` | 61.5%     | -0.3pp     | -0.9pp   | 2026-06-01 |
-| Initial Jobless Claims    | `▄▄▅▅▃▄▃▆▄▅▁▂▅▄▅▇█▇▅▅▅▄▁▂` | 197,000   | +9,000     | -22,000  | 2026-07-25 |
-| Continued Claims          | `▇▅█▆▆▄▅▂▄▄▂▁▂▁▂▁▂▃▄▃▄▃▂▂` | 1,782,000 | -7,000     | -154,000 | 2026-07-18 |
+| Initial Jobless Claims    | `▄▅▅▃▄▃▅▄▅▁▂▄▄▄▇█▇▅▅▅▄▁▂▂` | 199,000   | +1,000     | -27,000  | 2026-08-01 |
+| Continued Claims          | `▅█▆▆▄▅▂▄▄▂▁▂▁▂▁▂▃▄▃▄▃▂▂▃` | 1,801,000 | +24,000    | -162,000 | 2026-07-25 |
 
 ### Unemployment Measures (U1–U6)
 
@@ -62,14 +62,14 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 | GDP                           | `▁▁▁▂▂▃▃▃▄▄▄▄▅▅▅▅▆▆▆▆▇▇▇█` | $32,475.2B | +609.5B    | +1989.5B | 2026-04-01 |
 | CPI (All Urban)               | `▁▁▁▁▁▂▂▂▃▃▃▃▃▄▄▄▅▅▅▅▆▇█▇` | 332.57     | -1.41      | +11.95   | 2026-06-01 |
 | Consumer Sentiment (U. Mich.) | `▆▆▇▇▇█▇▅▃▂▂▄▅▄▃▃▂▂▃▃▃▂▁▂` | 49.50      | +4.70      | -11.20   | 2026-06-01 |
-| Supply Chain Pressure (GSCPI) | `▂▂▂▁▁▁▁▂▁▁▃▂▂▁▂▁▁▄▃▃▄█▇▆` | 1.25       | -0.56      | +1.15    | 2026-06-01 |
+| Supply Chain Pressure (GSCPI) | `▂▂▁▁▁▁▂▁▁▃▂▂▁▂▁▁▄▃▄▄█▇▅▄` | 0.80       | -0.38      | +0.78    | 2026-07-01 |
 
 ### Mortgage Rates
 
 | Indicator     | Trend                      | Latest | WoW    | YoY (52w) | As of      |
 | ------------- | -------------------------- | ------ | ------ | --------- | ---------- |
-| 30-Year Fixed | `▁▁▁▂▃▅▅▅▄▃▄▅▄▆▆▆▆▆▆▅▆▆▇█` | 6.7%   | +0.1pp | -0.1pp    | 2026-07-30 |
-| 15-Year Fixed | `▁▁▁▂▂▅▅▄▄▃▃▄▄▆▆▅▅▅▅▅▅▆▇█` | 6.0%   | +0.1pp | +0.2pp    | 2026-07-30 |
+| 30-Year Fixed | `▁▁▂▃▄▅▄▄▃▄▄▄▆▆▅▆▅▆▅▆▆▆▇█` | 6.7%   | +0.0pp | +0.1pp    | 2026-08-06 |
+| 15-Year Fixed | `▁▁▁▂▄▄▄▃▂▃▄▄▅▆▅▅▅▅▅▅▆▇█▇` | 6.0%   | -0.0pp | +0.3pp    | 2026-08-06 |
 
 ### Household Credit — 90+ Day Delinquency (% of balance)
 
