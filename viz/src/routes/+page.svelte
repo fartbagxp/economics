@@ -203,6 +203,15 @@
     { start: new Date('2026-04-01'), end: new Date('2026-05-01'), label: 'Strait of Hormuz shutdown' },
   ];
 
+  // Student-loan-specific band — only surfaced on the delinquency chart. Federal
+  // student loan payments resumed Oct 2023 after the pandemic pause, but a 12-month
+  // "on-ramp" kept missed payments off credit reports. Once that ended in late 2024,
+  // servicers resumed reporting delinquencies, so the rate jumps from ~0.5% (Q4 2024)
+  // to ~7.7% (Q1 2025) — a reporting-resumption spike, not a sudden change in borrower behavior
+  const studentLoanBands = [
+    { start: new Date('2025-01-01'), end: new Date('2025-03-01'), label: 'On-ramp ends — student loan delinquencies resume credit reporting' },
+  ];
+
   // Recession band / event annotations for the hovered date, shown inside the
   // existing line tooltips so no second hover layer is needed
   function annotationsFor(date, extraBands = []) {
@@ -1211,20 +1220,21 @@
         <Frame />
         <RuleY data={[0]} />
         <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Rect data={studentLoanBands} x1="start" x2="end" fill="#f4a261" fillOpacity={0.15} stroke="none" />
         <Line data={dqHeloc}      x="date" y="value" stroke="#457b9d" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={dqOther}      x="date" y="value" stroke="#bc4749" strokeWidth={1.5} />
         <Line data={dqMortgage}   x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
         <Line data={dqAuto}       x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
         <Line data={dqStudent}    x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
         <Line data={dqCreditCard} x="date" y="value" stroke="#e63946" strokeWidth={2} />
-        {#snippet overlay()}<RecessionHover bands={recessions} />
+        {#snippet overlay()}<RecessionHover bands={[...recessions, ...studentLoanBands]} />
           <HTMLTooltip data={dqML.all} x="date" y="value">
             {#snippet children({ datum })}
               {#if datum}
                 {@const v = dqML.byDate.get(datum.date.getTime())}
                 <div class="tip" style:transform={datum.date > dqMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
                   <span class="tip-label">90+ Day Delinquency</span>
-                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date, studentLoanBands) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
                     {#if v.creditCard != null}<span class="tip-edu-row"><span style="color:#e63946">●</span> Credit Card <b>{v.creditCard.toFixed(2)}%</b></span>{/if}
                     {#if v.student    != null}<span class="tip-edu-row"><span style="color:#f4a261">●</span> Student     <b>{v.student.toFixed(2)}%</b></span>{/if}
