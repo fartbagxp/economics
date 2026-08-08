@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-08-08 04:13 UTC_
+_Last updated: 2026-08-08 18:12 UTC_
 
 _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 points (quarterly)._
 
