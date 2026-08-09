@@ -68,16 +68,16 @@ class Deriver:
         for series_id in INFLATION_SERIES:
             try:
                 self.derive_series(series_id)
-            except Exception as e:  # noqa: BLE001 — one series' failure shouldn't stop the rest
+            except (OSError, pl.exceptions.PolarsError) as e:
                 print(f"❌ Error deriving {series_id}: {e}")
         for series_id in INCOME_YOY_SERIES:
             try:
                 df = self._load(series_id)
                 self._save(self._pct_change(df, 12), f"{series_id}_yoy")
-            except Exception as e:  # noqa: BLE001 — one series' failure shouldn't stop the rest
+            except (OSError, pl.exceptions.PolarsError) as e:
                 print(f"❌ Error deriving {series_id}: {e}")
         for series_id in PAYROLL_SERIES:
             try:
                 self.derive_payrolls(series_id)
-            except Exception as e:  # noqa: BLE001 — one series' failure shouldn't stop the rest
+            except (OSError, pl.exceptions.PolarsError) as e:
                 print(f"❌ Error deriving {series_id}: {e}")

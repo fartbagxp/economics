@@ -1,5 +1,5 @@
 import logging
-from datetime import date, timedelta
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import polars as pl
@@ -30,10 +30,13 @@ class OilCollector:
                 return None
             last_date = hist.index[-1].date()
             # Skip stale prices from contracts near or past expiry
-            if (date.today() - last_date) > timedelta(days=4):  # noqa: DTZ011 — calendar-date comparison, not an instant
+            if (datetime.now(UTC).date() - last_date) > timedelta(days=4):
                 return None
             return float(hist["Close"].dropna().iloc[-1])
-        except Exception:  # noqa: BLE001 — a missing/failed contract price degrades to None, not a crash
+        except (yf.exceptions.YFException, OSError, IndexError, ValueError):
+            # yfinance's own errors, network/urllib failures (OSError), an
+            # all-NaN close column (IndexError), or a non-numeric close
+            # (ValueError) all mean "no usable price" — degrade to None.
             return None
 
     def _wti_contract_tickers(
@@ -45,7 +48,7 @@ class OilCollector:
         in its expiry window (NYMEX WTI expires ~3 business days before the
         25th of the month preceding delivery).
         """
-        today = date.today()  # noqa: DTZ011 — calendar date, not an instant
+        today = datetime.now(UTC).date()
         result = []
         for i in range(2, months_ahead + 2):
             total = today.month + i - 1

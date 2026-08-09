@@ -229,7 +229,7 @@ def build_dashboard(data_dir: str = "data/raw") -> str:
                 freq = meta.get("frequency", "Monthly")
                 stats = compute_stats(df, freq)
                 rows.append(_row_cells(label, stats, meta))
-            except Exception as e:  # noqa: BLE001 — one series' failure shouldn't break the whole dashboard table
+            except (OSError, pl.exceptions.PolarsError, KeyError) as e:
                 rows.append([label, f"_(error: {e})_", "—", "—", "—", "—"])
 
         lines.append(_format_table(header, rows))
