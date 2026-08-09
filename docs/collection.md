@@ -69,6 +69,16 @@ Both are stored **downsampled**: full weekly resolution for the last 5 years, fi
 
 Raw data is saved to `data/raw/` as CSV files, with metadata stored in `data/metadata.json`.
 
+### Regional Manufacturing Surveys (ISM PMI Proxies)
+
+- **GACDFSA066MSFRBPHI**: Philadelphia Fed Manufacturing Business Outlook Survey — Current General Activity, diffusion index (monthly since 1968)
+- **GACDISA066MSFRBNY**: Empire State (NY Fed) Manufacturing Survey — Current General Business Conditions, diffusion index (monthly since 2001)
+- **BACTSAMFRBDAL**: Dallas Fed Texas Manufacturing Outlook Survey — Current General Business Activity, diffusion index (monthly since 2004)
+
+All three are seasonally adjusted diffusion indexes: positive values indicate expansion, negative values contraction, 0 is the breakeven point.
+
+**Why these instead of the ISM Manufacturing PMI**: ISM's own PMI is a paid, copyrighted product. FRED discontinued its `NAPM` mirror of the series in 2016 after a licensing dispute with ISM, and ISM's website only publishes the current month's headline figure (no bulk history, no API). These three regional Fed surveys are the standard free proxies economists watch ahead of the ISM release each month — they're freely licensed, historical, and directionally track the national PMI closely.
+
 ### Payrolls (BLS)
 
 Collected via `uv run python main.py --source bls` (fetched directly from the BLS public API, not mirrored through FRED).

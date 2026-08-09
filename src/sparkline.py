@@ -1,5 +1,6 @@
-from pathlib import Path
 import json
+from pathlib import Path
+
 import polars as pl
 
 SPARK_CHARS = "▁▂▃▄▅▆▇█"
@@ -163,6 +164,14 @@ def build_dashboard(data_dir: str = "data/raw") -> str:
             ],
         ),
         (
+            "Manufacturing (Regional Fed Surveys — ISM PMI Proxies)",
+            [
+                ("gacdfsa066msfrbphi", "Philadelphia Fed"),
+                ("gacdisa066msfrbny", "Empire State (NY Fed)"),
+                ("bactsamfrbdal", "Dallas Fed"),
+            ],
+        ),
+        (
             "Mortgage Rates",
             [
                 ("mortgage30us", "30-Year Fixed"),
@@ -220,7 +229,7 @@ def build_dashboard(data_dir: str = "data/raw") -> str:
                 freq = meta.get("frequency", "Monthly")
                 stats = compute_stats(df, freq)
                 rows.append(_row_cells(label, stats, meta))
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 — one series' failure shouldn't break the whole dashboard table
                 rows.append([label, f"_(error: {e})_", "—", "—", "—", "—"])
 
         lines.append(_format_table(header, rows))

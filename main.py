@@ -55,42 +55,42 @@ def main():
         nyfed_collector = NyFedCollector(args.output)
         try:
             nyfed_collector.collect_all(quarter=getattr(args, "nyfed_quarter", None))
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 — one source's failure shouldn't stop `--source all`
             print(f"❌ NY Fed collection failed: {e}")
 
     if args.source in ["gscpi", "all"]:
         gscpi_collector = GscpiCollector(args.output)
         try:
             gscpi_collector.collect_all()
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 — one source's failure shouldn't stop `--source all`
             print(f"❌ GSCPI collection failed: {e}")
 
     if args.source in ["oil", "all"]:
         oil_collector = OilCollector(args.output)
         try:
             oil_collector.collect_all()
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 — one source's failure shouldn't stop `--source all`
             print(f"❌ Oil collection failed: {e}")
 
     if args.source in ["snap", "all"]:
         snap_collector = SnapCollector(args.output)
         try:
             snap_collector.collect_all()
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 — one source's failure shouldn't stop `--source all`
             print(f"❌ SNAP collection failed: {e}")
 
     if args.source in ["medicare", "all"]:
         medicare_collector = MedicareCollector(args.output)
         try:
             medicare_collector.collect_all()
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 — one source's failure shouldn't stop `--source all`
             print(f"❌ Medicare collection failed: {e}")
 
     if args.source in ["medicaid", "all"]:
         medicaid_collector = MedicaidCollector(args.output)
         try:
             medicaid_collector.collect_all()
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 — one source's failure shouldn't stop `--source all`
             print(f"❌ Medicaid collection failed: {e}")
 
     print("\n📐 Computing derived statistics...")

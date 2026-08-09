@@ -655,5 +655,23 @@
     "source": "CMS Performance Indicator Dataset",
     "source_url": "https://www.medicaid.gov/medicaid/national-medicaid-chip-program-information/medicaid-chip-enrollment-data",
     "last_updated": "2026-08-08"
+  },
+  "gacdisa066msfrbny": {
+    "title": "Current General Business Conditions; Diffusion Index for New York",
+    "units": "Index",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted",
+    "last_updated": "2026-07-15 07:33:42-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/GACDISA066MSFRBNY"
+  },
+  "bactsamfrbdal": {
+    "title": "Current General Business Activity; Diffusion Index for Texas",
+    "units": "Index",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted",
+    "last_updated": "2026-07-27 10:33:48-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/BACTSAMFRBDAL"
   }
 }

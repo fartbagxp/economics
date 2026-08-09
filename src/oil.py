@@ -1,14 +1,14 @@
 import logging
-from pathlib import Path
 from datetime import date, timedelta
+from pathlib import Path
 
 import polars as pl
 import yfinance as yf
 
 # Suppress yfinance's "possibly delisted" / "Failed to get ticker" noise
-logging.getLogger('yfinance').setLevel(logging.CRITICAL)
+logging.getLogger("yfinance").setLevel(logging.CRITICAL)
 
-MONTH_CODES = ['F', 'G', 'H', 'J', 'K', 'M', 'N', 'Q', 'U', 'V', 'X', 'Z']
+MONTH_CODES = ["F", "G", "H", "J", "K", "M", "N", "Q", "U", "V", "X", "Z"]
 
 # Yahoo Finance doesn't expose individual Brent (BZ) monthly contracts.
 # We use the WTI term structure (CL*.NYM) shifted by the live Brent-WTI
@@ -30,20 +30,22 @@ class OilCollector:
                 return None
             last_date = hist.index[-1].date()
             # Skip stale prices from contracts near or past expiry
-            if (date.today() - last_date) > timedelta(days=4):
+            if (date.today() - last_date) > timedelta(days=4):  # noqa: DTZ011 — calendar-date comparison, not an instant
                 return None
             return float(hist["Close"].dropna().iloc[-1])
-        except Exception:
+        except Exception:  # noqa: BLE001 — a missing/failed contract price degrades to None, not a crash
             return None
 
-    def _wti_contract_tickers(self, months_ahead: int = 18) -> list[tuple[str, int, int]]:
+    def _wti_contract_tickers(
+        self, months_ahead: int = 18
+    ) -> list[tuple[str, int, int]]:
         """Return (ticker, year, month) for WTI monthly contracts going forward.
 
         Starts 2 months out — skips the nearest-month contract which is often
         in its expiry window (NYMEX WTI expires ~3 business days before the
         25th of the month preceding delivery).
         """
-        today = date.today()
+        today = date.today()  # noqa: DTZ011 — calendar date, not an instant
         result = []
         for i in range(2, months_ahead + 2):
             total = today.month + i - 1
@@ -64,20 +66,24 @@ class OilCollector:
         print("📊 Fetching Brent crude futures curve (WTI curve + Brent-WTI spread)...")
 
         brent_spot = self._fetch_price("BZ=F")
-        wti_spot   = self._fetch_price("CL=F")
+        wti_spot = self._fetch_price("CL=F")
         if brent_spot is None or wti_spot is None:
             print("⚠️  Could not fetch Brent or WTI spot price")
             return False
 
         spread = brent_spot - wti_spot
-        print(f"  Brent spot: ${brent_spot:.2f}  WTI spot: ${wti_spot:.2f}  spread: ${spread:+.2f}")
+        print(
+            f"  Brent spot: ${brent_spot:.2f}  WTI spot: ${wti_spot:.2f}  spread: ${spread:+.2f}"
+        )
 
         rows = []
         for ticker, year, month in self._wti_contract_tickers():
             wti_price = self._fetch_price(ticker)
             if wti_price is not None:
                 brent_est = wti_price + spread
-                rows.append({"date": f"{year}-{month:02d}-01", "value": round(brent_est, 2)})
+                rows.append(
+                    {"date": f"{year}-{month:02d}-01", "value": round(brent_est, 2)}
+                )
 
         if not rows:
             print("⚠️  Could not fetch any WTI futures contracts")
@@ -86,8 +92,10 @@ class OilCollector:
         df = pl.DataFrame(rows)
         filepath = self.output_dir / "brent_futures_curve.csv"
         df.write_csv(filepath)
-        print(f"✅ Saved brent_futures_curve.csv ({len(df)} contracts, "
-              f"{rows[0]['date'][:7]} → {rows[-1]['date'][:7]})")
+        print(
+            f"✅ Saved brent_futures_curve.csv ({len(df)} contracts, "
+            f"{rows[0]['date'][:7]} → {rows[-1]['date'][:7]})"
+        )
         return True
 
     def collect_all(self) -> None:

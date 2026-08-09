@@ -1,10 +1,9 @@
+import json
 from datetime import timedelta
 from pathlib import Path
-import json
 
 import polars as pl
 from fredapi import Fred
-
 
 # High-frequency series where full history is more resolution than a line chart
 # needs: keep every observation from the last 5 years, and only the first
@@ -72,7 +71,7 @@ class FredCollector:
         try:
             metadata = self.get_series_metadata(series_id)
             self.save_metadata(series_id, metadata)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 — metadata is a nice-to-have, shouldn't block the series data
             print(f"⚠️  Could not fetch metadata: {e}")
 
         df = pl.DataFrame({"date": data.index.to_list(), "value": data.to_list()})
@@ -149,10 +148,16 @@ class FredCollector:
             # Mortgage Rates (Freddie Mac Primary Mortgage Market Survey, weekly)
             "MORTGAGE30US": "30-Year Fixed Rate Mortgage Average",
             "MORTGAGE15US": "15-Year Fixed Rate Mortgage Average",
+            # Regional Fed Manufacturing Surveys (ISM PMI proxies; ISM's own
+            # PMI series was pulled from FRED in 2016 and is no longer
+            # freely redistributable)
+            "GACDFSA066MSFRBPHI": "Philadelphia Fed Manufacturing: Current General Activity",
+            "GACDISA066MSFRBNY": "Empire State (NY Fed) Manufacturing: Current General Business Conditions",
+            "BACTSAMFRBDAL": "Dallas Fed Manufacturing: Current General Business Activity",
         }
 
         for series_id, name in series_map.items():
             try:
                 self.collect_series(series_id, name)
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 — one series' failure shouldn't stop the rest
                 print(f"❌ Error fetching {series_id}: {e}")
