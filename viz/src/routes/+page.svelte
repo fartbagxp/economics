@@ -155,6 +155,14 @@
   const gscpiHasData = $derived(gscpi.length > 0);
   const gscpiMid     = $derived(gscpiHasData ? new Date((gscpi[0].date.getTime() + gscpi[gscpi.length - 1].date.getTime()) / 2) : midDate);
 
+  // Regional Fed manufacturing surveys (ISM PMI proxies) — populated after running: python main.py --source fred
+  const philly    = $derived(parse(data.series.gacdfsa066msfrbphi));
+  const empire    = $derived(parse(data.series.gacdisa066msfrbny));
+  const dallas    = $derived(parse(data.series.bactsamfrbdal));
+  const manufHasData = $derived(philly.length > 0);
+  const manufML   = $derived(multiLine({ philly, empire, dallas }));
+  const manufMid  = $derived(manufHasData ? new Date((philly[0].date.getTime() + philly[philly.length - 1].date.getTime()) / 2) : midDate);
+
   // Social program enrollment (millions) — populated after running:
   // python main.py --source snap / --source medicare / --source medicaid
   const snapPersons      = $derived(parse(data.series.snap_persons).map((d) => ({ ...d, value: d.value / 1e6 })));
@@ -398,8 +406,8 @@
                   <span class="tip-label">Nonfarm Payrolls — Change</span>
                   <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
-                    <span class="tip-edu-row"><span style="color:#a8dadc">●</span> Monthly  <b>{v.change?.toLocaleString('en-US', { maximumFractionDigits: 0 })}K</b></span>
-                    <span class="tip-edu-row"><span style="color:#457b9d">●</span> 3-Mo Avg <b>{v.avg3mo?.toLocaleString('en-US', { maximumFractionDigits: 0 })}K</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#a8dadc">●</span> Monthly</span><b>{v.change?.toLocaleString('en-US', { maximumFractionDigits: 0 })}K</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#457b9d">●</span> 3-Mo Avg</span><b>{v.avg3mo?.toLocaleString('en-US', { maximumFractionDigits: 0 })}K</b></span>
                   {/if}
                 </div>
               {/if}
@@ -519,10 +527,10 @@
                   <span class="tip-label">LFPR by Education (25+)</span>
                   <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if edu}
-                    <span class="tip-edu-row"><span style="color:#2a9d8f">●</span> Bach+    <b>{edu.bachPlus?.toFixed(1)}%</b></span>
-                    <span class="tip-edu-row"><span style="color:#457b9d">●</span> Some col <b>{edu.someCol?.toFixed(1)}%</b></span>
-                    <span class="tip-edu-row"><span style="color:#f4a261">●</span> HS only  <b>{edu.hsOnly?.toFixed(1)}%</b></span>
-                    <span class="tip-edu-row"><span style="color:#bc4749">●</span> &lt; HS   <b>{edu.ltHs?.toFixed(1)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#2a9d8f">●</span> Bach+</span><b>{edu.bachPlus?.toFixed(1)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#457b9d">●</span> Some col</span><b>{edu.someCol?.toFixed(1)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#f4a261">●</span> HS only</span><b>{edu.hsOnly?.toFixed(1)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#bc4749">●</span> &lt; HS</span><b>{edu.ltHs?.toFixed(1)}%</b></span>
                   {/if}
                 </div>
               {/if}
@@ -681,8 +689,8 @@
                   <span class="tip-label">CPI YoY</span>
                   <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
-                    <span class="tip-edu-row"><span style="color:#e63946">●</span> Headline <b>{v.headline?.toFixed(2)}%</b></span>
-                    <span class="tip-edu-row"><span style="color:#ff9f43">●</span> Core     <b>{v.core?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#e63946">●</span> Headline</span><b>{v.headline?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#ff9f43">●</span> Core</span><b>{v.core?.toFixed(2)}%</b></span>
                   {/if}
                 </div>
               {/if}
@@ -718,8 +726,8 @@
                   <span class="tip-label">PCE YoY</span>
                   <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
-                    <span class="tip-edu-row"><span style="color:#2a9d8f">●</span> Headline <b>{v.headline?.toFixed(2)}%</b></span>
-                    <span class="tip-edu-row"><span style="color:#52b788">●</span> Core     <b>{v.core?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#2a9d8f">●</span> Headline</span><b>{v.headline?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#52b788">●</span> Core</span><b>{v.core?.toFixed(2)}%</b></span>
                   {/if}
                 </div>
               {/if}
@@ -754,8 +762,8 @@
                   <span class="tip-label">PPI YoY</span>
                   <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
-                    <span class="tip-edu-row"><span style="color:#457b9d">●</span> Headline <b>{v.headline?.toFixed(2)}%</b></span>
-                    <span class="tip-edu-row"><span style="color:#74b3ce">●</span> Core     <b>{v.core?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#457b9d">●</span> Headline</span><b>{v.headline?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#74b3ce">●</span> Core</span><b>{v.core?.toFixed(2)}%</b></span>
                   {/if}
                 </div>
               {/if}
@@ -793,9 +801,9 @@
                   <span class="tip-label">Core Inflation YoY</span>
                   <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
-                    <span class="tip-edu-row"><span style="color:#ff9f43">●</span> Core CPI <b>{v.cpi?.toFixed(2)}%</b></span>
-                    <span class="tip-edu-row"><span style="color:#52b788">●</span> Core PCE <b>{v.pce?.toFixed(2)}%</b></span>
-                    <span class="tip-edu-row"><span style="color:#74b3ce">●</span> Core PPI <b>{v.ppi?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#ff9f43">●</span> Core CPI</span><b>{v.cpi?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#52b788">●</span> Core PCE</span><b>{v.pce?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#74b3ce">●</span> Core PPI</span><b>{v.ppi?.toFixed(2)}%</b></span>
                   {/if}
                 </div>
               {/if}
@@ -835,8 +843,8 @@
                   <span class="tip-label">CPI MoM</span>
                   <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
-                    <span class="tip-edu-row"><span style="color:#e63946">●</span> Headline <b>{v.headline?.toFixed(2)}%</b></span>
-                    <span class="tip-edu-row"><span style="color:#ff9f43">●</span> Core     <b>{v.core?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#e63946">●</span> Headline</span><b>{v.headline?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#ff9f43">●</span> Core</span><b>{v.core?.toFixed(2)}%</b></span>
                   {/if}
                 </div>
               {/if}
@@ -871,8 +879,8 @@
                   <span class="tip-label">PCE MoM</span>
                   <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
-                    <span class="tip-edu-row"><span style="color:#2a9d8f">●</span> Headline <b>{v.headline?.toFixed(2)}%</b></span>
-                    <span class="tip-edu-row"><span style="color:#52b788">●</span> Core     <b>{v.core?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#2a9d8f">●</span> Headline</span><b>{v.headline?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#52b788">●</span> Core</span><b>{v.core?.toFixed(2)}%</b></span>
                   {/if}
                 </div>
               {/if}
@@ -907,8 +915,8 @@
                   <span class="tip-label">PPI MoM</span>
                   <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
-                    <span class="tip-edu-row"><span style="color:#457b9d">●</span> Headline <b>{v.headline?.toFixed(2)}%</b></span>
-                    <span class="tip-edu-row"><span style="color:#74b3ce">●</span> Core     <b>{v.core?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#457b9d">●</span> Headline</span><b>{v.headline?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#74b3ce">●</span> Core</span><b>{v.core?.toFixed(2)}%</b></span>
                   {/if}
                 </div>
               {/if}
@@ -945,9 +953,9 @@
                   <span class="tip-label">Core Inflation MoM</span>
                   <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
-                    <span class="tip-edu-row"><span style="color:#ff9f43">●</span> Core CPI <b>{v.cpi?.toFixed(2)}%</b></span>
-                    <span class="tip-edu-row"><span style="color:#52b788">●</span> Core PCE <b>{v.pce?.toFixed(2)}%</b></span>
-                    <span class="tip-edu-row"><span style="color:#74b3ce">●</span> Core PPI <b>{v.ppi?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#ff9f43">●</span> Core CPI</span><b>{v.cpi?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#52b788">●</span> Core PCE</span><b>{v.pce?.toFixed(2)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#74b3ce">●</span> Core PPI</span><b>{v.ppi?.toFixed(2)}%</b></span>
                   {/if}
                 </div>
               {/if}
@@ -988,8 +996,8 @@
                   <span class="tip-label">Income</span>
                   <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
-                    <span class="tip-edu-row"><span style="color:#1a6faf">●</span> Personal Income &nbsp;<b>${v.income?.toLocaleString('en-US', { maximumFractionDigits: 0 })}B</b></span>
-                    <span class="tip-edu-row"><span style="color:#f4a261">●</span> Disposable &nbsp;<b>${v.disposable?.toLocaleString('en-US', { maximumFractionDigits: 0 })}B</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#1a6faf">●</span> Personal Income</span><b>${v.income?.toLocaleString('en-US', { maximumFractionDigits: 0 })}B</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#f4a261">●</span> Disposable</span><b>${v.disposable?.toLocaleString('en-US', { maximumFractionDigits: 0 })}B</b></span>
                   {/if}
                 </div>
               {/if}
@@ -1151,12 +1159,12 @@
                   <span class="tip-label">Household Debt (NY Fed)</span>
                   <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
-                    {#if v.mortgage   != null}<span class="tip-edu-row"><span style="color:#1a6faf">●</span> Mortgage    <b>${v.mortgage.toFixed(2)}T</b></span>{/if}
-                    {#if v.auto       != null}<span class="tip-edu-row"><span style="color:#2a9d8f">●</span> Auto        <b>${v.auto.toFixed(2)}T</b></span>{/if}
-                    {#if v.student    != null}<span class="tip-edu-row"><span style="color:#f4a261">●</span> Student     <b>${v.student.toFixed(2)}T</b></span>{/if}
-                    {#if v.creditCard != null}<span class="tip-edu-row"><span style="color:#e63946">●</span> Credit Card <b>${v.creditCard.toFixed(2)}T</b></span>{/if}
-                    {#if v.heloc      != null}<span class="tip-edu-row"><span style="color:#457b9d">●</span> HELOC       <b>${v.heloc.toFixed(2)}T</b></span>{/if}
-                    {#if v.other      != null}<span class="tip-edu-row"><span style="color:#bc4749">●</span> Other       <b>${v.other.toFixed(2)}T</b></span>{/if}
+                    {#if v.mortgage   != null}<span class="tip-edu-row"><span><span style="color:#1a6faf">●</span> Mortgage</span><b>${v.mortgage.toFixed(2)}T</b></span>{/if}
+                    {#if v.auto       != null}<span class="tip-edu-row"><span><span style="color:#2a9d8f">●</span> Auto</span><b>${v.auto.toFixed(2)}T</b></span>{/if}
+                    {#if v.student    != null}<span class="tip-edu-row"><span><span style="color:#f4a261">●</span> Student</span><b>${v.student.toFixed(2)}T</b></span>{/if}
+                    {#if v.creditCard != null}<span class="tip-edu-row"><span><span style="color:#e63946">●</span> Credit Card</span><b>${v.creditCard.toFixed(2)}T</b></span>{/if}
+                    {#if v.heloc      != null}<span class="tip-edu-row"><span><span style="color:#457b9d">●</span> HELOC</span><b>${v.heloc.toFixed(2)}T</b></span>{/if}
+                    {#if v.other      != null}<span class="tip-edu-row"><span><span style="color:#bc4749">●</span> Other</span><b>${v.other.toFixed(2)}T</b></span>{/if}
                   {/if}
                 </div>
               {/if}
@@ -1236,12 +1244,12 @@
                   <span class="tip-label">90+ Day Delinquency</span>
                   <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date, studentLoanBands) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
-                    {#if v.creditCard != null}<span class="tip-edu-row"><span style="color:#e63946">●</span> Credit Card <b>{v.creditCard.toFixed(2)}%</b></span>{/if}
-                    {#if v.student    != null}<span class="tip-edu-row"><span style="color:#f4a261">●</span> Student     <b>{v.student.toFixed(2)}%</b></span>{/if}
-                    {#if v.auto       != null}<span class="tip-edu-row"><span style="color:#2a9d8f">●</span> Auto        <b>{v.auto.toFixed(2)}%</b></span>{/if}
-                    {#if v.mortgage   != null}<span class="tip-edu-row"><span style="color:#1a6faf">●</span> Mortgage    <b>{v.mortgage.toFixed(2)}%</b></span>{/if}
-                    {#if v.heloc      != null}<span class="tip-edu-row"><span style="color:#457b9d">●</span> HELOC       <b>{v.heloc.toFixed(2)}%</b></span>{/if}
-                    {#if v.other      != null}<span class="tip-edu-row"><span style="color:#bc4749">●</span> Other       <b>{v.other.toFixed(2)}%</b></span>{/if}
+                    {#if v.creditCard != null}<span class="tip-edu-row"><span><span style="color:#e63946">●</span> Credit Card</span><b>{v.creditCard.toFixed(2)}%</b></span>{/if}
+                    {#if v.student    != null}<span class="tip-edu-row"><span><span style="color:#f4a261">●</span> Student</span><b>{v.student.toFixed(2)}%</b></span>{/if}
+                    {#if v.auto       != null}<span class="tip-edu-row"><span><span style="color:#2a9d8f">●</span> Auto</span><b>{v.auto.toFixed(2)}%</b></span>{/if}
+                    {#if v.mortgage   != null}<span class="tip-edu-row"><span><span style="color:#1a6faf">●</span> Mortgage</span><b>{v.mortgage.toFixed(2)}%</b></span>{/if}
+                    {#if v.heloc      != null}<span class="tip-edu-row"><span><span style="color:#457b9d">●</span> HELOC</span><b>{v.heloc.toFixed(2)}%</b></span>{/if}
+                    {#if v.other      != null}<span class="tip-edu-row"><span><span style="color:#bc4749">●</span> Other</span><b>{v.other.toFixed(2)}%</b></span>{/if}
                   {/if}
                 </div>
               {/if}
@@ -1286,10 +1294,10 @@
                   <span class="tip-label">Household Debt (FRED)</span>
                   <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
-                    {#if v.mortgage     != null}<span class="tip-edu-row"><span style="color:#1a6faf">●</span> Mortgage       <b>${v.mortgage.toFixed(2)}T</b></span>{/if}
-                    {#if v.creditCards  != null}<span class="tip-edu-row"><span style="color:#e63946">●</span> Credit Cards   <b>${v.creditCards.toFixed(2)}T</b></span>{/if}
-                    {#if v.studentLoans != null}<span class="tip-edu-row"><span style="color:#f4a261">●</span> Student Loans  <b>${v.studentLoans.toFixed(2)}T</b></span>{/if}
-                    {#if v.autoLoans    != null}<span class="tip-edu-row"><span style="color:#2a9d8f">●</span> Auto Loans     <b>${v.autoLoans.toFixed(2)}T</b></span>{/if}
+                    {#if v.mortgage     != null}<span class="tip-edu-row"><span><span style="color:#1a6faf">●</span> Mortgage</span><b>${v.mortgage.toFixed(2)}T</b></span>{/if}
+                    {#if v.creditCards  != null}<span class="tip-edu-row"><span><span style="color:#e63946">●</span> Credit Cards</span><b>${v.creditCards.toFixed(2)}T</b></span>{/if}
+                    {#if v.studentLoans != null}<span class="tip-edu-row"><span><span style="color:#f4a261">●</span> Student Loans</span><b>${v.studentLoans.toFixed(2)}T</b></span>{/if}
+                    {#if v.autoLoans    != null}<span class="tip-edu-row"><span><span style="color:#2a9d8f">●</span> Auto Loans</span><b>${v.autoLoans.toFixed(2)}T</b></span>{/if}
                   {/if}
                 </div>
               {/if}
@@ -1404,8 +1412,8 @@
                   <span class="tip-label">Brent Crude Oil</span>
                   <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date, oilBands) as note}<span class="tip-note">{note}</span>{/each}
                   {#if hasFutures && v}
-                    {#if v.spot    != null}<span class="tip-edu-row"><span style="color:#c77b00">●</span> Spot    <b>${v.spot.toFixed(2)}/bbl</b></span>{/if}
-                    {#if v.futures != null}<span class="tip-edu-row"><span style="color:#e8a000">●</span> Futures <b>${v.futures.toFixed(2)}/bbl</b></span>{/if}
+                    {#if v.spot    != null}<span class="tip-edu-row"><span><span style="color:#c77b00">●</span> Spot</span><b>${v.spot.toFixed(2)}/bbl</b></span>{/if}
+                    {#if v.futures != null}<span class="tip-edu-row"><span><span style="color:#e8a000">●</span> Futures</span><b>${v.futures.toFixed(2)}/bbl</b></span>{/if}
                   {:else}
                     <span class="tip-val">${datum.value.toFixed(2)}/bbl</span>
                   {/if}
@@ -1460,6 +1468,60 @@
       </Plot>
       </LazyChart>
       <p class="source">Source: <a href="https://www.newyorkfed.org/research/policy/gscpi" target="_blank" rel="noopener">NY Fed / Global Supply Chain Pressure Index</a></p>
+    </div>
+    </WideChartCtx>
+
+  </section>
+  {/if}
+
+  <!-- ── Manufacturing ────────────────────────────────────────── -->
+  {#if manufHasData}
+  <h3 class="section-label">Manufacturing</h3>
+  <section class="grid" style="grid-template-columns: minmax(500px, 1fr) minmax(500px, 1fr)">
+    <WideChartCtx>
+    <!-- Regional Fed Manufacturing Surveys (ISM PMI proxies) -->
+    <div class="card wide" id="manufacturing">
+      <h2>Regional Fed Manufacturing Surveys <a class="anchor-link" href="#manufacturing">#</a></h2>
+      <p class="meta">
+        Monthly · Seasonally Adjusted Diffusion Index · Above 0 = expansion, below 0 = contraction &nbsp;·&nbsp;
+        <span class="legend-swatch" style="background:#e63946"></span> Philadelphia Fed &nbsp;
+        <span class="legend-swatch" style="background:#457b9d"></span> Empire State (NY Fed) &nbsp;
+        <span class="legend-swatch" style="background:#2a9d8f"></span> Dallas Fed
+      </p>
+      <LazyChart height={280}>
+      <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: 'Index', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={philly} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
+        <Line data={empire} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
+        <Line data={dallas} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
+        {#snippet overlay()}<RecessionHover bands={recessions} />
+          <HTMLTooltip data={manufML.all} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const v = manufML.byDate.get(datum.date.getTime())}
+                <div class="tip" style:transform={datum.date > manufMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
+                  <span class="tip-label">Manufacturing Surveys</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
+                  {#if v}
+                    {#if v.philly != null}<span class="tip-edu-row"><span><span style="color:#e63946">●</span> Philadelphia</span><b>{v.philly?.toFixed(1)}</b></span>{/if}
+                    {#if v.empire != null}<span class="tip-edu-row"><span><span style="color:#457b9d">●</span> Empire State</span><b>{v.empire?.toFixed(1)}</b></span>{/if}
+                    {#if v.dallas != null}<span class="tip-edu-row"><span><span style="color:#2a9d8f">●</span> Dallas</span><b>{v.dallas?.toFixed(1)}</b></span>{/if}
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      <p class="source">
+        Source: FRED — <a href={fredUrl('gacdfsa066msfrbphi')} target="_blank" rel="noopener">GACDFSA066MSFRBPHI</a> ·
+        <a href={fredUrl('gacdisa066msfrbny')} target="_blank" rel="noopener">GACDISA066MSFRBNY</a> ·
+        <a href={fredUrl('bactsamfrbdal')} target="_blank" rel="noopener">BACTSAMFRBDAL</a>
+        &nbsp;· Free proxies for the ISM Manufacturing PMI, which FRED stopped redistributing in 2016
+      </p>
     </div>
     </WideChartCtx>
 
@@ -1592,9 +1654,9 @@
                   <span class="tip-label">Inflation Expectations</span>
                   <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
-                    {#if v.mich != null}<span class="tip-edu-row"><span style="color:#e63946">●</span> UMich 1Y &nbsp;<b>{v.mich?.toFixed(1)}%</b></span>{/if}
-                    {#if v.b5y != null}<span class="tip-edu-row"><span style="color:#457b9d">●</span> 5Y Breakeven <b>{v.b5y?.toFixed(2)}%</b></span>{/if}
-                    {#if v.b10y != null}<span class="tip-edu-row"><span style="color:#74b3ce">●</span> 10Y Breakeven <b>{v.b10y?.toFixed(2)}%</b></span>{/if}
+                    {#if v.mich != null}<span class="tip-edu-row"><span><span style="color:#e63946">●</span> UMich 1Y</span><b>{v.mich?.toFixed(1)}%</b></span>{/if}
+                    {#if v.b5y != null}<span class="tip-edu-row"><span><span style="color:#457b9d">●</span> 5Y Breakeven</span><b>{v.b5y?.toFixed(2)}%</b></span>{/if}
+                    {#if v.b10y != null}<span class="tip-edu-row"><span><span style="color:#74b3ce">●</span> 10Y Breakeven</span><b>{v.b10y?.toFixed(2)}%</b></span>{/if}
                   {/if}
                 </div>
               {/if}
@@ -1637,8 +1699,8 @@
                   <span class="tip-label">Mortgage Rates</span>
                   <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
-                    {#if v.m30 != null}<span class="tip-edu-row"><span style="color:#e63946">●</span> 30-Year <b>{v.m30?.toFixed(2)}%</b></span>{/if}
-                    {#if v.m15 != null}<span class="tip-edu-row"><span style="color:#2a9d8f">●</span> 15-Year <b>{v.m15?.toFixed(2)}%</b></span>{/if}
+                    {#if v.m30 != null}<span class="tip-edu-row"><span><span style="color:#e63946">●</span> 30-Year</span><b>{v.m30?.toFixed(2)}%</b></span>{/if}
+                    {#if v.m15 != null}<span class="tip-edu-row"><span><span style="color:#2a9d8f">●</span> 15-Year</span><b>{v.m15?.toFixed(2)}%</b></span>{/if}
                   {/if}
                 </div>
               {/if}
@@ -1683,11 +1745,11 @@
                   <span class="tip-label">Interest Rates</span>
                   <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
                   {#if v}
-                    {#if v.fedfunds != null}<span class="tip-edu-row"><span style="color:#6d6875">●</span> Fed Funds &nbsp;<b>{v.fedfunds?.toFixed(2)}%</b></span>{/if}
-                    {#if v.gs2 != null}<span class="tip-edu-row"><span style="color:#f4a261">●</span> 2-Year &nbsp;<b>{v.gs2?.toFixed(2)}%</b></span>{/if}
-                    {#if v.gs10 != null}<span class="tip-edu-row"><span style="color:#e63946">●</span> 10-Year &nbsp;<b>{v.gs10?.toFixed(2)}%</b></span>{/if}
-                    {#if v.gs20 != null}<span class="tip-edu-row"><span style="color:#457b9d">●</span> 20-Year &nbsp;<b>{v.gs20?.toFixed(2)}%</b></span>{/if}
-                    {#if v.gs30 != null}<span class="tip-edu-row"><span style="color:#2a9d8f">●</span> 30-Year &nbsp;<b>{v.gs30?.toFixed(2)}%</b></span>{/if}
+                    {#if v.fedfunds != null}<span class="tip-edu-row"><span><span style="color:#6d6875">●</span> Fed Funds</span><b>{v.fedfunds?.toFixed(2)}%</b></span>{/if}
+                    {#if v.gs2 != null}<span class="tip-edu-row"><span><span style="color:#f4a261">●</span> 2-Year</span><b>{v.gs2?.toFixed(2)}%</b></span>{/if}
+                    {#if v.gs10 != null}<span class="tip-edu-row"><span><span style="color:#e63946">●</span> 10-Year</span><b>{v.gs10?.toFixed(2)}%</b></span>{/if}
+                    {#if v.gs20 != null}<span class="tip-edu-row"><span><span style="color:#457b9d">●</span> 20-Year</span><b>{v.gs20?.toFixed(2)}%</b></span>{/if}
+                    {#if v.gs30 != null}<span class="tip-edu-row"><span><span style="color:#2a9d8f">●</span> 30-Year</span><b>{v.gs30?.toFixed(2)}%</b></span>{/if}
                   {/if}
                 </div>
               {/if}

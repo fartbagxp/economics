@@ -2,7 +2,6 @@ from pathlib import Path
 
 import polars as pl
 
-
 INFLATION_SERIES = ["cpiaucsl", "cpilfesl", "pcepi", "pcepilfe", "ppifid", "ppifes"]
 INCOME_YOY_SERIES = ["w875rx1"]
 PAYROLL_SERIES = ["ces0000000001"]
@@ -50,10 +49,9 @@ class Deriver:
         )
 
     def _rolling_mean(self, df, window):
-        return (
-            df.with_columns(pl.col("value").rolling_mean(window).alias("value"))
-            .drop_nulls("value")
-        )
+        return df.with_columns(
+            pl.col("value").rolling_mean(window).alias("value")
+        ).drop_nulls("value")
 
     def derive_series(self, series_id):
         df = self._load(series_id)
@@ -70,16 +68,16 @@ class Deriver:
         for series_id in INFLATION_SERIES:
             try:
                 self.derive_series(series_id)
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 — one series' failure shouldn't stop the rest
                 print(f"❌ Error deriving {series_id}: {e}")
         for series_id in INCOME_YOY_SERIES:
             try:
                 df = self._load(series_id)
                 self._save(self._pct_change(df, 12), f"{series_id}_yoy")
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 — one series' failure shouldn't stop the rest
                 print(f"❌ Error deriving {series_id}: {e}")
         for series_id in PAYROLL_SERIES:
             try:
                 self.derive_payrolls(series_id)
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 — one series' failure shouldn't stop the rest
                 print(f"❌ Error deriving {series_id}: {e}")

@@ -32,6 +32,10 @@ const OIL_SERIES = ['brent_futures_curve'];
 // Supply chain pressure is optional — populated by: python main.py --source gscpi
 const GSCPI_SERIES = ['gscpi'];
 
+// Regional Fed manufacturing surveys (ISM PMI proxies) are optional —
+// populated by: python main.py --source fred
+const MANUFACTURING_SERIES = ['gacdfsa066msfrbphi', 'gacdisa066msfrbny', 'bactsamfrbdal'];
+
 // Payrolls are optional — populated by: python main.py --source bls
 const BLS_SERIES = ['ces0000000001'];
 
@@ -90,6 +94,9 @@ export function load() {
   const gscpi = Object.fromEntries(
     GSCPI_SERIES.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'raw', `${id}.csv`))])
   );
+  const manufacturing = Object.fromEntries(
+    MANUFACTURING_SERIES.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'raw', `${id}.csv`))])
+  );
   const social = Object.fromEntries(
     SOCIAL_SERIES.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'raw', `${id}.csv`))])
   );
@@ -99,5 +106,5 @@ export function load() {
   const derivedOptional = Object.fromEntries(
     DERIVED_SERIES_OPTIONAL.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'derived', `${id}.csv`))])
   );
-  return { series: { ...raw, ...nyfed, ...oil, ...bls, ...gscpi, ...social, ...derived, ...derivedOptional }, metadata };
+  return { series: { ...raw, ...nyfed, ...oil, ...bls, ...gscpi, ...manufacturing, ...social, ...derived, ...derivedOptional }, metadata };
 }
