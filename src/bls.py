@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 import polars as pl
@@ -68,7 +68,7 @@ class BlsCollector:
         """Collect a single series from BLS, from 1990 to the current year."""
         print(f"📊 Fetching {name} ({series_id}) from BLS...")
 
-        current_year = datetime.now().year  # noqa: DTZ005 — only the calendar year is used
+        current_year = datetime.now(UTC).year
         start_year = 1990
         raw_items = []
         year = start_year
@@ -85,7 +85,9 @@ class BlsCollector:
             if period.startswith("M"):
                 month = period[1:]
                 date_str = f"{year}-{month}-01"
-                dates.append(datetime.strptime(date_str, "%Y-%m-%d"))  # noqa: DTZ007 — calendar date, not an instant
+                dates.append(
+                    datetime.strptime(date_str, "%Y-%m-%d").replace(tzinfo=UTC)
+                )
                 values.append(float(item["value"]))
 
         if not dates:
@@ -113,5 +115,5 @@ class BlsCollector:
         for series_id, (name, units) in series_map.items():
             try:
                 self.collect_series(series_id, name, units)
-            except Exception as e:  # noqa: BLE001 — one series' failure shouldn't stop the rest
+            except (OSError, ValueError, KeyError, pl.exceptions.PolarsError) as e:
                 print(f"❌ Error fetching {series_id}: {e}")

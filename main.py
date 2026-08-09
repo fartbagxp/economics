@@ -1,3 +1,8 @@
+import zipfile
+
+import polars as pl
+import xlrd
+
 from src.bls import BlsCollector
 from src.chart import EconomicChart
 from src.cli import Cli
@@ -10,6 +15,30 @@ from src.medicare import MedicareCollector
 from src.nyfed import NyFedCollector
 from src.oil import OilCollector
 from src.snap import SnapCollector
+
+# Each collector below wraps a different upstream library (openpyxl, xlrd,
+# zipfile, requests) and we want one source's failure to not stop the rest
+# of `--source all`. These tuples name every exception type that source's
+# collect_all() can actually raise, traced from its implementation, instead
+# of catching blind Exception.
+_NYFED_ERRORS = (
+    OSError,
+    RuntimeError,
+    ValueError,
+    zipfile.BadZipFile,
+    pl.exceptions.PolarsError,
+)
+_GSCPI_ERRORS = (OSError, xlrd.XLRDError, pl.exceptions.PolarsError)
+_OIL_ERRORS = (OSError, pl.exceptions.PolarsError)
+_SNAP_ERRORS = (
+    OSError,
+    RuntimeError,
+    zipfile.BadZipFile,
+    xlrd.XLRDError,
+    pl.exceptions.PolarsError,
+)
+_MEDICARE_ERRORS = (OSError, RuntimeError, pl.exceptions.PolarsError)
+_MEDICAID_ERRORS = (OSError, RuntimeError, pl.exceptions.PolarsError)
 
 
 def main():
@@ -55,42 +84,42 @@ def main():
         nyfed_collector = NyFedCollector(args.output)
         try:
             nyfed_collector.collect_all(quarter=getattr(args, "nyfed_quarter", None))
-        except Exception as e:  # noqa: BLE001 — one source's failure shouldn't stop `--source all`
+        except _NYFED_ERRORS as e:
             print(f"❌ NY Fed collection failed: {e}")
 
     if args.source in ["gscpi", "all"]:
         gscpi_collector = GscpiCollector(args.output)
         try:
             gscpi_collector.collect_all()
-        except Exception as e:  # noqa: BLE001 — one source's failure shouldn't stop `--source all`
+        except _GSCPI_ERRORS as e:
             print(f"❌ GSCPI collection failed: {e}")
 
     if args.source in ["oil", "all"]:
         oil_collector = OilCollector(args.output)
         try:
             oil_collector.collect_all()
-        except Exception as e:  # noqa: BLE001 — one source's failure shouldn't stop `--source all`
+        except _OIL_ERRORS as e:
             print(f"❌ Oil collection failed: {e}")
 
     if args.source in ["snap", "all"]:
         snap_collector = SnapCollector(args.output)
         try:
             snap_collector.collect_all()
-        except Exception as e:  # noqa: BLE001 — one source's failure shouldn't stop `--source all`
+        except _SNAP_ERRORS as e:
             print(f"❌ SNAP collection failed: {e}")
 
     if args.source in ["medicare", "all"]:
         medicare_collector = MedicareCollector(args.output)
         try:
             medicare_collector.collect_all()
-        except Exception as e:  # noqa: BLE001 — one source's failure shouldn't stop `--source all`
+        except _MEDICARE_ERRORS as e:
             print(f"❌ Medicare collection failed: {e}")
 
     if args.source in ["medicaid", "all"]:
         medicaid_collector = MedicaidCollector(args.output)
         try:
             medicaid_collector.collect_all()
-        except Exception as e:  # noqa: BLE001 — one source's failure shouldn't stop `--source all`
+        except _MEDICAID_ERRORS as e:
             print(f"❌ Medicaid collection failed: {e}")
 
     print("\n📐 Computing derived statistics...")

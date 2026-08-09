@@ -71,7 +71,10 @@ class FredCollector:
         try:
             metadata = self.get_series_metadata(series_id)
             self.save_metadata(series_id, metadata)
-        except Exception as e:  # noqa: BLE001 — metadata is a nice-to-have, shouldn't block the series data
+        except (ValueError, OSError, SyntaxError) as e:
+            # fredapi wraps bad responses as ValueError, network/urllib failures
+            # as OSError, and malformed XML as SyntaxError. Metadata is a
+            # nice-to-have — it shouldn't block saving the series data itself.
             print(f"⚠️  Could not fetch metadata: {e}")
 
         df = pl.DataFrame({"date": data.index.to_list(), "value": data.to_list()})
@@ -159,5 +162,5 @@ class FredCollector:
         for series_id, name in series_map.items():
             try:
                 self.collect_series(series_id, name)
-            except Exception as e:  # noqa: BLE001 — one series' failure shouldn't stop the rest
+            except (ValueError, OSError, SyntaxError, pl.exceptions.PolarsError) as e:
                 print(f"❌ Error fetching {series_id}: {e}")
