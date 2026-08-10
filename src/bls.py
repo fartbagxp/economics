@@ -85,9 +85,11 @@ class BlsCollector:
             if period.startswith("M"):
                 month = period[1:]
                 date_str = f"{year}-{month}-01"
-                dates.append(
-                    datetime.strptime(date_str, "%Y-%m-%d").replace(tzinfo=UTC)
-                )
+                # Naive on purpose: this is a calendar month, not an instant,
+                # and every other collector in this repo stores dates the same
+                # way (tz-aware here breaks strict=False parsing downstream —
+                # see sparkline.py's load_series and derive.py's _load).
+                dates.append(datetime.strptime(date_str, "%Y-%m-%d"))  # noqa: DTZ007
                 values.append(float(item["value"]))
 
         if not dates:
