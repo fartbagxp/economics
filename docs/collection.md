@@ -87,6 +87,12 @@ Collected via `uv run python main.py --source bls` (fetched directly from the BL
 
 Two derived series are computed by `Deriver`: the month-over-month change in thousands (`ces0000000001_chg`) and its 3-month rolling average (`ces0000000001_chg_3mo`), since the initial print is volatile and gets revised.
 
+### Wage Growth
+
+- **CES0500000003**: Average Hourly Earnings of All Employees, Total Private (dollars/hour, seasonally adjusted, monthly since March 2006)
+
+`Deriver` computes `ces0500000003_yoy`, the year-over-year percent change — the standard "wage growth" figure reported in the news. The viz dashboard's "Wage Growth vs. Inflation" chart plots it against CPI YoY inflation (`cpiaucsl_yoy`) and 1-year inflation expectations (`MICH`) so you can see whether pay is keeping pace with prices.
+
 ### Household Debt
 
 All series are stored in **millions of dollars** and displayed as **trillions** in the dashboard.

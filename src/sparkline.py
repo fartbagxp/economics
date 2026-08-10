@@ -159,6 +159,7 @@ def build_dashboard(data_dir: str = "data/raw") -> str:
             [
                 ("gdp", "GDP"),
                 ("cpiaucsl", "CPI (All Urban)"),
+                ("ces0500000003", "Avg. Hourly Earnings (Wage Growth)"),
                 ("umcsent", "Consumer Sentiment (U. Mich.)"),
                 ("gscpi", "Supply Chain Pressure (GSCPI)"),
             ],

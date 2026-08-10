@@ -88,6 +88,12 @@
   const t5yie    = $derived(parse(data.series.t5yie).filter((d) => d.date >= cutoff));
   const t10yie   = $derived(parse(data.series.t10yie).filter((d) => d.date >= cutoff));
 
+  // Wage growth vs. inflation — populated after running: python main.py --source fred
+  const wageYoy     = $derived(parse(data.series.ces0500000003_yoy).filter((d) => d.date >= cutoff));
+  const wageHasData = $derived(wageYoy.length > 0);
+  const wageVsInflML = $derived(multiLine({ wage: wageYoy, cpi: cpi_yoy, mich }));
+  const wageMid = $derived(wageHasData ? new Date((wageYoy[0].date.getTime() + wageYoy[wageYoy.length - 1].date.getTime()) / 2) : midDate);
+
   // FRED debt series (millions → trillions)
   const mortgage    = $derived(parse(data.series.hhmsdodns).filter((d) => d.date >= cutoff).map((d) => ({ ...d, value: d.value / 1e6 })));
   const creditCards = $derived(parse(data.series.revolsl).filter((d) => d.date >= cutoff).map((d) => ({ ...d, value: d.value / 1e6 })));
@@ -1624,14 +1630,69 @@
   </section>
   {/if}
 
+  <!-- ── Wage Growth vs. Inflation ────────────────────────────── -->
+  {#if wageHasData}
+  <h3 class="section-label">Wage Growth vs. Inflation</h3>
+  <section class="grid" style="grid-template-columns: minmax(500px, 1fr) minmax(500px, 1fr)">
+    <WideChartCtx>
+    <!-- Wage Growth vs. Inflation -->
+    <div class="card wide" id="wages-vs-inflation">
+      <h2>Wage Growth vs. Inflation <span class="badge badge-actual">actual</span> <a class="anchor-link" href="#wages-vs-inflation">#</a></h2>
+      <p class="meta">
+        Monthly · Year-over-Year % Change · realized wages and prices, with 1-year expectations shown for reference &nbsp;·&nbsp;
+        <span class="legend-swatch" style="background:#2a9d8f"></span> Wage Growth (Avg. Hourly Earnings) &nbsp;
+        <span class="legend-swatch" style="background:#e63946"></span> CPI Inflation (actual) &nbsp;
+        <span class="legend-swatch dashed" style="border-color:#f4a261"></span> 1-Year Inflation Expectation (forecast)
+      </p>
+      <LazyChart height={280}>
+      <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <Rect data={recessions.filter((r) => r.end >= cutoff)} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <Line data={mich} x="date" y="value" stroke="#f4a261" strokeWidth={1.5} strokeDasharray="5,3" />
+        <Line data={cpi_yoy} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
+        <Line data={wageYoy} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
+        {#snippet overlay()}<RecessionHover bands={recessions} />
+          <HTMLTooltip data={wageVsInflML.all} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const v = wageVsInflML.byDate.get(datum.date.getTime())}
+                <div class="tip" style:transform={datum.date > wageMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
+                  <span class="tip-label">Wages vs. Inflation</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
+                  {#if v}
+                    {#if v.wage != null}<span class="tip-edu-row"><span><span style="color:#2a9d8f">●</span> Wage Growth</span><b>{v.wage?.toFixed(1)}%</b></span>{/if}
+                    {#if v.cpi != null}<span class="tip-edu-row"><span><span style="color:#e63946">●</span> CPI Inflation</span><b>{v.cpi?.toFixed(1)}%</b></span>{/if}
+                    {#if v.mich != null}<span class="tip-edu-row"><span><span style="color:#f4a261">●</span> 1Y Expectation</span><b>{v.mich?.toFixed(1)}%</b></span>{/if}
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      <p class="source">
+        Source: FRED — <a href={fredUrl('ces0500000003')} target="_blank" rel="noopener">CES0500000003</a> (Average Hourly Earnings, Total Private) ·
+        <a href={fredUrl('cpiaucsl')} target="_blank" rel="noopener">CPIAUCSL</a> ·
+        <a href={fredUrl('mich')} target="_blank" rel="noopener">MICH</a>
+        &nbsp;· When the green line sits below the red, wages are losing ground to inflation
+      </p>
+    </div>
+    </WideChartCtx>
+
+  </section>
+  {/if}
+
   <!-- ── Inflation Expectations ────────────────────────────────── -->
   <h3 class="section-label">Inflation Expectations</h3>
   <section class="grid" style="grid-template-columns: minmax(500px, 1fr) minmax(500px, 1fr)">
     <WideChartCtx>
     <!-- Inflation Expectations: Survey vs Market -->
     <div class="card wide" id="infl-exp">
-      <h2>Inflation Expectations <a class="anchor-link" href="#infl-exp">#</a></h2>
+      <h2>Inflation Expectations <span class="badge badge-forecast">forecast</span> <a class="anchor-link" href="#infl-exp">#</a></h2>
       <p class="meta">
+        Sentiment &amp; market pricing, not realized inflation &nbsp;·&nbsp;
         <span class="legend-swatch" style="background:#e63946"></span> U. Michigan 1-Year (survey, monthly, NSA) &nbsp;
         <span class="legend-swatch" style="background:#457b9d"></span> 5-Year Breakeven (market-based, daily) &nbsp;
         <span class="legend-swatch dashed" style="border-color:#74b3ce"></span> 10-Year Breakeven (market-based, daily)
@@ -1854,6 +1915,29 @@
     font-size: 0.95rem;
     font-weight: 600;
     margin: 0 0 0.1rem;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    vertical-align: middle;
+    position: relative;
+    top: -0.1rem;
+  }
+
+  .badge-forecast {
+    background: #fef3e2;
+    color: #b6760a;
+  }
+
+  .badge-actual {
+    background: #e6f4ef;
+    color: #1a7a5e;
   }
 
   .meta {
