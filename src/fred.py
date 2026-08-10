@@ -129,6 +129,7 @@ class FredCollector:
             "PCE": "Personal Consumption Expenditures",
             "PSAVE": "Personal Saving",
             "PSAVERT": "Personal Saving Rate",
+            "CES0500000003": "Average Hourly Earnings, Total Private",
             "MICH": "University of Michigan: Inflation Expectation (1-Year)",
             "T5YIE": "5-Year Breakeven Inflation Rate",
             "T10YIE": "10-Year Breakeven Inflation Rate",

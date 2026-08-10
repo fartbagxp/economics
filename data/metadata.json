@@ -682,5 +682,14 @@
     "last_updated": "2026-07-16 07:48:27-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/GACDFSA066MSFRBPHI"
+  },
+  "ces0500000003": {
+    "title": "Average Hourly Earnings of All Employees, Total Private",
+    "units": "Dollars per Hour",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted",
+    "last_updated": "2026-08-07 08:33:45-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/CES0500000003"
   }
 }
