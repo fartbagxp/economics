@@ -21,19 +21,25 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-08-10 14:48 UTC_
+_Last updated: 2026-08-10 15:27 UTC_
 
 _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 points (quarterly)._
 
 ### Labor Market Overview
 
-| Indicator                 | Trend                      | Latest    | Chg (prev) | Chg (1Y) | As of      |
-| ------------------------- | -------------------------- | --------- | ---------- | -------- | ---------- |
-| Unemployment Rate (U-3)   | `▃▃▂▂▃▂▁▃▃▃▅▂▅▅▆█▆▅▆▅▅▅▃▂` | 4.1%      | -0.1pp     | +0.0pp   | 2026-07-01 |
-| Total Nonfarm Payrolls    | `▁▁▂▃▄▄▄▄▅▅▅▅▅▅▅▅▅▆▅▆▇▇█▇` | 158,858K  | -23K       | +316K    | 2026-07-01 |
-| Labor Force Participation | `███▆▆▆▇▆▆▇▆▅▅▅▆▆▆▄▄▃▃▃▁▁` | 61.4%     | -0.1pp     | -0.9pp   | 2026-07-01 |
-| Initial Jobless Claims    | `▄▅▅▃▄▃▅▄▅▁▂▄▄▄▇█▇▅▅▅▄▁▂▂` | 199,000   | +1,000     | -27,000  | 2026-08-01 |
-| Continued Claims          | `▅█▆▆▄▅▂▄▄▂▁▂▁▂▁▂▃▄▃▄▃▂▂▃` | 1,801,000 | +24,000    | -162,000 | 2026-07-25 |
+| Indicator                 | Trend                                                                                                                                                                                                                                                                                                                                                                                                 | Latest    | Chg (prev) | Chg (1Y) | As of      |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---------- | -------- | ---------- |
+| Unemployment Rate (U-3)   | `▃▃▂▂▃▂▁▃▃▃▅▂▅▅▆█▆▅▆▅▅▅▃▂`                                                                                                                                                                                                                                                                                                                                                                            | 4.1%      | -0.1pp     | +0.0pp   | 2026-07-01 |
+| Total Nonfarm Payrolls    | _(error: `strptime` / `to_datetime` was called with no format and no time zone, but a time zone is part of the data.
+
+This was previously allowed but led to unpredictable and erroneous results. Give a format string, set a time zone or perform the operation eagerly on a Series instead of on an Expr.
+
+This error occurred in the following expression:
+	col("date").str.strptime(["raise"])
+)_ | —         | —          | —        | —          |
+| Labor Force Participation | `███▆▆▆▇▆▆▇▆▅▅▅▆▆▆▄▄▃▃▃▁▁`                                                                                                                                                                                                                                                                                                                                                                            | 61.4%     | -0.1pp     | -0.9pp   | 2026-07-01 |
+| Initial Jobless Claims    | `▄▅▅▃▄▃▅▄▅▁▂▄▄▄▇█▇▅▅▅▄▁▂▂`                                                                                                                                                                                                                                                                                                                                                                            | 199,000   | +1,000     | -27,000  | 2026-08-01 |
+| Continued Claims          | `▅█▆▆▄▅▂▄▄▂▁▂▁▂▁▂▃▄▃▄▃▂▂▃`                                                                                                                                                                                                                                                                                                                                                                            | 1,801,000 | +24,000    | -162,000 | 2026-07-25 |
 
 ### Unemployment Measures (U1–U6)
 
