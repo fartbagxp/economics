@@ -12,11 +12,11 @@ dependencies = [
     "python-dotenv==1.2.2",
     "requests==2.34.2",
     "xlrd==2.0.2",
-    "yfinance==1.5.2",
+    "yfinance==1.6.0",
 ]
 
 [dependency-groups]
 dev = [
-    "pre-commit==4.6.1",
+    "pre-commit==4.6.2",
     "pytest==9.1.1",
 ]

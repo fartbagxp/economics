@@ -1,13 +1,32 @@
 <script>
-  import { Plot, Line, RuleY, Rect, AreaY, HTMLTooltip, Frame } from 'svelteplot';
+  import { onMount } from 'svelte';
+  import { Plot, Line, RuleX, RuleY, AreaY, HTMLTooltip, Frame } from 'svelteplot';
   import LazyChart from './LazyChart.svelte';
   import WideChartCtx from './WideChartCtx.svelte';
   import RecessionHover from './RecessionHover.svelte';
 
   let { data } = $props();
 
+  let theme = $state('light');
+
+  onMount(() => {
+    theme = document.documentElement.getAttribute('data-theme') || 'light';
+  });
+
+  function toggleTheme() {
+    theme = theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }
+
   function parse(rows) {
     return rows.map((d) => ({ date: new Date(d.date + 'T12:00:00'), value: d.value }));
+  }
+
+  // x-axis domain matching a series' own date range, so charts whose data
+  // starts later than the recession markers don't show a leading blank gap
+  function dataDomain(series) {
+    return series.length ? [series[0].date, series[series.length - 1].date] : undefined;
   }
 
   // Merges named series into a flat array (for HTMLTooltip data) and a date→values Map
@@ -114,6 +133,7 @@
   const nyfedHasData     = $derived(nyfedMortgage.length > 0);
   const nyfedML = $derived(multiLine({ mortgage: nyfedMortgage, heloc: nyfedHeloc, auto: nyfedAuto, creditCard: nyfedCreditCard, student: nyfedStudent, other: nyfedOther }));
   const nyfedMidDate = $derived(nyfedHasData ? new Date((nyfedCutoff.getTime() + new Date().getTime()) / 2) : midDate);
+  const nyfedDomain = $derived(dataDomain(nyfedMortgage));
 
   // NY Fed 90+ day delinquency rates (percent of balance, Q1 2003–present)
   const dqMortgage   = $derived(parse(data.series.nyfed_delinq_mortgage));
@@ -125,6 +145,7 @@
   const dqHasData    = $derived(dqCreditCard.length > 0);
   const dqML = $derived(multiLine({ mortgage: dqMortgage, heloc: dqHeloc, auto: dqAuto, creditCard: dqCreditCard, student: dqStudent, other: dqOther }));
   const dqMid = $derived(dqHasData ? new Date((dqCreditCard[0].date.getTime() + dqCreditCard[dqCreditCard.length - 1].date.getTime()) / 2) : midDate);
+  const dqDomain = $derived(dataDomain(dqCreditCard));
 
   const incomeML  = $derived(multiLine({ income: pi, disposable: dspi }));
   const inflExpML = $derived(multiLine({ mich: mich, b5y: t5yie, b10y: t10yie }));
@@ -180,6 +201,8 @@
   const snapMid     = $derived(snapHasData ? new Date((snapPersons[0].date.getTime() + snapPersons[snapPersons.length - 1].date.getTime()) / 2) : midDate);
   const medicareMid = $derived(medicareHasData ? new Date((medicareEnrolled[0].date.getTime() + medicareEnrolled[medicareEnrolled.length - 1].date.getTime()) / 2) : midDate);
   const medicaidMid = $derived(medicaidHasData ? new Date((medicaidEnrolled[0].date.getTime() + medicaidEnrolled[medicaidEnrolled.length - 1].date.getTime()) / 2) : midDate);
+  const medicareDomain = $derived(dataDomain(medicareEnrolled));
+  const medicaidDomain = $derived(dataDomain(medicaidEnrolled));
 
   // Mortgage rates (Freddie Mac PMMS, weekly; stored sparse — monthly before the last 5 years)
   const mort30 = $derived(parse(data.series.mortgage30us).filter((d) => d.date >= ratesCutoff));
@@ -201,6 +224,11 @@
     { start: new Date('2007-12-01'), end: new Date('2009-06-01'), label: 'Great Recession' },
     { start: new Date('2020-02-01'), end: new Date('2020-04-01'), label: 'COVID-19 recession' }
   ].filter((r) => r.end >= cutoff);
+
+  // Recession start/end dates as flat list, for drawing two boundary lines per
+  // recession instead of a filled band (a filled rect reads as a solid block
+  // in dark mode where it overlaps gridlines/rules)
+  const recessionLines = recessions.flatMap((r) => [r.start, r.end]);
 
   // Point-in-time markers surfaced in tooltips only — no extra ink on the charts
   const events = [
@@ -268,8 +296,28 @@
 </svelte:head>
 
 <main>
-  <h1>US Economic Dashboard</h1>
-  <p class="subtitle">US economic data from FRED, BLS, NY Fed, USDA, and CMS</p>
+  <div class="page-header">
+    <div>
+      <h1>US Economic Dashboard</h1>
+      <p class="subtitle">US economic data from FRED, BLS, NY Fed, USDA, and CMS</p>
+    </div>
+    <button
+      class="theme-toggle"
+      onclick={toggleTheme}
+      aria-label="Toggle dark mode"
+      title="Toggle dark mode">
+      {#if theme === 'dark'}
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+        </svg>
+      {:else}
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+          <path d="M20.354 15.354A9 9 0 0 1 8.646 3.646 9.003 9.003 0 1 0 20.354 15.354Z" />
+        </svg>
+      {/if}
+    </button>
+  </div>
 
   <!-- ── Labor Market ─────────────────────────────────────────── -->
   <h3 class="section-label">Labor Market</h3>
@@ -283,7 +331,7 @@
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={unrate} x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={unrate} x="date" y="value">
@@ -311,7 +359,7 @@
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={u6rate} x="date" y="value" stroke="#6a4c93" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={u6rate} x="date" y="value">
@@ -339,7 +387,7 @@
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={ltunempPct} x="date" y="value" stroke="#d62828" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={ltunempPct} x="date" y="value">
@@ -367,7 +415,7 @@
       <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: 'Thousands', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={ltunempCount} x="date" y="value" stroke="#e07a5f" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={ltunempCount} x="date" y="value">
@@ -400,7 +448,7 @@
       <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: 'Thousands', grid: true, type: 'symlog' }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={payrollChg} x="date" y="value" stroke="#a8dadc" strokeWidth={1.5} />
         <Line data={payrollChg3mo} x="date" y="value" stroke="#457b9d" strokeWidth={2} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
@@ -432,7 +480,7 @@
       <LazyChart height={220}>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={civpart} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={civpart} x="date" y="value">
@@ -459,7 +507,7 @@
       <LazyChart height={220}>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={lfprMen} x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={lfprMen} x="date" y="value">
@@ -486,7 +534,7 @@
       <LazyChart height={220}>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={lfprWomen} x="date" y="value" stroke="#e76f51" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={lfprWomen} x="date" y="value">
@@ -519,7 +567,7 @@
       <LazyChart height={300}>
       <Plot height={300} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={lfprLtHs}     x="date" y="value" stroke="#bc4749" strokeWidth={1.5} />
         <Line data={lfprHsOnly}   x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
         <Line data={lfprSomeCol}  x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
@@ -556,7 +604,7 @@
       <Plot height={300} marginLeft={64} marginRight={10} x={{ type: 'time' }} y={{ label: 'Claims', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={icsa} x="date" y="value" stroke="#bc4749" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={icsa} x="date" y="value">
@@ -589,7 +637,7 @@
       <LazyChart height={220}>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: 'Index', grid: true }}>
         <Frame />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={cpiaucsl} x="date" y="value" stroke="#e76f51" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={cpiaucsl} x="date" y="value">
@@ -616,7 +664,7 @@
       <LazyChart height={220}>
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: 'Index', grid: true }}>
         <Frame />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={umcsent} x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={umcsent} x="date" y="value">
@@ -643,7 +691,7 @@
       <LazyChart height={200}>
       <Plot height={200} marginLeft={56} marginRight={10} x={{ type: 'time' }} y={{ label: '$B', grid: true }}>
         <Frame />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={gdp} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={gdp} x="date" y="value">
@@ -682,8 +730,8 @@
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <RuleY data={[2]} stroke="#bbb" strokeDasharray="4,3" />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleY data={[2]} stroke="var(--rule-color)" strokeDasharray="4,3" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={core_cpi_yoy} x="date" y="value" stroke="#ff9f43" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={cpi_yoy} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
@@ -719,8 +767,8 @@
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <RuleY data={[2]} stroke="#bbb" strokeDasharray="4,3" />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleY data={[2]} stroke="var(--rule-color)" strokeDasharray="4,3" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={core_pce_yoy} x="date" y="value" stroke="#52b788" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={pce_yoy} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
@@ -756,7 +804,7 @@
       <Plot height={200} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={core_ppi_yoy} x="date" y="value" stroke="#74b3ce" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={ppi_yoy} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
@@ -793,8 +841,8 @@
       <Plot height={200} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <RuleY data={[2]} stroke="#bbb" strokeDasharray="4,3" />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleY data={[2]} stroke="var(--rule-color)" strokeDasharray="4,3" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={core_cpi_yoy} x="date" y="value" stroke="#ff9f43" strokeWidth={1.5} />
         <Line data={core_pce_yoy} x="date" y="value" stroke="#52b788" strokeWidth={1.5} />
         <Line data={core_ppi_yoy} x="date" y="value" stroke="#74b3ce" strokeWidth={1.5} />
@@ -837,7 +885,7 @@
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={core_cpi_mom} x="date" y="value" stroke="#ff9f43" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={cpi_mom} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
@@ -873,7 +921,7 @@
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={core_pce_mom} x="date" y="value" stroke="#52b788" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={pce_mom} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
@@ -909,7 +957,7 @@
       <Plot height={200} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={core_ppi_mom} x="date" y="value" stroke="#74b3ce" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={ppi_mom} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
@@ -946,7 +994,7 @@
       <Plot height={200} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={core_cpi_mom} x="date" y="value" stroke="#ff9f43" strokeWidth={1.5} />
         <Line data={core_pce_mom} x="date" y="value" stroke="#52b788" strokeWidth={1.5} />
         <Line data={core_ppi_mom} x="date" y="value" stroke="#74b3ce" strokeWidth={1.5} />
@@ -990,7 +1038,7 @@
       <LazyChart height={220}>
       <Plot height={220} marginLeft={64} marginRight={10} x={{ type: 'time' }} y={{ label: '$B', grid: true }}>
         <Frame />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={dspi} x="date" y="value" stroke="#f4a261" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={pi} x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
@@ -1023,7 +1071,7 @@
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={w875rx1_yoy} x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={w875rx1_yoy} x="date" y="value">
@@ -1050,7 +1098,7 @@
       <LazyChart height={220}>
       <Plot height={220} marginLeft={64} marginRight={10} x={{ type: 'time' }} y={{ label: '$B', grid: true }}>
         <Frame />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={pce} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={pce} x="date" y="value">
@@ -1078,7 +1126,7 @@
       <Plot height={220} marginLeft={64} marginRight={10} x={{ type: 'time' }} y={{ label: '$B', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={psave} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={psave} x="date" y="value">
@@ -1106,7 +1154,7 @@
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={psavert} x="date" y="value" stroke="#6a4c93" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={psavert} x="date" y="value">
@@ -1137,7 +1185,7 @@
     <div class="card wide" id="debt-nyfed">
       <h2>Household Debt by Category — NY Fed / Equifax <a class="anchor-link" href="#debt-nyfed">#</a></h2>
       <p class="meta">
-        Quarterly · Not Seasonally Adjusted · Trillions of Dollars · Q1 1999–present ·
+        Quarterly · Not Seasonally Adjusted · Trillions of Dollars · Q1 2003–present ·
         <span class="legend-swatch" style="background:#1a6faf"></span> Mortgage &nbsp;
         <span class="legend-swatch" style="background:#457b9d"></span> HELOC &nbsp;
         <span class="legend-swatch" style="background:#e63946"></span> Credit Card &nbsp;
@@ -1146,10 +1194,10 @@
         <span class="legend-swatch" style="background:#bc4749"></span> Other (incl. medical)
       </p>
       <LazyChart height={340}>
-      <Plot height={340} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: '$T', grid: true }}>
+      <Plot height={340} marginLeft={54} marginRight={10} x={{ type: 'time', domain: nyfedDomain }} y={{ label: '$T', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={nyfedOther}      x="date" y="value" stroke="#bc4749" strokeWidth={1.5} />
         <Line data={nyfedHeloc}      x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
         <Line data={nyfedCreditCard} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
@@ -1189,13 +1237,13 @@
     <!-- NY Fed: Total household debt -->
     <div class="card wide" id="debt-total">
       <h2>Total Household Debt — NY Fed / Equifax <a class="anchor-link" href="#debt-total">#</a></h2>
-      <p class="meta">Quarterly · Not Seasonally Adjusted · Trillions of Dollars · Q1 1999–present</p>
+      <p class="meta">Quarterly · Not Seasonally Adjusted · Trillions of Dollars · Q1 2003–present</p>
       <LazyChart height={220}>
-      <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: '$T', grid: true }}>
+      <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time', domain: nyfedDomain }} y={{ label: '$T', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
-        <Line data={nyfedTotal} x="date" y="value" stroke="#1a1a2e" strokeWidth={2} />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
+        <Line data={nyfedTotal} x="date" y="value" stroke="currentColor" strokeWidth={2} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={nyfedTotal} x="date" y="value">
             {#snippet children({ datum })}
@@ -1230,11 +1278,11 @@
         <span class="legend-swatch" style="background:#bc4749"></span> Other (incl. medical)
       </p>
       <LazyChart height={340}>
-      <Plot height={340} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '% of balance', grid: true }}>
+      <Plot height={340} marginLeft={44} marginRight={10} x={{ type: 'time', domain: dqDomain }} y={{ label: '% of balance', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
-        <Rect data={studentLoanBands} x1="start" x2="end" fill="#f4a261" fillOpacity={0.15} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
+        <RuleX data={studentLoanBands.flatMap((b) => [b.start, b.end])} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={dqHeloc}      x="date" y="value" stroke="#457b9d" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={dqOther}      x="date" y="value" stroke="#bc4749" strokeWidth={1.5} />
         <Line data={dqMortgage}   x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
@@ -1286,7 +1334,7 @@
       <Plot height={320} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: '$T', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={autoLoans}    x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
         <Line data={studentLoans} x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
         <Line data={creditCards}  x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
@@ -1331,7 +1379,7 @@
       <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: '$T', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={nonrevsl} x="date" y="value" stroke="#6a4c93" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={nonrevsl} x="date" y="value">
@@ -1359,7 +1407,7 @@
       <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: '$T', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={creditCards} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={creditCards} x="date" y="value">
@@ -1399,8 +1447,8 @@
       <Plot height={300} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: 'USD/bbl', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
-        <Rect data={oilBands} x1="start" x2="end" fill="#c77b00" fillOpacity={0.12} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
+        <RuleX data={oilBands.flatMap((b) => [b.start, b.end])} stroke="var(--band-fill)" strokeOpacity={0.5} />
         {#if hasFutures}
           <!-- vertical rule marking today -->
           <RuleY data={[]} />
@@ -1456,7 +1504,7 @@
       <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: 'σ from avg', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={gscpi} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={gscpi} x="date" y="value">
@@ -1498,7 +1546,7 @@
       <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: 'Index', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={philly} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
         <Line data={empire} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
         <Line data={dallas} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
@@ -1547,7 +1595,7 @@
       <LazyChart height={280}>
       <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: 'Millions', grid: true }}>
         <Frame />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={snapPersons} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={snapPersons} x="date" y="value">
@@ -1574,9 +1622,9 @@
       <h2>Medicare Enrollment <a class="anchor-link" href="#medicare">#</a></h2>
       <p class="meta">Monthly · Millions of Beneficiaries</p>
       <LazyChart height={280}>
-      <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: 'Millions', grid: true }}>
+      <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time', domain: medicareDomain }} y={{ label: 'Millions', grid: true }}>
         <Frame />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={medicareEnrolled} x="date" y="value" stroke="#e76f51" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={medicareEnrolled} x="date" y="value">
@@ -1603,9 +1651,9 @@
       <h2>Medicaid &amp; CHIP Enrollment <a class="anchor-link" href="#medicaid">#</a></h2>
       <p class="meta">Monthly · Millions of Enrollees · Gap 2013–2017 in source data</p>
       <LazyChart height={280}>
-      <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: 'Millions', grid: true }}>
+      <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time', domain: medicaidDomain }} y={{ label: 'Millions', grid: true }}>
         <Frame />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={medicaidEnrolled} x="date" y="value" stroke="#6d597a" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={medicaidEnrolled} x="date" y="value">
@@ -1648,7 +1696,7 @@
       <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions.filter((r) => r.end >= cutoff)} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={mich} x="date" y="value" stroke="#f4a261" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={cpi_yoy} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
         <Line data={wageYoy} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
@@ -1701,8 +1749,8 @@
       <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <RuleY data={[2]} stroke="#bbb" strokeDasharray="4,3" />
-        <Rect data={recessions} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleY data={[2]} stroke="var(--rule-color)" strokeDasharray="4,3" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={t10yie} x="date" y="value" stroke="#74b3ce" strokeWidth={1.5} strokeDasharray="5,3" />
         <Line data={t5yie} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
         <Line data={mich} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
@@ -1748,7 +1796,7 @@
       <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions.filter((r) => r.end >= ratesCutoff)} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={mort30} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
         <Line data={mort15} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
@@ -1790,7 +1838,7 @@
       <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleY data={[0]} />
-        <Rect data={recessions.filter((r) => r.end >= ratesCutoff)} x1="start" x2="end" fill="#888" fillOpacity={0.08} stroke="none" />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <AreaY data={targetBand} x="date" y1="lower" y2="upper" fill="#6d6875" fillOpacity={0.15} stroke="none" />
         <Line data={gs30} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
         <Line data={gs20} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
@@ -1836,17 +1884,78 @@
 </main>
 
 <style>
+  :global(:root) {
+    --bg: #f8f9fa;
+    --text: #1a1a2e;
+    --text-muted: #666;
+    --text-faint: #999;
+    --text-source: #aaa;
+    --card-bg: #fff;
+    --card-border: #e5e7eb;
+    --card-shadow: rgba(0, 0, 0, 0.04);
+    --band-fill: #5b8dc7;
+    --rule-color: #bbb;
+    --tooltip-bg: rgba(15, 15, 30, 0.88);
+    --tooltip-text: #fff;
+    --tooltip-border: rgba(255, 255, 255, 0.14);
+    --note-bg: rgba(255, 255, 255, 0.92);
+    --note-border: #d9dce1;
+    --note-text: #444;
+    --anchor-color: #bbb;
+    --anchor-hover: #555;
+    --badge-forecast-bg: #fef3e2;
+    --badge-forecast-text: #b6760a;
+    --badge-actual-bg: #e6f4ef;
+    --badge-actual-text: #1a7a5e;
+    --toggle-hover-bg: rgba(0, 0, 0, 0.06);
+    color-scheme: light;
+  }
+
+  :global(:root[data-theme='dark']) {
+    --bg: #14161c;
+    --text: #e7e9ee;
+    --text-muted: #a6a9b4;
+    --text-faint: #82858f;
+    --text-source: #6b6e78;
+    --card-bg: #1b1e26;
+    --card-border: #2c3038;
+    --card-shadow: rgba(0, 0, 0, 0.35);
+    --band-fill: #7ab0f0;
+    --rule-color: #4d525e;
+    --tooltip-bg: rgba(230, 232, 240, 0.95);
+    --tooltip-text: #14161c;
+    --tooltip-border: rgba(0, 0, 0, 0.12);
+    --note-bg: rgba(27, 30, 38, 0.92);
+    --note-border: #363a44;
+    --note-text: #c7cad2;
+    --anchor-color: #4a4e58;
+    --anchor-hover: #c7cad2;
+    --badge-forecast-bg: #3a2c14;
+    --badge-forecast-text: #f0b357;
+    --badge-actual-bg: #123027;
+    --badge-actual-text: #4fcfa0;
+    --toggle-hover-bg: rgba(255, 255, 255, 0.08);
+    color-scheme: dark;
+  }
+
   :global(body) {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #f8f9fa;
-    color: #1a1a2e;
+    background: var(--bg);
+    color: var(--text);
   }
 
   main {
     max-width: 1100px;
     margin: 0 auto;
     padding: 2rem 1.5rem 4rem;
+  }
+
+  .page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
   }
 
   h1 {
@@ -1857,15 +1966,34 @@
   }
 
   .subtitle {
-    color: #666;
+    color: var(--text-muted);
     margin: 0 0 2rem;
     font-size: 0.875rem;
+  }
+
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex: none;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    background: var(--card-bg);
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .theme-toggle:hover {
+    background: var(--toggle-hover-bg);
   }
 
   .site-footer {
     margin-top: 3rem;
     padding-top: 1.5rem;
-    border-top: 1px solid #e5e5e5;
+    border-top: 1px solid var(--card-border);
     text-align: center;
   }
 
@@ -1873,13 +2001,13 @@
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    color: #666;
+    color: var(--text-muted);
     text-decoration: none;
     font-size: 0.875rem;
   }
 
   .site-footer a:hover {
-    color: #1a1a2e;
+    color: var(--text);
   }
 
   .section-label {
@@ -1887,10 +2015,10 @@
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #999;
+    color: var(--text-faint);
     margin: 2rem 0 0.75rem;
     padding-bottom: 0.4rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--card-border);
   }
 
   .grid {
@@ -1900,11 +2028,12 @@
   }
 
   .card {
-    background: #fff;
-    border: 1px solid #e5e7eb;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
     border-radius: 10px;
     padding: 1.25rem 1.25rem 0.75rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 1px 3px var(--card-shadow);
+    color: var(--text);
   }
 
   .card.wide {
@@ -1931,25 +2060,25 @@
   }
 
   .badge-forecast {
-    background: #fef3e2;
-    color: #b6760a;
+    background: var(--badge-forecast-bg);
+    color: var(--badge-forecast-text);
   }
 
   .badge-actual {
-    background: #e6f4ef;
-    color: #1a7a5e;
+    background: var(--badge-actual-bg);
+    color: var(--badge-actual-text);
   }
 
   .meta {
     font-size: 0.72rem;
-    color: #888;
+    color: var(--text-faint);
     margin: 0 0 0.75rem;
   }
 
   .sub-label {
     font-size: 0.75rem;
     font-weight: 600;
-    color: #666;
+    color: var(--text-muted);
     margin: 1.25rem 0 0.6rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -1975,8 +2104,8 @@
     flex-direction: column;
     gap: 0.1rem;
     padding: 0.5rem 0.75rem;
-    background: rgba(15, 15, 30, 0.88);
-    color: #fff;
+    background: var(--tooltip-bg);
+    color: var(--tooltip-text);
     border-radius: 7px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 0.8rem;
@@ -2005,7 +2134,7 @@
     opacity: 0.7;
     margin-top: 0.2rem;
     padding-top: 0.2rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    border-top: 1px solid var(--tooltip-border);
     max-width: 16rem;
   }
 
@@ -2025,24 +2154,24 @@
 
   .source {
     font-size: 0.68rem;
-    color: #aaa;
+    color: var(--text-source);
     margin: 0.4rem 0 0;
   }
 
   .source a {
-    color: #aaa;
+    color: var(--text-source);
     text-decoration: underline;
     text-underline-offset: 2px;
   }
 
   .source a:hover {
-    color: #666;
+    color: var(--text-muted);
   }
 
   h2 .anchor-link {
     opacity: 0;
     margin-left: 0.35em;
-    color: #bbb;
+    color: var(--anchor-color);
     font-weight: 400;
     font-size: 0.82em;
     text-decoration: none;
@@ -2053,7 +2182,7 @@
     opacity: 1;
   }
   h2 .anchor-link:hover {
-    color: #555;
+    color: var(--anchor-hover);
   }
 
   .card {
