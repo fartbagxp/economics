@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-08-13 15:48 UTC_
+_Last updated: 2026-08-15 18:08 UTC_
 
 _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 points (quarterly)._
 
@@ -77,8 +77,8 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 
 | Indicator     | Trend                      | Latest | WoW    | YoY (52w) | As of      |
 | ------------- | -------------------------- | ------ | ------ | --------- | ---------- |
-| 30-Year Fixed | `▁▁▂▃▄▅▄▄▃▄▄▄▆▆▅▆▅▆▅▆▆▆▇█` | 6.7%   | +0.0pp | +0.1pp    | 2026-08-06 |
-| 15-Year Fixed | `▁▁▁▂▄▄▄▃▂▃▄▄▅▆▅▅▅▅▅▅▆▇█▇` | 6.0%   | -0.0pp | +0.3pp    | 2026-08-06 |
+| 30-Year Fixed | `▁▂▃▄▅▄▄▃▄▄▄▆▆▅▆▅▅▅▅▆▆▇█▇` | 6.7%   | -0.0pp | +0.1pp    | 2026-08-13 |
+| 15-Year Fixed | `▁▁▂▄▄▄▃▂▃▄▄▅▆▅▅▅▅▅▅▆▇█▇▇` | 6.0%   | -0.0pp | +0.2pp    | 2026-08-13 |
 
 ### Household Credit — 90+ Day Delinquency (% of balance)
 
