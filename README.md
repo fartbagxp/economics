@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-08-15 18:08 UTC_
+_Last updated: 2026-08-18 19:49 UTC_
 
 _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 points (quarterly)._
 
@@ -70,7 +70,7 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 | Indicator             | Trend                      | Latest | MoM    | YoY (12m) | As of      |
 | --------------------- | -------------------------- | ------ | ------ | --------- | ---------- |
 | Philadelphia Fed      | `▂▂▃▂▁▆▄▃▁▂▂▄▂▅▁▂▁▄▄▄▆▂▃█` | 41.40  | +31.10 | +30.00    | 2026-07-01 |
-| Empire State (NY Fed) | `▄▄▁▇▄▂▄▁▂▂▁▄▅▂▅▆▃▅▅▄▆█▅▇` | 15.60  | +9.90  | +12.50    | 2026-07-01 |
+| Empire State (NY Fed) | `▄▁▇▄▂▄▁▂▂▁▄▅▂▅▆▃▅▅▃▆▇▅▇█` | 20.60  | +5.00  | +11.50    | 2026-08-01 |
 | Dallas Fed            | `▄▄▅▅▆█▄▃▁▃▄▆▅▄▅▄▄▅▆▅▅▆▅▆` | 1.30   | +1.30  | +0.10     | 2026-07-01 |
 
 ### Mortgage Rates
