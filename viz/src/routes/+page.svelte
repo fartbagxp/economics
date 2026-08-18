@@ -2,7 +2,6 @@
   import { onMount } from 'svelte';
   import { Plot, Line, RuleX, RuleY, AreaY, HTMLTooltip, Frame } from 'svelteplot';
   import LazyChart from './LazyChart.svelte';
-  import WideChartCtx from './WideChartCtx.svelte';
   import RecessionHover from './RecessionHover.svelte';
 
   let { data } = $props();
@@ -1431,8 +1430,7 @@
 
   <!-- ── Energy ──────────────────────────────────────────────── -->
   <h3 class="section-label">Energy</h3>
-  <section class="grid" style="grid-template-columns: minmax(500px, 1fr) minmax(500px, 1fr)">
-    <WideChartCtx>
+  <section class="grid">
     <!-- Brent Crude Oil: historical + futures curve -->
     <div class="card wide" id="brent">
       <h2>Brent Crude Oil Price{hasFutures ? ' & Futures Curve' : ''} <a class="anchor-link" href="#brent">#</a></h2>
@@ -1487,15 +1485,13 @@
         {/if}
       </p>
     </div>
-    </WideChartCtx>
 
   </section>
 
   <!-- ── Supply Chain ─────────────────────────────────────────── -->
   {#if gscpiHasData}
   <h3 class="section-label">Supply Chain</h3>
-  <section class="grid" style="grid-template-columns: minmax(500px, 1fr) minmax(500px, 1fr)">
-    <WideChartCtx>
+  <section class="grid">
     <!-- NY Fed Global Supply Chain Pressure Index -->
     <div class="card wide" id="gscpi">
       <h2>Global Supply Chain Pressure Index (GSCPI) <a class="anchor-link" href="#gscpi">#</a></h2>
@@ -1523,7 +1519,6 @@
       </LazyChart>
       <p class="source">Source: <a href="https://www.newyorkfed.org/research/policy/gscpi" target="_blank" rel="noopener">NY Fed / Global Supply Chain Pressure Index</a></p>
     </div>
-    </WideChartCtx>
 
   </section>
   {/if}
@@ -1531,8 +1526,7 @@
   <!-- ── Manufacturing ────────────────────────────────────────── -->
   {#if manufHasData}
   <h3 class="section-label">Manufacturing</h3>
-  <section class="grid" style="grid-template-columns: minmax(500px, 1fr) minmax(500px, 1fr)">
-    <WideChartCtx>
+  <section class="grid">
     <!-- Regional Fed Manufacturing Surveys (ISM PMI proxies) -->
     <div class="card wide" id="manufacturing">
       <h2>Regional Fed Manufacturing Surveys <a class="anchor-link" href="#manufacturing">#</a></h2>
@@ -1577,7 +1571,6 @@
         &nbsp;· Free proxies for the ISM Manufacturing PMI, which FRED stopped redistributing in 2016
       </p>
     </div>
-    </WideChartCtx>
 
   </section>
   {/if}
@@ -1585,8 +1578,7 @@
   <!-- ── Social Programs ──────────────────────────────────────── -->
   {#if snapHasData || medicareHasData || medicaidHasData}
   <h3 class="section-label">Social Programs</h3>
-  <section class="grid" style="grid-template-columns: minmax(500px, 1fr) minmax(500px, 1fr)">
-    <WideChartCtx>
+  <section class="grid">
     {#if snapHasData}
     <!-- SNAP participation -->
     <div class="card wide" id="snap">
@@ -1673,7 +1665,6 @@
       <p class="source">Source: <a href="https://www.medicaid.gov/medicaid/national-medicaid-chip-program-information/medicaid-chip-enrollment-data" target="_blank" rel="noopener">CMS Performance Indicator Dataset</a></p>
     </div>
     {/if}
-    </WideChartCtx>
 
   </section>
   {/if}
@@ -1681,8 +1672,7 @@
   <!-- ── Wage Growth vs. Inflation ────────────────────────────── -->
   {#if wageHasData}
   <h3 class="section-label">Wage Growth vs. Inflation</h3>
-  <section class="grid" style="grid-template-columns: minmax(500px, 1fr) minmax(500px, 1fr)">
-    <WideChartCtx>
+  <section class="grid">
     <!-- Wage Growth vs. Inflation -->
     <div class="card wide" id="wages-vs-inflation">
       <h2>Wage Growth vs. Inflation <span class="badge badge-actual">actual</span> <a class="anchor-link" href="#wages-vs-inflation">#</a></h2>
@@ -1727,15 +1717,13 @@
         &nbsp;· When the green line sits below the red, wages are losing ground to inflation
       </p>
     </div>
-    </WideChartCtx>
 
   </section>
   {/if}
 
   <!-- ── Inflation Expectations ────────────────────────────────── -->
   <h3 class="section-label">Inflation Expectations</h3>
-  <section class="grid" style="grid-template-columns: minmax(500px, 1fr) minmax(500px, 1fr)">
-    <WideChartCtx>
+  <section class="grid">
     <!-- Inflation Expectations: Survey vs Market -->
     <div class="card wide" id="infl-exp">
       <h2>Inflation Expectations <span class="badge badge-forecast">forecast</span> <a class="anchor-link" href="#infl-exp">#</a></h2>
@@ -1776,14 +1764,12 @@
       </LazyChart>
       <p class="source">Source: FRED — <a href={fredUrl('mich')} target="_blank" rel="noopener">MICH</a> · <a href={fredUrl('t5yie')} target="_blank" rel="noopener">T5YIE</a> · <a href={fredUrl('t10yie')} target="_blank" rel="noopener">T10YIE</a></p>
     </div>
-    </WideChartCtx>
 
   </section>
 
   <!-- ── Interest Rates ───────────────────────────────────────── -->
   <h3 class="section-label">Interest Rates</h3>
-  <section class="grid" style="grid-template-columns: minmax(500px, 1fr) minmax(500px, 1fr)">
-    <WideChartCtx>
+  <section class="grid">
     <!-- Mortgage Rates -->
     <div class="card wide" id="mortgage-rates">
       <h2>30- &amp; 15-Year Fixed Mortgage Rates <a class="anchor-link" href="#mortgage-rates">#</a></h2>
@@ -1820,9 +1806,7 @@
       </LazyChart>
       <p class="source">Source: FRED — <a href={fredUrl('mortgage30us')} target="_blank" rel="noopener">MORTGAGE30US</a> · <a href={fredUrl('mortgage15us')} target="_blank" rel="noopener">MORTGAGE15US</a> (Freddie Mac PMMS)</p>
     </div>
-    </WideChartCtx>
 
-    <WideChartCtx>
     <!-- Treasury Yields & Fed Funds Rate -->
     <div class="card wide" id="interest-rates">
       <h2>Treasury Yields &amp; Federal Funds Rate <a class="anchor-link" href="#interest-rates">#</a></h2>
@@ -1869,7 +1853,6 @@
       </LazyChart>
       <p class="source">Source: FRED — <a href={fredUrl('fedfunds')} target="_blank" rel="noopener">FEDFUNDS</a> · <a href={fredUrl('dfedtaru')} target="_blank" rel="noopener">DFEDTARU</a> · <a href={fredUrl('dfedtarl')} target="_blank" rel="noopener">DFEDTARL</a> · <a href={fredUrl('gs2')} target="_blank" rel="noopener">GS2</a> · <a href={fredUrl('gs10')} target="_blank" rel="noopener">GS10</a> · <a href={fredUrl('gs20')} target="_blank" rel="noopener">GS20</a> · <a href={fredUrl('gs30')} target="_blank" rel="noopener">GS30</a></p>
     </div>
-    </WideChartCtx>
 
   </section>
 
@@ -2034,6 +2017,11 @@
     padding: 1.25rem 1.25rem 0.75rem;
     box-shadow: 0 1px 3px var(--card-shadow);
     color: var(--text);
+    /* Grid items default to min-width: auto, sizing to their content's
+       min-content. A chart's SVG has a fixed pixel width attribute, so
+       without this override its intrinsic size pins the whole grid track,
+       stopping the row (and the page) from ever shrinking below it. */
+    min-width: 0;
   }
 
   .card.wide {
@@ -2187,5 +2175,23 @@
 
   .card {
     scroll-margin-top: 1rem;
+  }
+
+  @media (max-width: 700px) {
+    main {
+      padding: 1.25rem 1rem 3rem;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+    }
+
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    .card.wide {
+      grid-column: auto;
+    }
   }
 </style>
