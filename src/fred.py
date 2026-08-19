@@ -8,7 +8,7 @@ from fredapi import Fred
 # High-frequency series where full history is more resolution than a line chart
 # needs: keep every observation from the last 5 years, and only the first
 # observation of each month before that.
-SPARSE_SERIES = {"MORTGAGE30US", "MORTGAGE15US"}
+SPARSE_SERIES = {"MORTGAGE30US", "MORTGAGE15US", "GASREGW", "GASDESW"}
 
 
 def thin_history(df: pl.DataFrame, recent_years: int = 5) -> pl.DataFrame:
@@ -141,6 +141,8 @@ class FredCollector:
             "NONREVSL": "Nonrevolving Consumer Credit (Auto + Student)",
             # Energy
             "DCOILBRENTEU": "Crude Oil Prices: Brent - Europe",
+            "GASREGW": "US Regular Gasoline Retail Price",
+            "GASDESW": "US Diesel Retail Price",
             # Fed Funds & Treasury Rates
             "FEDFUNDS": "Federal Funds Effective Rate",
             "GS2": "2-Year Treasury Constant Maturity Rate",
