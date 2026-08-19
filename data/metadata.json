@@ -319,7 +319,7 @@
     "units": "Percent",
     "frequency": "Daily",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-08-17 16:03:19-05",
+    "last_updated": "2026-08-18 16:02:32-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/T5YIE"
   },
@@ -328,7 +328,7 @@
     "units": "Percent",
     "frequency": "Daily",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-08-17 16:03:21-05",
+    "last_updated": "2026-08-18 16:02:28-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/T10YIE"
   },
@@ -393,7 +393,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-08-18"
+    "last_updated": "2026-08-19"
   },
   "nyfed_he_revolving": {
     "title": "NY Fed: Home Equity Revolving (HELOC) Balance",
@@ -402,7 +402,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-08-18"
+    "last_updated": "2026-08-19"
   },
   "nyfed_auto": {
     "title": "NY Fed: Auto Loan Balance",
@@ -411,7 +411,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-08-18"
+    "last_updated": "2026-08-19"
   },
   "nyfed_credit_card": {
     "title": "NY Fed: Credit Card Balance",
@@ -420,7 +420,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-08-18"
+    "last_updated": "2026-08-19"
   },
   "nyfed_student": {
     "title": "NY Fed: Student Loan Balance",
@@ -429,7 +429,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-08-18"
+    "last_updated": "2026-08-19"
   },
   "nyfed_other": {
     "title": "NY Fed: Other Debt Balance (incl. medical)",
@@ -438,7 +438,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-08-18"
+    "last_updated": "2026-08-19"
   },
   "nyfed_total": {
     "title": "NY Fed: Total Household Debt Balance",
@@ -447,7 +447,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-08-18"
+    "last_updated": "2026-08-19"
   },
   "dcoilbrenteu": {
     "title": "Crude Oil Prices: Brent - Europe",
@@ -546,7 +546,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-08-18"
+    "last_updated": "2026-08-19"
   },
   "nyfed_delinq_he_revolving": {
     "title": "NY Fed: HELOC Balance 90+ Days Delinquent",
@@ -555,7 +555,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-08-18"
+    "last_updated": "2026-08-19"
   },
   "nyfed_delinq_auto": {
     "title": "NY Fed: Auto Loan Balance 90+ Days Delinquent",
@@ -564,7 +564,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-08-18"
+    "last_updated": "2026-08-19"
   },
   "nyfed_delinq_credit_card": {
     "title": "NY Fed: Credit Card Balance 90+ Days Delinquent",
@@ -573,7 +573,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-08-18"
+    "last_updated": "2026-08-19"
   },
   "nyfed_delinq_student": {
     "title": "NY Fed: Student Loan Balance 90+ Days Delinquent",
@@ -582,7 +582,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-08-18"
+    "last_updated": "2026-08-19"
   },
   "nyfed_delinq_other": {
     "title": "NY Fed: Other Debt Balance 90+ Days Delinquent",
@@ -591,7 +591,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-08-18"
+    "last_updated": "2026-08-19"
   },
   "nyfed_delinq_total": {
     "title": "NY Fed: All Debt Balance 90+ Days Delinquent",
@@ -600,7 +600,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "NY Fed / Equifax Consumer Credit Panel",
     "source_url": "https://www.newyorkfed.org/microeconomics/hhdc",
-    "last_updated": "2026-08-18"
+    "last_updated": "2026-08-19"
   },
   "mortgage30us": {
     "title": "30-Year Fixed Rate Mortgage Average in the United States",
@@ -627,7 +627,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "Federal Reserve Bank of New York",
     "source_url": "https://www.newyorkfed.org/research/policy/gscpi",
-    "last_updated": "2026-08-18"
+    "last_updated": "2026-08-19"
   },
   "snap_persons": {
     "title": "SNAP: Persons Participating (National)",
@@ -636,7 +636,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "USDA Food and Nutrition Service, National Data Bank",
     "source_url": "https://www.fna.usda.gov/pd/supplemental-nutrition-assistance-program-snap",
-    "last_updated": "2026-08-18"
+    "last_updated": "2026-08-19"
   },
   "medicare_total_enrollment": {
     "title": "Medicare: Total Beneficiaries Enrolled (National)",
@@ -645,7 +645,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "CMS Medicare Monthly Enrollment",
     "source_url": "https://data.cms.gov/summary-statistics-on-beneficiary-enrollment/medicare-and-medicaid-reports/medicare-monthly-enrollment",
-    "last_updated": "2026-08-18"
+    "last_updated": "2026-08-19"
   },
   "medicaid_chip_enrollment": {
     "title": "Medicaid & CHIP: Total Enrollment (National)",
@@ -654,7 +654,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "CMS Performance Indicator Dataset",
     "source_url": "https://www.medicaid.gov/medicaid/national-medicaid-chip-program-information/medicaid-chip-enrollment-data",
-    "last_updated": "2026-08-18"
+    "last_updated": "2026-08-19"
   },
   "gacdisa066msfrbny": {
     "title": "Current General Business Conditions; Diffusion Index for New York",
