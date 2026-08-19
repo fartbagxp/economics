@@ -11,7 +11,7 @@ const RAW_SERIES = [
   'pi', 'w875rx1', 'dspi', 'pce', 'psave', 'psavert',
   'mich', 't5yie', 't10yie',
   'hhmsdodns', 'revolsl', 'sloas', 'mvloas', 'nonrevsl',
-  'dcoilbrenteu',
+  'dcoilbrenteu', 'gasregw', 'gasdesw',
   'gs2', 'gs10', 'gs20', 'gs30', 'fedfunds',
   'dfedtaru', 'dfedtarl',
   'mortgage30us', 'mortgage15us',

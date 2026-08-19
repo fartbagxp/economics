@@ -181,7 +181,7 @@ See `docs/collection.md` for the full catalog. Key series:
 
 **Mortgage Rates:** MORTGAGE30US, MORTGAGE15US (Freddie Mac PMMS weekly; stored downsampled — weekly last 5 years, monthly before)
 
-**Commodities:** Brent crude oil futures curve (estimated from WTI via Yahoo Finance)
+**Commodities:** Brent crude oil futures curve (estimated from WTI via Yahoo Finance), GASREGW/GASDESW (EIA weekly national retail gasoline/diesel prices via FRED)
 
 **Supply Chain:** gscpi — NY Fed Global Supply Chain Pressure Index (monthly, std devs from average)
 

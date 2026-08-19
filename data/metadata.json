@@ -691,5 +691,23 @@
     "last_updated": "2026-08-07 08:33:45-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/CES0500000003"
+  },
+  "gasregw": {
+    "title": "US Regular All Formulations Gas Price",
+    "units": "Dollars per Gallon",
+    "frequency": "Weekly, Ending Monday",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "last_updated": "2026-08-18 09:03:16-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/GASREGW"
+  },
+  "gasdesw": {
+    "title": "US Diesel Sales Price",
+    "units": "Dollars per Gallon",
+    "frequency": "Weekly, Ending Monday",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "last_updated": "2026-08-18 09:03:22-05",
+    "source": "FRED, Federal Reserve Bank of St. Louis",
+    "source_url": "https://fred.stlouisfed.org/series/GASDESW"
   }
 }

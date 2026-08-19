@@ -208,6 +208,12 @@
   const mort15 = $derived(parse(data.series.mortgage15us).filter((d) => d.date >= ratesCutoff));
   const mortML = $derived(multiLine({ m30: mort30, m15: mort15 }));
 
+  // Retail gasoline & diesel prices (EIA via FRED, weekly; stored sparse — monthly before the last 5 years)
+  const gasoline = $derived(parse(data.series.gasregw));
+  const diesel   = $derived(parse(data.series.gasdesw));
+  const fuelML   = $derived(multiLine({ gas: gasoline, diesel }));
+  const fuelMid  = $derived(new Date(((gasoline[0]?.date.getTime() ?? midDate.getTime()) + new Date().getTime()) / 2));
+
   const cpiYoyML  = $derived(multiLine({ headline: cpi_yoy,     core: core_cpi_yoy }));
   const pceYoyML  = $derived(multiLine({ headline: pce_yoy,     core: core_pce_yoy }));
   const ppiYoyML  = $derived(multiLine({ headline: ppi_yoy,     core: core_ppi_yoy }));
@@ -1484,6 +1490,44 @@
           &nbsp;· Run <code>python main.py --source oil</code> to add the current futures curve
         {/if}
       </p>
+    </div>
+
+    <!-- Gasoline & Diesel Retail Prices -->
+    <div class="card wide" id="fuel-prices">
+      <h2>Gasoline &amp; Diesel Retail Prices <a class="anchor-link" href="#fuel-prices">#</a></h2>
+      <p class="meta">
+        Weekly · Not Seasonally Adjusted · EIA &nbsp;·&nbsp;
+        <span class="legend-swatch" style="background:#457b9d"></span> Regular Gasoline &nbsp;
+        <span class="legend-swatch" style="background:#f4a261"></span> Diesel
+      </p>
+      <LazyChart height={280}>
+      <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '$/gallon', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
+        <RuleX data={oilBands.flatMap((b) => [b.start, b.end])} stroke="var(--band-fill)" strokeOpacity={0.5} />
+        <Line data={gasoline} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
+        <Line data={diesel} x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
+        {#snippet overlay()}<RecessionHover bands={[...recessions, ...oilBands]} />
+          <HTMLTooltip data={fuelML.all} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const v = fuelML.byDate.get(datum.date.getTime())}
+                <div class="tip" style:transform={datum.date > fuelMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
+                  <span class="tip-label">Fuel Prices</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date, oilBands) as note}<span class="tip-note">{note}</span>{/each}
+                  {#if v}
+                    {#if v.gas != null}<span class="tip-edu-row"><span><span style="color:#457b9d">●</span> Regular Gasoline</span><b>${v.gas?.toFixed(2)}</b></span>{/if}
+                    {#if v.diesel != null}<span class="tip-edu-row"><span><span style="color:#f4a261">●</span> Diesel</span><b>${v.diesel?.toFixed(2)}</b></span>{/if}
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      <p class="source">Source: FRED — <a href={fredUrl('gasregw')} target="_blank" rel="noopener">GASREGW</a> · <a href={fredUrl('gasdesw')} target="_blank" rel="noopener">GASDESW</a> (EIA)</p>
     </div>
 
   </section>
