@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-08-19 02:28 UTC_
+_Last updated: 2026-08-22 18:08 UTC_
 
 _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 points (quarterly)._
 
@@ -32,8 +32,8 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 | Unemployment Rate (U-3)   | `▃▃▂▂▃▂▁▃▃▃▅▂▅▅▆█▆▅▆▅▅▅▃▂` | 4.1%      | -0.1pp     | +0.0pp   | 2026-07-01 |
 | Total Nonfarm Payrolls    | `▁▁▂▃▄▄▄▄▅▅▅▅▅▅▅▅▅▆▅▆▇▇█▇` | 158,858K  | -23K       | +316K    | 2026-07-01 |
 | Labor Force Participation | `███▆▆▆▇▆▆▇▆▅▅▅▆▆▆▄▄▃▃▃▁▁` | 61.4%     | -0.1pp     | -0.9pp   | 2026-07-01 |
-| Initial Jobless Claims    | `▅▅▃▄▃▅▄▅▁▂▄▄▄▇█▇▅▅▅▄▁▂▂▄` | 209,000   | +9,000     | -15,000  | 2026-08-08 |
-| Continued Claims          | `█▆▆▄▅▂▄▄▂▁▂▁▂▁▂▃▄▃▄▃▂▂▃▂` | 1,777,000 | -22,000    | -165,000 | 2026-08-01 |
+| Initial Jobless Claims    | `▅▃▄▃▅▄▅▁▂▄▄▄▇█▇▅▅▅▄▁▂▂▄▃` | 206,000   | -6,000     | -27,000  | 2026-08-15 |
+| Continued Claims          | `▇█▅▆▃▄▄▂▁▂▁▃▁▃▄▅▄▅▄▃▂▄▂▄` | 1,799,000 | +18,000    | -158,000 | 2026-08-08 |
 
 ### Unemployment Measures (U1–U6)
 
@@ -67,18 +67,18 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 
 ### Manufacturing (Regional Fed Surveys — ISM PMI Proxies)
 
-| Indicator             | Trend                      | Latest | MoM    | YoY (12m) | As of      |
-| --------------------- | -------------------------- | ------ | ------ | --------- | ---------- |
-| Philadelphia Fed      | `▂▂▃▂▁▆▄▃▁▂▂▄▂▅▁▂▁▄▄▄▆▂▃█` | 41.40  | +31.10 | +30.00    | 2026-07-01 |
-| Empire State (NY Fed) | `▄▁▇▄▂▄▁▂▂▁▄▅▂▅▆▃▅▅▃▆▇▅▇█` | 20.60  | +5.00  | +11.50    | 2026-08-01 |
-| Dallas Fed            | `▄▄▅▅▆█▄▃▁▃▄▆▅▄▅▄▄▅▆▅▅▆▅▆` | 1.30   | +1.30  | +0.10     | 2026-07-01 |
+| Indicator             | Trend                      | Latest | MoM   | YoY (12m) | As of      |
+| --------------------- | -------------------------- | ------ | ----- | --------- | ---------- |
+| Philadelphia Fed      | `▂▃▂▁▆▄▃▁▂▂▃▂▄▁▂▁▃▄▄▅▂▃▇█` | 47.40  | +6.00 | +46.70    | 2026-08-01 |
+| Empire State (NY Fed) | `▄▁▇▄▂▄▁▂▂▁▄▅▂▅▆▃▅▅▃▆▇▅▇█` | 20.60  | +5.00 | +11.50    | 2026-08-01 |
+| Dallas Fed            | `▄▄▅▅▆█▄▃▁▃▄▆▅▄▅▄▄▅▆▅▅▆▅▆` | 1.30   | +1.30 | +0.10     | 2026-07-01 |
 
 ### Mortgage Rates
 
 | Indicator     | Trend                      | Latest | WoW    | YoY (52w) | As of      |
 | ------------- | -------------------------- | ------ | ------ | --------- | ---------- |
-| 30-Year Fixed | `▁▂▃▄▅▄▄▃▄▄▄▆▆▅▆▅▅▅▅▆▆▇█▇` | 6.7%   | -0.0pp | +0.1pp    | 2026-08-13 |
-| 15-Year Fixed | `▁▁▂▄▄▄▃▂▃▄▄▅▆▅▅▅▅▅▅▆▇█▇▇` | 6.0%   | -0.0pp | +0.2pp    | 2026-08-13 |
+| 30-Year Fixed | `▁▂▄▅▄▃▂▃▄▄▅▆▅▅▅▅▄▅▆▆▇█▇▇` | 6.7%   | -0.0pp | +0.1pp    | 2026-08-20 |
+| 15-Year Fixed | `▁▁▄▄▄▂▂▂▃▃▅▅▄▅▅▅▄▅▆▆█▇▆▆` | 6.0%   | -0.0pp | +0.3pp    | 2026-08-20 |
 
 ### Household Credit — 90+ Day Delinquency (% of balance)
 
