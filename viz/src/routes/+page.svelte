@@ -203,6 +203,20 @@
   const medicareDomain = $derived(dataDomain(medicareEnrolled));
   const medicaidDomain = $derived(dataDomain(medicaidEnrolled));
 
+  // Consumer spending by age of reference person (BLS Consumer Expenditure
+  // Survey, annual, current dollars) — populated after running: python main.py --source ce
+  const ceAll   = $derived(parse(data.series.ce_totalexp_all));
+  const ceLt25  = $derived(parse(data.series.ce_totalexp_lt25));
+  const ce2534  = $derived(parse(data.series.ce_totalexp_25_34));
+  const ce3544  = $derived(parse(data.series.ce_totalexp_35_44));
+  const ce4554  = $derived(parse(data.series.ce_totalexp_45_54));
+  const ce5564  = $derived(parse(data.series.ce_totalexp_55_64));
+  const ce65up  = $derived(parse(data.series.ce_totalexp_65up));
+  const ceHasData = $derived(ceAll.length > 0);
+  const ceML = $derived(multiLine({ lt25: ceLt25, a2534: ce2534, a3544: ce3544, a4554: ce4554, a5564: ce5564, a65up: ce65up, all: ceAll }));
+  const ceMid = $derived(ceHasData ? new Date((ceAll[0].date.getTime() + ceAll[ceAll.length - 1].date.getTime()) / 2) : midDate);
+  const ceDomain = $derived(dataDomain(ceAll));
+
   // Mortgage rates (Freddie Mac PMMS, weekly; stored sparse — monthly before the last 5 years)
   const mort30 = $derived(parse(data.series.mortgage30us).filter((d) => d.date >= ratesCutoff));
   const mort15 = $derived(parse(data.series.mortgage15us).filter((d) => d.date >= ratesCutoff));
@@ -1180,6 +1194,66 @@
     </div>
 
   </section>
+
+  <!-- ── Consumer Spending by Age ─────────────────────────────── -->
+  {#if ceHasData}
+  <h3 class="section-label">Consumer Spending by Age</h3>
+  <section class="grid">
+    <div class="card wide" id="spending-by-age">
+      <h2>Average Annual Spending by Age of Reference Person <a class="anchor-link" href="#spending-by-age">#</a></h2>
+      <p class="meta">
+        Annual · Not Seasonally Adjusted · Current Dollars · 1984–present &nbsp;·&nbsp;
+        <span class="legend-swatch" style="background:#1a6faf"></span> Under 25 &nbsp;
+        <span class="legend-swatch" style="background:#2a9d8f"></span> 25–34 &nbsp;
+        <span class="legend-swatch" style="background:#f4a261"></span> 35–44 &nbsp;
+        <span class="legend-swatch" style="background:#e63946"></span> 45–54 &nbsp;
+        <span class="legend-swatch" style="background:#bc4749"></span> 55–64 &nbsp;
+        <span class="legend-swatch" style="background:#6d597a"></span> 65+ &nbsp;
+        <span class="legend-swatch" style="background:#9aa0a6"></span> All consumer units
+      </p>
+      <LazyChart height={340}>
+      <Plot height={340} marginLeft={60} marginRight={10} x={{ type: 'time', domain: ceDomain }} y={{ label: '$', grid: true }}>
+        <Frame />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
+        <Line data={ceAll}  x="date" y="value" stroke="#9aa0a6" strokeWidth={2} strokeDasharray="5,3" />
+        <Line data={ceLt25} x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
+        <Line data={ce2534} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
+        <Line data={ce3544} x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
+        <Line data={ce4554} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
+        <Line data={ce5564} x="date" y="value" stroke="#bc4749" strokeWidth={1.5} />
+        <Line data={ce65up} x="date" y="value" stroke="#6d597a" strokeWidth={1.5} />
+        {#snippet overlay()}<RecessionHover bands={recessions} />
+          <HTMLTooltip data={ceML.all} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const v = ceML.byDate.get(datum.date.getTime())}
+                <div class="tip" style:transform={datum.date > ceMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
+                  <span class="tip-label">Avg. Annual Spending</span>
+                  <span class="tip-date">{datum.date.getFullYear()}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
+                  {#if v}
+                    {#if v.lt25  != null}<span class="tip-edu-row"><span><span style="color:#1a6faf">●</span> Under 25</span><b>${v.lt25.toLocaleString()}</b></span>{/if}
+                    {#if v.a2534 != null}<span class="tip-edu-row"><span><span style="color:#2a9d8f">●</span> 25–34</span><b>${v.a2534.toLocaleString()}</b></span>{/if}
+                    {#if v.a3544 != null}<span class="tip-edu-row"><span><span style="color:#f4a261">●</span> 35–44</span><b>${v.a3544.toLocaleString()}</b></span>{/if}
+                    {#if v.a4554 != null}<span class="tip-edu-row"><span><span style="color:#e63946">●</span> 45–54</span><b>${v.a4554.toLocaleString()}</b></span>{/if}
+                    {#if v.a5564 != null}<span class="tip-edu-row"><span><span style="color:#bc4749">●</span> 55–64</span><b>${v.a5564.toLocaleString()}</b></span>{/if}
+                    {#if v.a65up != null}<span class="tip-edu-row"><span><span style="color:#6d597a">●</span> 65+</span><b>${v.a65up.toLocaleString()}</b></span>{/if}
+                    {#if v.all   != null}<span class="tip-edu-row"><span><span style="color:#9aa0a6">●</span> All units</span><b>${v.all.toLocaleString()}</b></span>{/if}
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      <p class="source">
+        Source: <a href="https://www.bls.gov/cex/tables.htm" target="_blank" rel="noopener">BLS Consumer Expenditure Surveys</a>
+        — total average annual expenditures per consumer unit by age of the reference person (CE table 1300).
+        Not inflation-adjusted; the combined 65+ band starts in 1988.
+      </p>
+    </div>
+  </section>
+  {/if}
 
   <!-- ── Household Debt ───────────────────────────────────────── -->
   <h3 class="section-label">Household Debt</h3>

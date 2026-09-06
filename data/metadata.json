@@ -709,5 +709,86 @@
     "last_updated": "2026-09-01 09:03:30-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/GASDESW"
+  },
+  "ce_totalexp_all": {
+    "units": "U.S. Dollars",
+    "frequency": "Annual",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "source": "U.S. Bureau of Labor Statistics \u2014 Consumer Expenditure Surveys",
+    "source_url": "https://www.bls.gov/cex/tables.htm",
+    "title": "Total Average Annual Expenditures \u2014 All consumer units",
+    "last_updated": "2026-09-06"
+  },
+  "ce_totalexp_lt25": {
+    "units": "U.S. Dollars",
+    "frequency": "Annual",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "source": "U.S. Bureau of Labor Statistics \u2014 Consumer Expenditure Surveys",
+    "source_url": "https://www.bls.gov/cex/tables.htm",
+    "title": "Total Average Annual Expenditures \u2014 Reference person under 25",
+    "last_updated": "2026-09-06"
+  },
+  "ce_totalexp_25_34": {
+    "units": "U.S. Dollars",
+    "frequency": "Annual",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "source": "U.S. Bureau of Labor Statistics \u2014 Consumer Expenditure Surveys",
+    "source_url": "https://www.bls.gov/cex/tables.htm",
+    "title": "Total Average Annual Expenditures \u2014 Reference person 25 to 34",
+    "last_updated": "2026-09-06"
+  },
+  "ce_totalexp_35_44": {
+    "units": "U.S. Dollars",
+    "frequency": "Annual",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "source": "U.S. Bureau of Labor Statistics \u2014 Consumer Expenditure Surveys",
+    "source_url": "https://www.bls.gov/cex/tables.htm",
+    "title": "Total Average Annual Expenditures \u2014 Reference person 35 to 44",
+    "last_updated": "2026-09-06"
+  },
+  "ce_totalexp_45_54": {
+    "units": "U.S. Dollars",
+    "frequency": "Annual",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "source": "U.S. Bureau of Labor Statistics \u2014 Consumer Expenditure Surveys",
+    "source_url": "https://www.bls.gov/cex/tables.htm",
+    "title": "Total Average Annual Expenditures \u2014 Reference person 45 to 54",
+    "last_updated": "2026-09-06"
+  },
+  "ce_totalexp_55_64": {
+    "units": "U.S. Dollars",
+    "frequency": "Annual",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "source": "U.S. Bureau of Labor Statistics \u2014 Consumer Expenditure Surveys",
+    "source_url": "https://www.bls.gov/cex/tables.htm",
+    "title": "Total Average Annual Expenditures \u2014 Reference person 55 to 64",
+    "last_updated": "2026-09-06"
+  },
+  "ce_totalexp_65up": {
+    "units": "U.S. Dollars",
+    "frequency": "Annual",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "source": "U.S. Bureau of Labor Statistics \u2014 Consumer Expenditure Surveys",
+    "source_url": "https://www.bls.gov/cex/tables.htm",
+    "title": "Total Average Annual Expenditures \u2014 Reference person 65 and older",
+    "last_updated": "2026-09-06"
+  },
+  "ce_totalexp_65_74": {
+    "units": "U.S. Dollars",
+    "frequency": "Annual",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "source": "U.S. Bureau of Labor Statistics \u2014 Consumer Expenditure Surveys",
+    "source_url": "https://www.bls.gov/cex/tables.htm",
+    "title": "Total Average Annual Expenditures \u2014 Reference person 65 to 74",
+    "last_updated": "2026-09-06"
+  },
+  "ce_totalexp_75up": {
+    "units": "U.S. Dollars",
+    "frequency": "Annual",
+    "seasonal_adjustment": "Not Seasonally Adjusted",
+    "source": "U.S. Bureau of Labor Statistics \u2014 Consumer Expenditure Surveys",
+    "source_url": "https://www.bls.gov/cex/tables.htm",
+    "title": "Total Average Annual Expenditures \u2014 Reference person 75 and older",
+    "last_updated": "2026-09-06"
   }
 }

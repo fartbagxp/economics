@@ -87,6 +87,26 @@ Collected via `uv run python main.py --source bls` (fetched directly from the BL
 
 Two derived series are computed by `Deriver`: the month-over-month change in thousands (`ces0000000001_chg`) and its 3-month rolling average (`ces0000000001_chg_3mo`), since the initial print is volatile and gets revised.
 
+### Consumer Spending by Age (BLS Consumer Expenditure Survey)
+
+Collected via `uv run python main.py --source ce` (fetched directly from the BLS public API, not mirrored through FRED — FRED only carries the 2020+ vintage of these series).
+
+Total average annual expenditures per consumer unit, broken out by the age of the reference person (CE table 1300). Annual, not seasonally adjusted, in current dollars. Coverage: 1984–present (the combined "65 and older" band starts 1988). Data for calendar year Y is published by BLS in September of year Y+1; the observation date is stored as January 1 of year Y.
+
+| Series                  | BLS ID              | Age of reference person |
+| ----------------------- | ------------------- | ----------------------- |
+| **ce_totalexp_all**     | CXUTOTALEXPLB0401M  | All consumer units (baseline) |
+| **ce_totalexp_lt25**    | CXUTOTALEXPLB0402M  | Under 25                |
+| **ce_totalexp_25_34**   | CXUTOTALEXPLB0403M  | 25 to 34                |
+| **ce_totalexp_35_44**   | CXUTOTALEXPLB0404M  | 35 to 44                |
+| **ce_totalexp_45_54**   | CXUTOTALEXPLB0405M  | 45 to 54                |
+| **ce_totalexp_55_64**   | CXUTOTALEXPLB0406M  | 55 to 64                |
+| **ce_totalexp_65up**    | CXUTOTALEXPLB0407M  | 65 and older            |
+| **ce_totalexp_65_74**   | CXUTOTALEXPLB0408M  | 65 to 74                |
+| **ce_totalexp_75up**    | CXUTOTALEXPLB0409M  | 75 and older            |
+
+**Source page**: [bls.gov/cex/tables.htm](https://www.bls.gov/cex/tables.htm). All nine series are requested in a single batched API call per 10-year window (~5 calls total) to stay under the unregistered BLS API's 25-requests-per-day limit.
+
 ### Wage Growth
 
 - **CES0500000003**: Average Hourly Earnings of All Employees, Total Private (dollars/hour, seasonally adjusted, monthly since March 2006)

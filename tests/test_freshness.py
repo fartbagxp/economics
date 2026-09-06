@@ -17,7 +17,7 @@ Freshness thresholds are based on typical release lags per frequency:
     quarter + release lag + one additional quarter of buffer before next release)
 """
 
-from datetime import date
+from datetime import UTC, date, datetime
 from pathlib import Path
 
 import polars as pl
@@ -93,6 +93,20 @@ SERIES_MAX_AGE = [
     ("nyfed_delinq_student", 215),
     ("nyfed_delinq_other", 215),
     ("nyfed_delinq_total", 215),
+    # Annual — BLS Consumer Expenditure Survey, spending by age of reference
+    # person. Data for calendar year Y is published in September of Y+1 and the
+    # observation date is stored as Jan 1 of year Y (FRED annual convention), so
+    # in the months just before a release the latest point is ~33 months old.
+    # 1050 days covers that plus a buffer for a slipped release.
+    ("ce_totalexp_all", 1050),
+    ("ce_totalexp_lt25", 1050),
+    ("ce_totalexp_25_34", 1050),
+    ("ce_totalexp_35_44", 1050),
+    ("ce_totalexp_45_54", 1050),
+    ("ce_totalexp_55_64", 1050),
+    ("ce_totalexp_65up", 1050),
+    ("ce_totalexp_65_74", 1050),
+    ("ce_totalexp_75up", 1050),
 ]
 
 # Must match RAW_SERIES in viz/src/routes/+page.server.js
@@ -136,7 +150,7 @@ def test_raw_series_freshness(series_id, max_age_days):
     path = DATA_DIR / "raw" / f"{series_id}.csv"
     assert path.exists(), f"CSV missing: {path.name}"
     latest = date.fromisoformat(_latest(path))
-    age = (date.today() - latest).days
+    age = (datetime.now(UTC).date() - latest).days
     assert age <= max_age_days, (
         f"{series_id}: latest point {latest} is {age} days old (max allowed {max_age_days})"
     )

@@ -43,6 +43,15 @@ const BLS_SERIES = ['ces0000000001'];
 // python main.py --source snap / --source medicare / --source medicaid
 const SOCIAL_SERIES = ['snap_persons', 'medicare_total_enrollment', 'medicaid_chip_enrollment'];
 
+// Consumer Expenditure Survey spending by age is optional — populated by:
+// python main.py --source ce
+const CE_SERIES = [
+  'ce_totalexp_all',
+  'ce_totalexp_lt25', 'ce_totalexp_25_34', 'ce_totalexp_35_44',
+  'ce_totalexp_45_54', 'ce_totalexp_55_64', 'ce_totalexp_65up',
+  'ce_totalexp_65_74', 'ce_totalexp_75up',
+];
+
 const DERIVED_SERIES = [
   'cpiaucsl_mom', 'cpiaucsl_yoy',
   'cpilfesl_mom', 'cpilfesl_yoy',
@@ -100,11 +109,14 @@ export function load() {
   const social = Object.fromEntries(
     SOCIAL_SERIES.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'raw', `${id}.csv`))])
   );
+  const ce = Object.fromEntries(
+    CE_SERIES.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'raw', `${id}.csv`))])
+  );
   const derived = Object.fromEntries(
     DERIVED_SERIES.map((id) => [id, loadCsv(join(process.cwd(), '..', 'data', 'derived', `${id}.csv`))])
   );
   const derivedOptional = Object.fromEntries(
     DERIVED_SERIES_OPTIONAL.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'derived', `${id}.csv`))])
   );
-  return { series: { ...raw, ...nyfed, ...oil, ...bls, ...gscpi, ...manufacturing, ...social, ...derived, ...derivedOptional }, metadata };
+  return { series: { ...raw, ...nyfed, ...oil, ...bls, ...gscpi, ...manufacturing, ...social, ...ce, ...derived, ...derivedOptional }, metadata };
 }
