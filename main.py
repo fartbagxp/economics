@@ -4,6 +4,7 @@ import polars as pl
 import xlrd
 
 from src.bls import BlsCollector
+from src.ce import CeCollector
 from src.chart import EconomicChart
 from src.cli import Cli
 from src.config import Config
@@ -37,6 +38,7 @@ _SNAP_ERRORS = (
     xlrd.XLRDError,
     pl.exceptions.PolarsError,
 )
+_CE_ERRORS = (OSError, RuntimeError, ValueError, pl.exceptions.PolarsError)
 _MEDICARE_ERRORS = (OSError, RuntimeError, pl.exceptions.PolarsError)
 _MEDICAID_ERRORS = (OSError, RuntimeError, pl.exceptions.PolarsError)
 
@@ -79,6 +81,13 @@ def main():
             bls_collector.collect_series(args.series, args.series)
         else:
             bls_collector.collect_all()
+
+    if args.source in ["ce", "all"]:
+        ce_collector = CeCollector(args.output)
+        try:
+            ce_collector.collect_all()
+        except _CE_ERRORS as e:
+            print(f"❌ Consumer Expenditure collection failed: {e}")
 
     if args.source in ["nyfed", "all"]:
         nyfed_collector = NyFedCollector(args.output)

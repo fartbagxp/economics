@@ -24,6 +24,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Raw series stored as
 
 - `uv run python main.py --source fred` - Collect all FRED data
 - `uv run python main.py --source bls` - Collect BLS data
+- `uv run python main.py --source ce` - Collect BLS Consumer Expenditure Survey spending by age of reference person
 - `uv run python main.py --source nyfed` - Collect NY Fed household debt data
 - `uv run python main.py --source gscpi` - Collect NY Fed Global Supply Chain Pressure Index
 - `uv run python main.py --source oil` - Collect Brent crude oil futures curve
@@ -77,6 +78,12 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Raw series stored as
 **src/bls.py (BlsCollector):**
 
 - Fetches data from BLS public API; no authentication required
+
+**src/ce.py (CeCollector):**
+
+- Fetches BLS Consumer Expenditure Survey "total average annual expenditures by age of reference person" (CE table 1300) directly from the BLS public API
+- Nine `CXUTOTALEXPLB04xxM` series (all consumer units + 8 age bands), all batched into ~5 requests to respect the unregistered API rate limit
+- Saves annual `data/raw/ce_totalexp_*.csv` in current dollars, dated Jan 1 of each data year; coverage 1984–present
 
 **src/nyfed.py (NyFedCollector):**
 
@@ -172,6 +179,8 @@ See `docs/collection.md` for the full catalog. Key series:
 **Labor Market:** UNRATE (U-3), U1RATE-U6RATE, CIVPART, initial/continued jobless claims, unemployment by age group (LNS series)
 
 **Economy:** GDP, CPIAUCSL (+ core/PCE/PPI variants), UMCSENT, real disposable income (W875RX1)
+
+**Consumer Spending by Age (BLS CE Survey):** ce_totalexp_all + ce_totalexp_{lt25,25_34,35_44,45_54,55_64,65up,65_74,75up} — total average annual expenditures per consumer unit by age of reference person, annual since 1984
 
 **Household Debt (FRED):** HHMSDODNS (mortgage), REVOLSL (credit cards), NONREVSL (auto+student)
 

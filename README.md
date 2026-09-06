@@ -11,7 +11,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
   <a href="https://github.com/fartbagxp/economics/actions/workflows/deploy-viz.yml"><img src="https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/deploy-viz.yml?label=deploy%20viz&style=flat-square" alt="Deploy Viz"></a>
   <a href="https://github.com/fartbagxp/economics/actions/workflows/lint.yml"><img src="https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/lint.yml?label=lint&style=flat-square" alt="Lint"></a>
   <a href="https://fartbagxp.github.io/economics/"><img src="https://img.shields.io/badge/dashboard-live-brightgreen?style=flat-square" alt="Live Dashboard"></a>
-  <!-- DATASET-COUNT --><img src="https://img.shields.io/badge/datasets-80-blue?style=flat-square" alt="80 datasets"><!-- /DATASET-COUNT -->
+  <!-- DATASET-COUNT --><img src="https://img.shields.io/badge/datasets-89-blue?style=flat-square" alt="89 datasets"><!-- /DATASET-COUNT -->
 </p>
 
 - [Setup](docs/setup.md): how to run the repo
@@ -21,9 +21,9 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-09-05 18:21 UTC_
+_Last updated: 2026-09-06 03:34 UTC_
 
-_Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 points (quarterly)._
+_Sparklines show the last 24 data points (monthly or annual), 52 points (weekly), or 8 points (quarterly)._
 
 ### Labor Market Overview
 
@@ -57,13 +57,13 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 
 ### Economy
 
-| Indicator                          | Trend                      | Latest     | Chg (prev) | Chg (1Y) | As of      |
-| ---------------------------------- | -------------------------- | ---------- | ---------- | -------- | ---------- |
-| GDP                                | `▁▁▁▂▂▃▃▃▄▄▄▄▅▅▅▅▆▆▆▆▇▇▇█` | $32,486.1B | +620.3B    | +2000.3B | 2026-04-01 |
-| CPI (All Urban)                    | `▁▁▁▁▂▂▂▃▃▃▃▃▃▄▄▄▅▅▅▆▇█▇▇` | 332.81     | +0.25      | +11.38   | 2026-07-01 |
-| Avg. Hourly Earnings (Wage Growth) | `▁▁▁▂▂▂▃▃▃▃▄▄▄▅▅▅▆▆▆▇▇▇▇█` | 37.75      | +0.10      | +1.13    | 2026-08-01 |
-| Consumer Sentiment (U. Mich.)      | `▆▇▇▇█▇▅▃▂▂▄▅▄▃▃▂▂▃▃▃▂▁▂▃` | 55.20      | +5.70      | -6.50    | 2026-07-01 |
-| Supply Chain Pressure (GSCPI)      | `▂▁▁▁▁▂▁▁▃▂▂▁▂▁▁▄▃▄▄█▇▅▅▅` | 1.06       | +0.13      | +1.15    | 2026-08-01 |
+| Indicator                          | Trend                      | Latest  | Chg (prev) | Chg (1Y) | As of      |
+| ---------------------------------- | -------------------------- | ------- | ---------- | -------- | ---------- |
+| GDP                                | `▁▁▁▂▂▃▃▃▄▄▄▄▅▅▅▅▆▆▆▆▇▇▇█` | $32,486 | +$620      | +$2,000  | 2026-04-01 |
+| CPI (All Urban)                    | `▁▁▁▁▂▂▂▃▃▃▃▃▃▄▄▄▅▅▅▆▇█▇▇` | 332.81  | +0.25      | +11.38   | 2026-07-01 |
+| Avg. Hourly Earnings (Wage Growth) | `▁▁▁▂▂▂▃▃▃▃▄▄▄▅▅▅▆▆▆▇▇▇▇█` | $38     | +$0        | +$1      | 2026-08-01 |
+| Consumer Sentiment (U. Mich.)      | `▆▇▇▇█▇▅▃▂▂▄▅▄▃▃▂▂▃▃▃▂▁▂▃` | 55.20   | +5.70      | -6.50    | 2026-07-01 |
+| Supply Chain Pressure (GSCPI)      | `▂▁▁▁▁▂▁▁▃▂▂▁▂▁▁▄▃▄▄█▇▅▅▅` | 1.06    | +0.13      | +1.15    | 2026-08-01 |
 
 ### Manufacturing (Regional Fed Surveys — ISM PMI Proxies)
 
@@ -79,6 +79,18 @@ _Sparklines show the last 24 data points (monthly), 52 points (weekly), or 8 poi
 | ------------- | -------------------------- | ------ | ------ | --------- | ---------- |
 | 30-Year Fixed | `▃▄▃▂▁▂▃▂▅▅▄▅▄▄▃▄▅▆▇▇▇▇▇█` | 6.7%   | +0.0pp | +0.2pp    | 2026-09-03 |
 | 15-Year Fixed | `▃▃▃▂▁▁▃▂▅▅▄▄▄▄▄▄▆▆█▇▆▆▇█` | 6.0%   | +0.1pp | +0.4pp    | 2026-09-03 |
+
+### Consumer Spending by Age (BLS Consumer Expenditure Survey, annual)
+
+| Indicator                 | Trend                      | Latest   | YoY (1y) | Chg (5y) | As of      |
+| ------------------------- | -------------------------- | -------- | -------- | -------- | ---------- |
+| All Consumer Units        | `▁▁▁▁▂▂▂▂▂▂▂▃▃▃▃▄▄▄▅▄▅▇▇█` | $78,535  | +$1,255  | +$15,499 | 2024-01-01 |
+| Reference Person Under 25 | `▁▁▁▁▂▂▂▂▂▂▂▃▃▃▃▄▃▃▅▅▆▇█▇` | $47,283  | -$2,277  | +$7,990  | 2024-01-01 |
+| Reference Person 25–34    | `▁▁▁▁▂▂▂▂▂▂▂▃▂▃▃▃▄▄▄▄▅▆▇█` | $74,475  | +$2,608  | +$17,347 | 2024-01-01 |
+| Reference Person 35–44    | `▁▁▁▁▂▂▂▂▂▂▂▂▂▃▃▄▄▄▅▅▆▇▇█` | $91,229  | +$290    | +$16,339 | 2024-01-01 |
+| Reference Person 45–54    | `▁▁▁▁▂▂▂▂▂▂▂▂▂▃▃▄▄▄▄▄▅▆▇█` | $100,327 | +$3,008  | +$22,971 | 2024-01-01 |
+| Reference Person 55–64    | `▁▁▁▁▂▂▂▃▂▂▂▃▃▃▃▄▄▄▅▄▅▆▇█` | $84,946  | +$1,567  | +$15,452 | 2024-01-01 |
+| Reference Person 65+      | `▁▁▁▁▂▂▂▂▃▂▃▃▃▄▄▄▅▅▅▅▆▇▇█` | $61,432  | +$1,345  | +$11,212 | 2024-01-01 |
 
 ### Household Credit — 90+ Day Delinquency (% of balance)
 

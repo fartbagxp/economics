@@ -47,6 +47,8 @@ def compute_stats(df: pl.DataFrame, frequency: str) -> dict:
         lookback = 52
     elif "quarterly" in freq:
         lookback = 4
+    elif "annual" in freq:
+        lookback = 5
     else:
         lookback = 12
 
@@ -70,6 +72,8 @@ def _fmt_change(val, units: str) -> str:
     sign = "+" if val >= 0 else ""
     if "percent" in units.lower() or units.lower() == "percent":
         return f"{sign}{val:.1f}pp"
+    if "dollar" in units.lower():
+        return f"{sign}${val:,.0f}" if val >= 0 else f"-${abs(val):,.0f}"
     if "billion" in units.lower():
         return f"{sign}{val:.1f}B"
     if "thousand" in units.lower():
@@ -82,6 +86,8 @@ def _fmt_change(val, units: str) -> str:
 def _fmt_value(val, units: str) -> str:
     if "percent" in units.lower() or units.lower() == "percent":
         return f"{val:.1f}%"
+    if "dollar" in units.lower():
+        return f"${val:,.0f}"
     if "billion" in units.lower():
         return f"${val:,.1f}B"
     if "thousand" in units.lower():
@@ -180,6 +186,18 @@ def build_dashboard(data_dir: str = "data/raw") -> str:
             ],
         ),
         (
+            "Consumer Spending by Age (BLS Consumer Expenditure Survey, annual)",
+            [
+                ("ce_totalexp_all", "All Consumer Units"),
+                ("ce_totalexp_lt25", "Reference Person Under 25"),
+                ("ce_totalexp_25_34", "Reference Person 25–34"),
+                ("ce_totalexp_35_44", "Reference Person 35–44"),
+                ("ce_totalexp_45_54", "Reference Person 45–54"),
+                ("ce_totalexp_55_64", "Reference Person 55–64"),
+                ("ce_totalexp_65up", "Reference Person 65+"),
+            ],
+        ),
+        (
             "Household Credit — 90+ Day Delinquency (% of balance)",
             [
                 ("nyfed_delinq_credit_card", "Credit Cards"),
@@ -194,7 +212,7 @@ def build_dashboard(data_dir: str = "data/raw") -> str:
 
     lines = []
     lines.append(
-        "_Sparklines show the last 24 data points (monthly), "
+        "_Sparklines show the last 24 data points (monthly or annual), "
         "52 points (weekly), or 8 points (quarterly)._\n"
     )
 
@@ -211,6 +229,8 @@ def build_dashboard(data_dir: str = "data/raw") -> str:
             period_col, yoy_col = "WoW", "YoY (52w)"
         elif "quarterly" in next(iter(freqs)):
             period_col, yoy_col = "QoQ", "YoY (4q)"
+        elif "annual" in next(iter(freqs)):
+            period_col, yoy_col = "YoY (1y)", "Chg (5y)"
         else:
             period_col, yoy_col = "MoM", "YoY (12m)"
 
