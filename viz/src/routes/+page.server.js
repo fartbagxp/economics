@@ -52,6 +52,14 @@ const CE_SERIES = [
   'ce_totalexp_65_74', 'ce_totalexp_75up',
 ];
 
+// Household wealth by percentile (Fed DFA) is optional and wide-format — one
+// column per percentile group rather than the usual date,value pair.
+// Collected one-off; provenance in data/raw/SOURCES.md
+const WEALTH_COLUMNS = ['top_1pct', 'pct_90_99', 'pct_50_90', 'bottom_50pct'];
+
+// Quarterly national debt, aligned to the DFA wealth quarters. Optional.
+const DEBT_SERIES = ['gfdebtn'];
+
 const DERIVED_SERIES = [
   'cpiaucsl_mom', 'cpiaucsl_yoy',
   'cpilfesl_mom', 'cpilfesl_yoy',
@@ -79,6 +87,38 @@ function loadCsv(path) {
 function loadCsvOptional(path) {
   if (!existsSync(path)) return [];
   return loadCsv(path);
+}
+
+// Reads a CSV with several data columns into one row object per date.
+// Rows with a missing or unparseable cell in any requested column are dropped.
+function loadWideCsvOptional(path, columns) {
+  if (!existsSync(path)) return [];
+  const lines = readFileSync(path, 'utf-8').trim().split('\n');
+  const header = lines[0].split(',');
+  const indexes = columns.map((c) => header.indexOf(c));
+  if (indexes.some((i) => i < 0)) return [];
+  return lines.slice(1)
+    .map((line) => {
+      const cells = line.split(',');
+      const row = { date: cells[0].slice(0, 10) };
+      columns.forEach((c, i) => {
+        const value = parseFloat(cells[indexes[i]]);
+        row[c] = isNaN(value) ? null : value;
+      });
+      return row;
+    })
+    .filter((row) => columns.every((c) => row[c] !== null));
+}
+
+// The daily Treasury debt file is ~8k rows and only its latest reading is shown,
+// so read the last line rather than shipping the whole series to the client.
+function loadLatestOptional(path) {
+  if (!existsSync(path)) return null;
+  const lines = readFileSync(path, 'utf-8').trim().split('\n');
+  if (lines.length < 2) return null;
+  const [dateStr, val] = lines[lines.length - 1].split(',');
+  const value = parseFloat(val);
+  return isNaN(value) ? null : { date: dateStr.slice(0, 10), value };
 }
 
 function loadMetadata() {
@@ -112,11 +152,26 @@ export function load() {
   const ce = Object.fromEntries(
     CE_SERIES.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'raw', `${id}.csv`))])
   );
+  const debt = Object.fromEntries(
+    DEBT_SERIES.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'raw', `${id}.csv`))])
+  );
+  const wealth = loadWideCsvOptional(
+    join(process.cwd(), '..', 'data', 'raw', 'fed_dfa_wealth_by_percentile.csv'),
+    WEALTH_COLUMNS
+  );
+  const treasuryDebtLatest = loadLatestOptional(
+    join(process.cwd(), '..', 'data', 'raw', 'treasury_national_debt.csv')
+  );
   const derived = Object.fromEntries(
     DERIVED_SERIES.map((id) => [id, loadCsv(join(process.cwd(), '..', 'data', 'derived', `${id}.csv`))])
   );
   const derivedOptional = Object.fromEntries(
     DERIVED_SERIES_OPTIONAL.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'derived', `${id}.csv`))])
   );
-  return { series: { ...raw, ...nyfed, ...oil, ...bls, ...gscpi, ...manufacturing, ...social, ...ce, ...derived, ...derivedOptional }, metadata };
+  return {
+    series: { ...raw, ...nyfed, ...oil, ...bls, ...gscpi, ...manufacturing, ...social, ...ce, ...debt, ...derived, ...derivedOptional },
+    wealth,
+    treasuryDebtLatest,
+    metadata,
+  };
 }

@@ -249,6 +249,58 @@
   // in dark mode where it overlaps gridlines/rules)
   const recessionLines = recessions.flatMap((r) => [r.start, r.end]);
 
+  // Household net worth by wealth percentile (Fed Distributional Financial
+  // Accounts) against total public debt. Source levels are millions of dollars;
+  // both are charted in trillions on a single axis — sharing one scale is the
+  // point of the comparison, so this is deliberately not a two-axis chart.
+  const wealthRows = $derived(
+    (data.wealth ?? []).map((d) => {
+      const bottom50 = d.bottom_50pct / 1e6;
+      const mid40    = d.pct_50_90 / 1e6;
+      const next9    = d.pct_90_99 / 1e6;
+      const top1     = d.top_1pct / 1e6;
+      // cumulative band edges, stacked from the baseline up: poorest at the bottom
+      const e1 = bottom50;
+      const e2 = e1 + mid40;
+      const e3 = e2 + next9;
+      const e4 = e3 + top1;
+      return {
+        date: new Date(d.date + 'T12:00:00'),
+        bottom50, mid40, next9, top1,
+        base: 0, e1, e2, e3, e4, total: e4,
+      };
+    })
+  );
+  const wealthHasData = $derived(wealthRows.length > 0);
+  const wealthDomain  = $derived(dataDomain(wealthRows));
+  const wealthStart   = $derived(wealthHasData ? wealthRows[0].date : cutoff);
+  const wealthByDate  = $derived(new Map(wealthRows.map((d) => [d.date.getTime(), d])));
+
+  // Quarterly total public debt, trimmed to the wealth window. FRED dates each
+  // quarter at its first day and stores the end-of-quarter level — the same
+  // convention as the DFA levels, so the two line up quarter for quarter.
+  const nationalDebt = $derived(
+    parse(data.series.gfdebtn ?? [])
+      .map((d) => ({ ...d, value: d.value / 1e6 }))
+      .filter((d) => d.date >= wealthStart)
+  );
+  const debtByDate = $derived(new Map(nationalDebt.map((d) => [d.date.getTime(), d.value])));
+
+  // HTMLTooltip matches the nearest point within 25px, so a ladder of points per
+  // quarter keeps the full height of the stack hoverable, not just its edges
+  const wealthTipPoints = $derived(
+    wealthRows
+      .flatMap((d) => Array.from({ length: 12 }, (_, i) => ({ date: d.date, value: (d.total * i) / 11 })))
+      .concat(nationalDebt)
+  );
+
+  // The shared recession list is trimmed to the 1994 cutoff most charts use;
+  // this one starts in 1989, so it carries the early-1990s recession as well.
+  const early90sRecession = { start: new Date('1990-07-01'), end: new Date('1991-03-01'), label: 'Early-1990s recession' };
+  const wealthRecessions = [early90sRecession, ...recessions];
+  const wealthRecessionLines = wealthRecessions.flatMap((r) => [r.start, r.end]);
+  const treasuryLatest = $derived(data.treasuryDebtLatest);
+
   // Point-in-time markers surfaced in tooltips only — no extra ink on the charts
   const events = [
     { month: '2008-09', label: 'Lehman Brothers collapse' },
@@ -1508,6 +1560,71 @@
 
   </section>
 
+  <!-- ── Wealth & Debt ───────────────────────────────────────── -->
+  {#if wealthHasData}
+  <h3 class="section-label">Wealth &amp; Debt</h3>
+  <section class="grid">
+
+    <!-- Household net worth stacked by wealth percentile, with total public
+         debt drawn on the same dollar scale -->
+    <div class="card wide" id="wealth-vs-debt">
+      <h2>US Household Wealth vs. National Debt <a class="anchor-link" href="#wealth-vs-debt">#</a></h2>
+      <p class="meta">
+        Quarterly · Not Seasonally Adjusted · Trillions of Dollars · Q3 1989–present ·
+        <span class="legend-swatch" style="background:var(--wealth-4)"></span> Top 1% &nbsp;
+        <span class="legend-swatch" style="background:var(--wealth-3)"></span> 90th–99th &nbsp;
+        <span class="legend-swatch" style="background:var(--wealth-2)"></span> 50th–90th &nbsp;
+        <span class="legend-swatch" style="background:var(--wealth-1)"></span> Bottom 50% &nbsp;
+        <span class="legend-swatch" style="background:var(--debt-line)"></span> National debt
+      </p>
+      <LazyChart height={400}>
+      <Plot height={400} marginLeft={58} marginRight={24} x={{ type: 'time', domain: wealthDomain }} y={{ label: '$T', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <AreaY data={wealthRows} x="date" y1="base" y2="e1" fill="var(--wealth-1)" stroke="var(--card-bg)" strokeWidth={1.5} />
+        <AreaY data={wealthRows} x="date" y1="e1"   y2="e2" fill="var(--wealth-2)" stroke="var(--card-bg)" strokeWidth={1.5} />
+        <AreaY data={wealthRows} x="date" y1="e2"   y2="e3" fill="var(--wealth-3)" stroke="var(--card-bg)" strokeWidth={1.5} />
+        <AreaY data={wealthRows} x="date" y1="e3"   y2="e4" fill="var(--wealth-4)" stroke="var(--card-bg)" strokeWidth={1.5} />
+        <RuleX data={wealthRecessionLines} stroke="var(--rule-color)" strokeOpacity={0.55} />
+        <Line data={nationalDebt} x="date" y="value" stroke="var(--debt-line)" strokeWidth={2.5} />
+        {#snippet overlay()}<RecessionHover bands={wealthRecessions} />
+          <HTMLTooltip data={wealthTipPoints} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const w = wealthByDate.get(datum.date.getTime())}
+                {@const debt = debtByDate.get(datum.date.getTime())}
+                <div class="tip" style:transform={tipTransform(datum)}>
+                  <span class="tip-label">Household Wealth vs. National Debt</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date, [early90sRecession]) as note}<span class="tip-note">{note}</span>{/each}
+                  {#if w}
+                    <span class="tip-edu-row"><span><span style="color:var(--wealth-4)">●</span> Top 1%</span><b>${w.top1.toFixed(1)}T</b></span>
+                    <span class="tip-edu-row"><span><span style="color:var(--wealth-3)">●</span> 90th–99th</span><b>${w.next9.toFixed(1)}T</b></span>
+                    <span class="tip-edu-row"><span><span style="color:var(--wealth-2)">●</span> 50th–90th</span><b>${w.mid40.toFixed(1)}T</b></span>
+                    <span class="tip-edu-row"><span><span style="color:var(--wealth-1)">●</span> Bottom 50%</span><b>${w.bottom50.toFixed(1)}T</b></span>
+                    <span class="tip-edu-row"><span>Total net worth</span><b>${w.total.toFixed(1)}T</b></span>
+                  {/if}
+                  {#if debt != null}
+                    <span class="tip-edu-row"><span><span style="color:var(--debt-line)">●</span> National debt</span><b>${debt.toFixed(1)}T</b></span>
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      <p class="source">
+        Sources: <a href="https://www.federalreserve.gov/releases/z1/dataviz/dfa/" target="_blank" rel="noopener">Federal Reserve Distributional Financial Accounts</a>
+        (net worth by wealth percentile; "Top 1%" combines the DFA's top 0.1% and next 0.9% groups) ·
+        <a href={fredUrl('gfdebtn')} target="_blank" rel="noopener">FRED / GFDEBTN</a> (total public debt, quarter-end)
+        {#if treasuryLatest}· Latest daily debt reading ${(treasuryLatest.value / 1e12).toFixed(2)}T on {treasuryLatest.date}
+        (<a href="https://fiscaldata.treasury.gov/datasets/debt-to-the-penny/" target="_blank" rel="noopener">Treasury Debt to the Penny</a>){/if}
+      </p>
+    </div>
+
+  </section>
+  {/if}
+
   <!-- ── Energy ──────────────────────────────────────────────── -->
   <h3 class="section-label">Energy</h3>
   <section class="grid">
@@ -2009,6 +2126,13 @@
     --badge-actual-bg: #e6f4ef;
     --badge-actual-text: #1a7a5e;
     --toggle-hover-bg: rgba(0, 0, 0, 0.06);
+    /* Wealth percentile bands: one blue hue stepped light-to-dark, because the
+       four groups are an ordered ladder rather than unrelated categories */
+    --wealth-1: #86b6ef;
+    --wealth-2: #5598e7;
+    --wealth-3: #2a78d6;
+    --wealth-4: #184f95;
+    --debt-line: #d03b3b;
     color-scheme: light;
   }
 
@@ -2036,6 +2160,12 @@
     --badge-actual-bg: #123027;
     --badge-actual-text: #4fcfa0;
     --toggle-hover-bg: rgba(255, 255, 255, 0.08);
+    /* Same ramp restepped for the dark surface, not an automatic flip */
+    --wealth-1: #9ec5f4;
+    --wealth-2: #6da7ec;
+    --wealth-3: #3987e5;
+    --wealth-4: #1c5cab;
+    --debt-line: #e66767;
     color-scheme: dark;
   }
 
