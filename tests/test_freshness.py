@@ -107,6 +107,18 @@ SERIES_MAX_AGE = [
     ("ce_totalexp_65up", 1050),
     ("ce_totalexp_65_74", 1050),
     ("ce_totalexp_75up", 1050),
+    # Quarterly — Treasury total public debt via FRED. Observation date is the
+    # quarter start but the value is the quarter-end level, and the release
+    # follows quarter end by ~2.5 months, so the latest point is ~5.5 months old
+    # on release day and ~8.5 months old just before the next one. 300 days
+    # covers that with room for a slipped release.
+    ("gfdebtn", 300),
+    # Quarterly — Fed Distributional Financial Accounts, published alongside the
+    # Z.1 release on the same lag and dating convention as gfdebtn above.
+    ("fed_dfa_wealth_by_percentile", 300),
+    # Daily — Treasury Debt to the Penny, published the next business day.
+    # A long holiday weekend puts the latest point ~5 days back.
+    ("treasury_national_debt", 10),
 ]
 
 # Must match RAW_SERIES in viz/src/routes/+page.server.js

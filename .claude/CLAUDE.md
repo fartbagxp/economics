@@ -31,6 +31,8 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Raw series stored as
 - `uv run python main.py --source snap` - Collect USDA SNAP national participation data
 - `uv run python main.py --source medicare` - Collect CMS Medicare national total enrollment
 - `uv run python main.py --source medicaid` - Collect CMS Medicaid & CHIP national total enrollment
+- `uv run python main.py --source dfa` - Collect Fed Distributional Financial Accounts household net worth by wealth percentile
+- `uv run python main.py --source treasury` - Collect Treasury Debt to the Penny total public debt outstanding
 - `uv run python main.py --source all` - Collect from all sources
 - `uv run python main.py --source fred --series CPIAUCSL` - Collect specific series
 
@@ -118,6 +120,20 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Raw series stored as
 - Prefers each state's final report over its preliminary one, then sums nationally
 - Saves `medicaid_chip_enrollment.csv`; covers September 2013 and June 2017–present (gap in between)
 
+**src/dfa.py (DfaCollector):**
+
+- Downloads the Federal Reserve Distributional Financial Accounts bulk archive (`dfa.zip`) and extracts `dfa-networth-levels.csv`
+- Writes a **wide** CSV — one column per wealth percentile group instead of the usual single `value` column — since the groups only mean anything read together as a distribution
+- The Fed publishes five groups; the top 0.1% and next 0.9% are summed into one top-1% column
+- Saves `fed_dfa_wealth_by_percentile.csv` in millions of dollars; quarterly, covers 1989:Q3–present
+
+**src/treasury.py (TreasuryCollector):**
+
+- Fetches total public debt outstanding from the Treasury Fiscal Data "Debt to the Penny" API (v2; v1 is retired)
+- Pages through the full history using the API's own page count
+- Saves `treasury_national_debt.csv` in dollars; daily (business days), covers April 1993–present
+- For years before 1993, and for a quarterly series aligned to the DFA wealth quarters, the dashboard uses FRED's `GFDEBTN` instead
+
 **src/derive.py (Deriver):**
 
 - Computes derived series from raw CSVs (YoY inflation, income growth)
@@ -142,7 +158,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Raw series stored as
 
 SvelteKit 2 / Svelte 5 app deployed to GitHub Pages via `deploy-viz.yml`.
 
-- **viz/src/routes/+page.server.js** - Loads raw and derived CSVs at build time; exposes `data.series` and `data.metadata` to the page
+- **viz/src/routes/+page.server.js** - Loads raw and derived CSVs at build time; exposes `data.series` and `data.metadata` to the page. Wide CSVs (currently only the DFA wealth file) load through `loadWideCsvOptional` and arrive as `data.wealth`; the daily Treasury debt file is read last-line-only as `data.treasuryDebtLatest` so 8k rows don't ship to the client
 - **viz/src/routes/+page.svelte** - Main dashboard page with D3 / svelteplot charts
 - **viz/src/routes/LazyChart.svelte** - Intersection-observer-based lazy loading wrapper
 - Uses `pnpm` as the package manager; `pnpm build` outputs to `viz/build/`
@@ -167,7 +183,8 @@ Charts and the README dashboard read this metadata for axis labels and titles.
 
 ## Data Storage
 
-- **data/raw/\*.csv** - Raw time series data (date, value columns)
+- **data/raw/\*.csv** - Raw time series data (date, value columns; `fed_dfa_wealth_by_percentile.csv` is wide, with one column per percentile group)
+- **data/raw/SOURCES.md** - Provenance for the wealth and debt datasets (exact URLs, retrieval dates, known gaps)
 - **data/derived/\*.csv** - Computed series (YoY rates, etc.) produced by `Deriver`
 - **data/metadata.json** - Series metadata (units, titles, frequency, seasonal adjustment)
 - All data files are committed to git for version control and change tracking
@@ -195,6 +212,10 @@ See `docs/collection.md` for the full catalog. Key series:
 **Supply Chain:** gscpi — NY Fed Global Supply Chain Pressure Index (monthly, std devs from average)
 
 **Social Programs:** snap_persons (USDA, national SNAP participants, monthly since Oct 1988), medicare_total_enrollment (CMS, national Medicare beneficiaries, monthly since Jan 2013), medicaid_chip_enrollment (CMS, national Medicaid+CHIP enrollees, monthly since Jun 2017 with a Sep 2013 data point)
+
+**Household Wealth (Fed DFA):** fed_dfa_wealth_by_percentile — household net worth by wealth percentile (top 1%, 90th–99th, 50th–90th, bottom 50%), quarterly since 1989:Q3, millions of dollars, wide CSV
+
+**Government Debt:** treasury_national_debt (Treasury Debt to the Penny, daily since April 1993, dollars), GFDEBTN (FRED, quarterly end-of-period since 1966, millions of dollars)
 
 **Derived:** YoY inflation rates for CPI/PCE/PPI series, income YoY growth
 

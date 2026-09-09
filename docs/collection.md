@@ -197,6 +197,30 @@ Collected via `uv run python main.py --source medicare`.
 
 ---
 
+### Household Wealth by Percentile (Federal Reserve DFA)
+
+Collected via `uv run python main.py --source dfa`.
+
+- **fed_dfa_wealth_by_percentile**: Household net worth by wealth percentile group, quarterly, in millions of dollars. Coverage: 1989:Q3–present.
+
+Unlike every other file in `data/raw/`, this one is **wide**: `date` plus one column per percentile group (`top_1pct`, `pct_90_99`, `pct_50_90`, `bottom_50pct`), because the groups are only meaningful read together as a distribution.
+
+**Source page**: [federalreserve.gov — Distributional Financial Accounts](https://www.federalreserve.gov/releases/z1/dataviz/dfa/). The DFA bulk archive (`dfa.zip`) is downloaded and `dfa-networth-levels.csv` extracted from it. The Fed publishes five groups — top 0.1%, next 0.9%, next 9%, next 40%, bottom 50% — and the first two are summed into a single top-1% column; units are left as published. Quarters labelled `1989:Q3` are stored as the first day of the quarter (`1989-07-01`), matching how FRED dates the equivalent `WFRBL*` series, though the value is the level at the quarter's **end**.
+
+---
+
+### National Debt (U.S. Treasury)
+
+Collected via `uv run python main.py --source treasury`.
+
+- **treasury_national_debt**: Total public debt outstanding, in dollars, for every business day. Coverage: 1993-04-01–present.
+
+**Source page**: [fiscaldata.treasury.gov — Debt to the Penny](https://fiscaldata.treasury.gov/datasets/debt-to-the-penny/). Pulled from the `v2` Fiscal Data API (the `v1` path for this dataset returns 404), paging through the full history using the API's own page count. Business days only — gaps between consecutive dates are weekends and federal holidays, not missing data.
+
+This dataset does not reach back before April 1993. For the 1989–1993 stretch, and for a quarterly series that lines up with the DFA wealth quarters, the dashboard uses **GFDEBTN** (FRED, Federal Debt: Total Public Debt, quarterly end-of-period, millions of dollars, back to 1966) which is collected with the other FRED series. The two agree exactly at quarter ends.
+
+---
+
 ### Medicaid & CHIP Enrollment (CMS)
 
 Collected via `uv run python main.py --source medicaid`.

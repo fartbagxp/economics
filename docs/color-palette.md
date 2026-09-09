@@ -24,6 +24,20 @@ Muted, desaturated tones throughout — nothing neon or overly saturated. Every 
 | Coral (light)   | `#e76f51` | CPI level, softer emphasis            |
 | Purple          | `#6a4c93` | One-off series with no natural family |
 
+## Ordered Ramps
+
+The anchor colors above encode *identity* — series that have no natural order. Where the series are an ordered ladder instead (wealth percentile groups, say), a single hue stepped light-to-dark carries the order that separate hues would throw away. The wealth-vs-debt chart uses one:
+
+| Slot | Light | Dark | Use |
+| --- | --- | --- | --- |
+| 1 | `#86b6ef` | `#9ec5f4` | Bottom 50% (lowest rung) |
+| 2 | `#5598e7` | `#6da7ec` | 50th–90th |
+| 3 | `#2a78d6` | `#3987e5` | 90th–99th |
+| 4 | `#184f95` | `#1c5cab` | Top 1% (highest rung) |
+| — | `#d03b3b` | `#e66767` | National debt, the contrasting overlay line |
+
+Both columns are stepped for their own background rather than flipped automatically, and each keeps monotone lightness, adjacent gaps of at least 0.06 L, and the surface-facing end clear of the background. Ramp colors live as CSS custom properties (`--wealth-1` … `--wealth-4`, `--debt-line`) so the two themes swap in one place.
+
 ## Structural Rules
 
 **Headline vs. secondary:** Solid line for the headline/primary series; dashed line (`strokeDasharray="5,3"`) for core or secondary series. Use a slightly lighter shade of the same hue for the dashed variant (e.g. `#e63946` headline → `#ff9f43` core CPI).

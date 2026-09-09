@@ -9,6 +9,7 @@ from src.chart import EconomicChart
 from src.cli import Cli
 from src.config import Config
 from src.derive import Deriver
+from src.dfa import DfaCollector
 from src.fred import FredCollector
 from src.gscpi import GscpiCollector
 from src.medicaid import MedicaidCollector
@@ -16,6 +17,7 @@ from src.medicare import MedicareCollector
 from src.nyfed import NyFedCollector
 from src.oil import OilCollector
 from src.snap import SnapCollector
+from src.treasury import TreasuryCollector
 
 # Each collector below wraps a different upstream library (openpyxl, xlrd,
 # zipfile, requests) and we want one source's failure to not stop the rest
@@ -41,6 +43,14 @@ _SNAP_ERRORS = (
 _CE_ERRORS = (OSError, RuntimeError, ValueError, pl.exceptions.PolarsError)
 _MEDICARE_ERRORS = (OSError, RuntimeError, pl.exceptions.PolarsError)
 _MEDICAID_ERRORS = (OSError, RuntimeError, pl.exceptions.PolarsError)
+_DFA_ERRORS = (
+    OSError,
+    RuntimeError,
+    ValueError,
+    zipfile.BadZipFile,
+    pl.exceptions.PolarsError,
+)
+_TREASURY_ERRORS = (OSError, RuntimeError, ValueError, pl.exceptions.PolarsError)
 
 
 def main():
@@ -130,6 +140,20 @@ def main():
             medicaid_collector.collect_all()
         except _MEDICAID_ERRORS as e:
             print(f"❌ Medicaid collection failed: {e}")
+
+    if args.source in ["dfa", "all"]:
+        dfa_collector = DfaCollector(args.output)
+        try:
+            dfa_collector.collect_all()
+        except _DFA_ERRORS as e:
+            print(f"❌ Fed DFA collection failed: {e}")
+
+    if args.source in ["treasury", "all"]:
+        treasury_collector = TreasuryCollector(args.output)
+        try:
+            treasury_collector.collect_all()
+        except _TREASURY_ERRORS as e:
+            print(f"❌ Treasury debt collection failed: {e}")
 
     print("\n📐 Computing derived statistics...")
     Deriver(args.output).derive_all()
