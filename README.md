@@ -19,10 +19,9 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 - [Dashboard](https://fartbagxp.github.io/economics/): interactive vizualization
 
 <!-- ECONOMIC-DATA-START -->
-
 ## Economic Dashboard
 
-_Last updated: 2026-09-09 06:25 UTC_
+_Last updated: 2026-09-09 06:35 UTC_
 
 _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly), or 8 points (quarterly)._
 
@@ -103,5 +102,4 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 | Mortgages     | `▄▃▃▁▁▁▁▂▁▁▁▁▂▂▃▂▄▄▅▅▅▆█▇` | 1.0%   | -0.1pp | +0.2pp   | 2026-06-01 |
 | HELOC         | `█▇▇▆▆▄▄▅▆▅▄▃▄▃▂▁▁▂▅▄▄▄▅▆` | 1.0%   | +0.0pp | +0.1pp   | 2026-06-01 |
 | All Debt      | `▄▄▄▃▂▂▂▂▁▁▁▁▁▂▂▂▃▃▆▆▆▇█▇` | 3.3%   | -0.0pp | +0.3pp   | 2026-06-01 |
-
 <!-- ECONOMIC-DATA-END -->
