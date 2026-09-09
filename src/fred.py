@@ -61,6 +61,7 @@ class FredCollector:
 
         with open(self.metadata_file, "w") as f:
             json.dump(all_metadata, f, indent=2)
+            f.write("\n")
 
     def collect_series(self, series_id: str, name: str, start_date=None):
         """Collect a single series from FRED."""
@@ -139,6 +140,10 @@ class FredCollector:
             "SLOAS": "Student Loans Owned and Securitized",
             "MVLOAS": "Motor Vehicle Loans Owned and Securitized",
             "NONREVSL": "Nonrevolving Consumer Credit (Auto + Student)",
+            # Government Debt — quarterly, end of period. Reaches back to 1966,
+            # covering the years before Treasury's daily Debt to the Penny series
+            # starts (1993) and lining up with the quarterly DFA wealth levels.
+            "GFDEBTN": "Federal Debt: Total Public Debt",
             # Energy
             "DCOILBRENTEU": "Crude Oil Prices: Brent - Europe",
             "GASREGW": "US Regular Gasoline Retail Price",

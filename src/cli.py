@@ -16,6 +16,8 @@ class Cli:
                 "snap",
                 "medicare",
                 "medicaid",
+                "dfa",
+                "treasury",
                 "all",
             ],
             default="all",

@@ -15,6 +15,7 @@ const RAW_SERIES = [
   'gs2', 'gs10', 'gs20', 'gs30', 'fedfunds',
   'dfedtaru', 'dfedtarl',
   'mortgage30us', 'mortgage15us',
+  'gfdebtn',
 ];
 
 // NY Fed series are optional — charts degrade gracefully if not yet collected
@@ -54,11 +55,8 @@ const CE_SERIES = [
 
 // Household wealth by percentile (Fed DFA) is optional and wide-format — one
 // column per percentile group rather than the usual date,value pair.
-// Collected one-off; provenance in data/raw/SOURCES.md
+// Populated by: python main.py --source dfa
 const WEALTH_COLUMNS = ['top_1pct', 'pct_90_99', 'pct_50_90', 'bottom_50pct'];
-
-// Quarterly national debt, aligned to the DFA wealth quarters. Optional.
-const DEBT_SERIES = ['gfdebtn'];
 
 const DERIVED_SERIES = [
   'cpiaucsl_mom', 'cpiaucsl_yoy',
@@ -112,6 +110,7 @@ function loadWideCsvOptional(path, columns) {
 
 // The daily Treasury debt file is ~8k rows and only its latest reading is shown,
 // so read the last line rather than shipping the whole series to the client.
+// Populated by: python main.py --source treasury
 function loadLatestOptional(path) {
   if (!existsSync(path)) return null;
   const lines = readFileSync(path, 'utf-8').trim().split('\n');
@@ -152,9 +151,6 @@ export function load() {
   const ce = Object.fromEntries(
     CE_SERIES.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'raw', `${id}.csv`))])
   );
-  const debt = Object.fromEntries(
-    DEBT_SERIES.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'raw', `${id}.csv`))])
-  );
   const wealth = loadWideCsvOptional(
     join(process.cwd(), '..', 'data', 'raw', 'fed_dfa_wealth_by_percentile.csv'),
     WEALTH_COLUMNS
@@ -169,7 +165,7 @@ export function load() {
     DERIVED_SERIES_OPTIONAL.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'derived', `${id}.csv`))])
   );
   return {
-    series: { ...raw, ...nyfed, ...oil, ...bls, ...gscpi, ...manufacturing, ...social, ...ce, ...debt, ...derived, ...derivedOptional },
+    series: { ...raw, ...nyfed, ...oil, ...bls, ...gscpi, ...manufacturing, ...social, ...ce, ...derived, ...derivedOptional },
     wealth,
     treasuryDebtLatest,
     metadata,

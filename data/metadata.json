@@ -814,8 +814,8 @@
     "units": "Millions of Dollars",
     "frequency": "Quarterly, End of Period",
     "seasonal_adjustment": "Not Seasonally Adjusted",
+    "last_updated": "2026-06-18 14:30:20-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
-    "source_url": "https://fred.stlouisfed.org/series/GFDEBTN",
-    "last_updated": "2026-09-09"
+    "source_url": "https://fred.stlouisfed.org/series/GFDEBTN"
   }
 }

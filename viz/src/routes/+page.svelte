@@ -280,7 +280,7 @@
   // quarter at its first day and stores the end-of-quarter level — the same
   // convention as the DFA levels, so the two line up quarter for quarter.
   const nationalDebt = $derived(
-    parse(data.series.gfdebtn ?? [])
+    parse(data.series.gfdebtn)
       .map((d) => ({ ...d, value: d.value / 1e6 }))
       .filter((d) => d.date >= wealthStart)
   );
