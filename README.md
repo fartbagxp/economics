@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-09-09 06:35 UTC_
+_Last updated: 2026-09-12 18:20 UTC_
 
 _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly), or 8 points (quarterly)._
 
@@ -32,8 +32,8 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 | Unemployment Rate (U-3)   | `▃▂▂▃▂▁▃▃▃▅▂▅▅▆█▆▅▆▅▅▅▃▂▂` | 4.1%      | +0.0pp     | -0.2pp   | 2026-08-01 |
 | Total Nonfarm Payrolls    | `▁▁▂▃▃▃▃▄▄▄▄▄▄▃▄▄▅▄▅▆▆▆▇█` | 159,075K  | +162K      | +603K    | 2026-08-01 |
 | Labor Force Participation | `██▆▆▆▇▆▆▇▆▅▅▅▆▆▆▄▄▃▃▃▁▁▂` | 61.6%     | +0.2pp     | -0.6pp   | 2026-08-01 |
-| Initial Jobless Claims    | `▄▃▅▄▅▁▂▄▄▄▇█▇▅▅▅▄▁▂▂▄▄▃▃` | 206,000   | +2,000     | -30,000  | 2026-08-29 |
-| Continued Claims          | `▆█▃▅▅▂▁▂▂▃▂▃▄▆▅▆▄▃▂▄▃▄▂▂` | 1,779,000 | +8,000     | -158,000 | 2026-08-22 |
+| Initial Jobless Claims    | `▃▅▄▅▁▂▄▄▄▇█▇▅▅▅▄▁▂▂▄▄▃▄▃` | 206,000   | -1,000     | -53,000  | 2026-09-05 |
+| Continued Claims          | `█▃▅▅▂▁▂▂▃▂▃▄▆▅▆▄▃▂▄▃▄▂▂▂` | 1,774,000 | -1,000     | -153,000 | 2026-08-29 |
 
 ### Unemployment Measures (U1–U6)
 
@@ -60,7 +60,7 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 | Indicator                          | Trend                      | Latest  | Chg (prev) | Chg (1Y) | As of      |
 | ---------------------------------- | -------------------------- | ------- | ---------- | -------- | ---------- |
 | GDP                                | `▁▁▁▂▂▃▃▃▄▄▄▄▅▅▅▅▆▆▆▆▇▇▇█` | $32,486 | +$620      | +$2,000  | 2026-04-01 |
-| CPI (All Urban)                    | `▁▁▁▁▂▂▂▃▃▃▃▃▃▄▄▄▅▅▅▆▇█▇▇` | 332.81  | +0.25      | +11.38   | 2026-07-01 |
+| CPI (All Urban)                    | `▁▁▁▁▂▂▂▂▃▃▃▃▄▄▄▅▅▅▆▇▇▇▇█` | 334.13  | +1.32      | +11.96   | 2026-08-01 |
 | Avg. Hourly Earnings (Wage Growth) | `▁▁▁▂▂▂▃▃▃▃▄▄▄▅▅▅▆▆▆▇▇▇▇█` | $38     | +$0        | +$1      | 2026-08-01 |
 | Consumer Sentiment (U. Mich.)      | `▆▇▇▇█▇▅▃▂▂▄▅▄▃▃▂▂▃▃▃▂▁▂▃` | 55.20   | +5.70      | -6.50    | 2026-07-01 |
 | Supply Chain Pressure (GSCPI)      | `▂▁▁▁▁▂▁▁▃▂▂▁▂▁▁▄▃▄▄█▇▅▅▅` | 1.06    | +0.13      | +1.15    | 2026-08-01 |
@@ -77,8 +77,8 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 
 | Indicator     | Trend                      | Latest | WoW    | YoY (52w) | As of      |
 | ------------- | -------------------------- | ------ | ------ | --------- | ---------- |
-| 30-Year Fixed | `▃▄▃▂▁▂▃▂▅▅▄▅▄▄▃▄▅▆▇▇▇▇▇█` | 6.7%   | +0.0pp | +0.2pp    | 2026-09-03 |
-| 15-Year Fixed | `▃▃▃▂▁▁▃▂▅▅▄▄▄▄▄▄▆▆█▇▆▆▇█` | 6.0%   | +0.1pp | +0.4pp    | 2026-09-03 |
+| 30-Year Fixed | `▄▂▁▁▁▂▂▄▄▄▄▄▄▃▄▅▅▆▇▆▆▆▇█` | 6.8%   | +0.0pp | +0.4pp    | 2026-09-10 |
+| 15-Year Fixed | `▃▃▁▁▁▂▂▄▄▃▄▄▄▃▄▅▆▇▆▆▆▆▇█` | 6.1%   | +0.0pp | +0.6pp    | 2026-09-10 |
 
 ### Consumer Spending by Age (BLS Consumer Expenditure Survey, annual)
 
