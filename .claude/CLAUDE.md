@@ -92,6 +92,8 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Raw series stored as
 - Downloads the NY Fed quarterly household debt Excel workbook
 - Extracts per-category balances (mortgage, HELOC, auto, credit card, student, other/medical)
 - Saves as CSV in millions of dollars to match FRED series units
+- Also extracts delinquency, plus new bankruptcies by age of filer — the age bands go to a **wide** CSV (`nyfed_bankruptcy_by_age.csv`, one column per band) since they only mean anything read together, alongside the tidy national `nyfed_bankruptcy_total`
+- The bands never sum to the national total (filers with unknown birth years are in the total but in no band — up to 13% apart in the early 2000s, ~0.2% today; one quarter runs the other way), so charts must use `nyfed_bankruptcy_total` for a total line
 
 **src/gscpi.py (GscpiCollector):**
 
@@ -158,7 +160,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Raw series stored as
 
 SvelteKit 2 / Svelte 5 app deployed to GitHub Pages via `deploy-viz.yml`.
 
-- **viz/src/routes/+page.server.js** - Loads raw and derived CSVs at build time; exposes `data.series` and `data.metadata` to the page. Wide CSVs (currently only the DFA wealth file) load through `loadWideCsvOptional` and arrive as `data.wealth`; the daily Treasury debt file is read last-line-only as `data.treasuryDebtLatest` so 8k rows don't ship to the client
+- **viz/src/routes/+page.server.js** - Loads raw and derived CSVs at build time; exposes `data.series` and `data.metadata` to the page. Wide CSVs (the DFA wealth file and the NY Fed bankruptcy-by-age file) load through `loadWideCsvOptional` and arrive as `data.wealth` and `data.bankruptcyByAge`; the daily Treasury debt file is read last-line-only as `data.treasuryDebtLatest` so 8k rows don't ship to the client
 - **viz/src/routes/+page.svelte** - Main dashboard page with D3 / svelteplot charts
 - **viz/src/routes/LazyChart.svelte** - Intersection-observer-based lazy loading wrapper
 - Uses `pnpm` as the package manager; `pnpm build` outputs to `viz/build/`
@@ -183,7 +185,7 @@ Charts and the README dashboard read this metadata for axis labels and titles.
 
 ## Data Storage
 
-- **data/raw/\*.csv** - Raw time series data (date, value columns; `fed_dfa_wealth_by_percentile.csv` is wide, with one column per percentile group)
+- **data/raw/\*.csv** - Raw time series data (date, value columns; `fed_dfa_wealth_by_percentile.csv` and `nyfed_bankruptcy_by_age.csv` are wide, with one column per group)
 - **data/raw/SOURCES.md** - Provenance for the wealth and debt datasets (exact URLs, retrieval dates, known gaps)
 - **data/derived/\*.csv** - Computed series (YoY rates, etc.) produced by `Deriver`
 - **data/metadata.json** - Series metadata (units, titles, frequency, seasonal adjustment)
@@ -204,6 +206,8 @@ See `docs/collection.md` for the full catalog. Key series:
 **Household Debt (NY Fed/Equifax):** nyfed_mortgage, nyfed_auto, nyfed_credit_card, nyfed_student, nyfed_other, nyfed_total
 
 **Delinquency (NY Fed/Equifax):** nyfed_delinq_* — percent of balance 90+ days delinquent per loan type (mortgage, HELOC, auto, credit_card, student, other, total)
+
+**Bankruptcy (NY Fed/Equifax):** nyfed_bankruptcy_by_age — consumers entering bankruptcy by age band (18-29, 30-39, 40-49, 50-59, 60-69, 70+), quarterly since 2000:Q1, whole persons, wide CSV; nyfed_bankruptcy_total — the national figure, quarterly since 2003:Q1. No US agency publishes *cause* of filing, and BLS publishes no bankruptcy data at all.
 
 **Mortgage Rates:** MORTGAGE30US, MORTGAGE15US (Freddie Mac PMMS weekly; stored downsampled — weekly last 5 years, monthly before)
 

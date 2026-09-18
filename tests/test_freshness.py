@@ -93,6 +93,9 @@ SERIES_MAX_AGE = [
     ("nyfed_delinq_student", 215),
     ("nyfed_delinq_other", 215),
     ("nyfed_delinq_total", 215),
+    # Quarterly — new bankruptcies from the same NY Fed workbook, same release lag
+    ("nyfed_bankruptcy_by_age", 215),
+    ("nyfed_bankruptcy_total", 215),
     # Annual — BLS Consumer Expenditure Survey, spending by age of reference
     # person. Data for calendar year Y is published in September of Y+1 and the
     # observation date is stored as Jan 1 of year Y (FRED annual convention), so
@@ -194,3 +197,33 @@ def test_derived_in_sync_with_source(source_id):
             f"{source_id}{suffix}: derived latest {derived_latest} does not match "
             f"raw latest {raw_latest} — re-run derivation"
         )
+
+
+def test_bankruptcy_bands_track_national_total():
+    """The age bands and the national total come from two separately computed
+    sheets of the same workbook, so they track each other without matching
+    exactly: the bands omit filers with an unknown birth year, which puts them
+    up to ~13% below the total in the early 2000s and within a fraction of a
+    percent today. One quarter (2024:Q3) runs 1.4% the other way.
+
+    The point of the bound is to catch a sheet layout shift or a unit error,
+    which would throw the two orders of magnitude apart — not to police the
+    publisher's own small inconsistencies.
+    """
+    bands = pl.read_csv(DATA_DIR / "raw" / "nyfed_bankruptcy_by_age.csv")
+    total = pl.read_csv(DATA_DIR / "raw" / "nyfed_bankruptcy_total.csv")
+    band_cols = [c for c in bands.columns if c != "date"]
+    assert len(band_cols) == 6, f"expected 6 age bands, found {band_cols}"
+
+    joined = (
+        bands.select("date", pl.sum_horizontal(band_cols).alias("banded"))
+        .join(total, on="date", how="inner")
+        .with_columns((pl.col("banded") / pl.col("value")).alias("ratio"))
+    )
+    assert joined.height > 0, "no overlapping quarters between bands and total"
+
+    stray = joined.filter((pl.col("ratio") < 0.80) | (pl.col("ratio") > 1.05))
+    assert stray.height == 0, (
+        f"band sum diverges from the national total in {stray.height} quarter(s): "
+        f"{stray.select('date', 'banded', 'value').head(5).to_dicts()}"
+    )

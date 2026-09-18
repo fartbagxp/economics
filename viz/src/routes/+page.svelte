@@ -294,6 +294,63 @@
       .concat(nationalDebt)
   );
 
+  // Consumers entering bankruptcy each quarter, stacked by age band (NY Fed
+  // Consumer Credit Panel). Bands are an ordered ladder, so they get one hue
+  // stepped light-to-dark rather than six unrelated colors.
+  //
+  // The total line is the panel's own national figure, NOT the sum of the bands:
+  // filers with an unknown birth year are absent from the bands, which leaves
+  // them summing up to ~13% short in the early 2000s (~0.2% today). The visible
+  // gap between the stack top and the total line is that residual. The two come
+  // from separately computed sheets, so the gap is not strictly one-signed —
+  // 2024:Q3 has the bands 1.4% above the total.
+  const bankruptcyRows = $derived(
+    (data.bankruptcyByAge ?? []).map((d) => {
+      const b1 = d.age_18_29 / 1e3;
+      const b2 = d.age_30_39 / 1e3;
+      const b3 = d.age_40_49 / 1e3;
+      const b4 = d.age_50_59 / 1e3;
+      const b5 = d.age_60_69 / 1e3;
+      const b6 = d.age_70up / 1e3;
+      // cumulative band edges, stacked from the baseline up: youngest at the bottom
+      const e1 = b1;
+      const e2 = e1 + b2;
+      const e3 = e2 + b3;
+      const e4 = e3 + b4;
+      const e5 = e4 + b5;
+      const e6 = e5 + b6;
+      return {
+        date: new Date(d.date + 'T12:00:00'),
+        b1, b2, b3, b4, b5, b6,
+        base: 0, e1, e2, e3, e4, e5, e6, banded: e6,
+      };
+    })
+  );
+  const bankruptcyHasData = $derived(bankruptcyRows.length > 0);
+  const bankruptcyDomain  = $derived(dataDomain(bankruptcyRows));
+  const bankruptcyStart   = $derived(bankruptcyHasData ? bankruptcyRows[0].date : cutoff);
+  const bankruptcyByDate  = $derived(new Map(bankruptcyRows.map((d) => [d.date.getTime(), d])));
+  const bankruptcyTotal = $derived(
+    parse(data.series.nyfed_bankruptcy_total)
+      .map((d) => ({ ...d, value: d.value / 1e3 }))
+      .filter((d) => d.date >= bankruptcyStart)
+  );
+  const bankruptcyTotalByDate = $derived(new Map(bankruptcyTotal.map((d) => [d.date.getTime(), d.value])));
+  // A ladder of points per quarter keeps the whole stack height hoverable,
+  // matching the wealth chart's tooltip behaviour
+  const bankruptcyTipPoints = $derived(
+    bankruptcyRows
+      .flatMap((d) => Array.from({ length: 12 }, (_, i) => ({ date: d.date, value: (d.banded * i) / 11 })))
+      .concat(bankruptcyTotal)
+  );
+  // The 2005 spike is nearly twice any other quarter, so it lands flush against
+  // the frame on an auto domain — a little headroom keeps its apex readable
+  const bankruptcyMax = $derived(
+    Math.max(0, ...bankruptcyRows.map((d) => d.banded), ...bankruptcyTotal.map((d) => d.value))
+  );
+  // BAPCPA took effect 2005-10-17; filings spiked ahead of it, then collapsed
+  const bapcpa = { start: new Date('2005-07-01'), end: new Date('2005-10-01'), label: 'BAPCPA filing rush' };
+
   // The shared recession list is trimmed to the 1994 cutoff most charts use;
   // this one starts in 1989, so it carries the early-1990s recession as well.
   const early90sRecession = { start: new Date('1990-07-01'), end: new Date('1991-03-01'), label: 'Early-1990s recession' };
@@ -1450,6 +1507,70 @@
       </p>
     </div>
     {/if}
+
+    {#if bankruptcyHasData}
+    <!-- New bankruptcies stacked by age band, with the panel's own national
+         total drawn over the stack -->
+    <div class="card wide" id="bankruptcy-by-age">
+      <h2>New Bankruptcies by Age — NY Fed / Equifax <a class="anchor-link" href="#bankruptcy-by-age">#</a></h2>
+      <p class="meta">
+        Quarterly · Not Seasonally Adjusted · Thousands of Consumers · Q1 2000–present ·
+        <span class="legend-swatch" style="background:var(--age-6)"></span> 70+ &nbsp;
+        <span class="legend-swatch" style="background:var(--age-5)"></span> 60–69 &nbsp;
+        <span class="legend-swatch" style="background:var(--age-4)"></span> 50–59 &nbsp;
+        <span class="legend-swatch" style="background:var(--age-3)"></span> 40–49 &nbsp;
+        <span class="legend-swatch" style="background:var(--age-2)"></span> 30–39 &nbsp;
+        <span class="legend-swatch" style="background:var(--age-1)"></span> 18–29 &nbsp;
+        <span class="legend-swatch" style="background:var(--bankruptcy-total-line)"></span> National total
+      </p>
+      <LazyChart height={400}>
+      <Plot height={400} marginLeft={50} marginRight={24} x={{ type: 'time', domain: bankruptcyDomain }} y={{ label: 'thousands', grid: true, domain: [0, bankruptcyMax * 1.06] }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <AreaY data={bankruptcyRows} x="date" y1="base" y2="e1" fill="var(--age-1)" stroke="var(--card-bg)" strokeWidth={1.5} />
+        <AreaY data={bankruptcyRows} x="date" y1="e1"   y2="e2" fill="var(--age-2)" stroke="var(--card-bg)" strokeWidth={1.5} />
+        <AreaY data={bankruptcyRows} x="date" y1="e2"   y2="e3" fill="var(--age-3)" stroke="var(--card-bg)" strokeWidth={1.5} />
+        <AreaY data={bankruptcyRows} x="date" y1="e3"   y2="e4" fill="var(--age-4)" stroke="var(--card-bg)" strokeWidth={1.5} />
+        <AreaY data={bankruptcyRows} x="date" y1="e4"   y2="e5" fill="var(--age-5)" stroke="var(--card-bg)" strokeWidth={1.5} />
+        <AreaY data={bankruptcyRows} x="date" y1="e5"   y2="e6" fill="var(--age-6)" stroke="var(--card-bg)" strokeWidth={1.5} />
+        <RuleX data={[bapcpa.start, bapcpa.end, ...recessionLines]} stroke="var(--band-fill)" strokeOpacity={0.5} />
+        <Line data={bankruptcyTotal} x="date" y="value" stroke="var(--bankruptcy-total-line)" strokeWidth={2.5} />
+        {#snippet overlay()}<RecessionHover bands={[bapcpa, ...recessions]} />
+          <HTMLTooltip data={bankruptcyTipPoints} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const b = bankruptcyByDate.get(datum.date.getTime())}
+                {@const total = bankruptcyTotalByDate.get(datum.date.getTime())}
+                <div class="tip" style:transform={tipTransform(datum)}>
+                  <span class="tip-label">New Bankruptcies by Age</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date, [bapcpa]) as note}<span class="tip-note">{note}</span>{/each}
+                  {#if b}
+                    <span class="tip-edu-row"><span><span style="color:var(--age-6)">●</span> 70+</span><b>{b.b6.toFixed(1)}k</b></span>
+                    <span class="tip-edu-row"><span><span style="color:var(--age-5)">●</span> 60–69</span><b>{b.b5.toFixed(1)}k</b></span>
+                    <span class="tip-edu-row"><span><span style="color:var(--age-4)">●</span> 50–59</span><b>{b.b4.toFixed(1)}k</b></span>
+                    <span class="tip-edu-row"><span><span style="color:var(--age-3)">●</span> 40–49</span><b>{b.b3.toFixed(1)}k</b></span>
+                    <span class="tip-edu-row"><span><span style="color:var(--age-2)">●</span> 30–39</span><b>{b.b2.toFixed(1)}k</b></span>
+                    <span class="tip-edu-row"><span><span style="color:var(--age-1)">●</span> 18–29</span><b>{b.b1.toFixed(1)}k</b></span>
+                  {/if}
+                  {#if total != null}
+                    <span class="tip-edu-row"><span><span style="color:var(--bankruptcy-total-line)">●</span> National total</span><b>{total.toFixed(1)}k</b></span>
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      <p class="source">
+        Source: <a href="https://www.newyorkfed.org/microeconomics/hhdc" target="_blank" rel="noopener">NY Fed Household Debt &amp; Credit Report</a>
+        (NY Fed Consumer Credit Panel / Equifax) ·
+        The national total sits above the stacked bands in most quarters because filers with an unknown birth year are counted in the total but fall in no age band —
+        about 6–13% of filings in the early 2000s, under 0.5% today ·
+        The 2005 spike is the filing rush ahead of BAPCPA, which tightened eligibility that October
+      </p>
+    </div>
+    {/if}
     {:else}
     <!-- Fallback: FRED-sourced combined debt chart shown until NY Fed data is collected -->
     <div class="card wide" id="debt-fred">
@@ -2133,6 +2254,15 @@
     --wealth-3: #2a78d6;
     --wealth-4: #184f95;
     --debt-line: #d03b3b;
+    /* Bankruptcy age bands: one violet hue stepped light-to-dark — same ordered
+       ladder treatment as the wealth bands, in a hue that keeps the two apart */
+    --age-1: #c6b2ed;
+    --age-2: #b196e1;
+    --age-3: #9c7bd2;
+    --age-4: #8760c3;
+    --age-5: #724aab;
+    --age-6: #5a3a89;
+    --bankruptcy-total-line: #e3770e;
     color-scheme: light;
   }
 
@@ -2166,6 +2296,14 @@
     --wealth-3: #3987e5;
     --wealth-4: #1c5cab;
     --debt-line: #e66767;
+    /* Same ramp restepped for the dark surface, not an automatic flip */
+    --age-1: #d8c6fc;
+    --age-2: #c4acf2;
+    --age-3: #b192e7;
+    --age-4: #9d78da;
+    --age-5: #8961c6;
+    --age-6: #744faa;
+    --bankruptcy-total-line: #ff9b45;
     color-scheme: dark;
   }
 
