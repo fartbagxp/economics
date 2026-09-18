@@ -5,13 +5,20 @@ Data source: Federal Reserve Bank of New York, Consumer Credit Panel (based on E
 Report: Household Debt and Credit — quarterly Excel workbook published at
 https://www.newyorkfed.org/microeconomics/hhdc
 
-Two sheets are extracted:
+Four sheets are extracted:
 
 - "Page 3 Data" — total debt balances by category in trillions of dollars going
   back to Q1 1999. Categories: Mortgage, HE Revolving (HELOC), Auto Loan,
   Credit Card, Student Loan, Other.
 - "Page 12 Data" — percent of balance 90+ days delinquent by loan type going
   back to Q1 2003. Columns: MORTGAGE, HELOC, AUTO, CC, STUDENT LOAN, OTHER, ALL.
+- "Page 30 Data" — consumers with a new bankruptcy by age band (18-29 … 70+)
+  going back to Q1 2000, written as a single wide CSV since the bands only
+  mean anything read together as a distribution.
+- "Page 17 Data" — the national consumer bankruptcy total, back to Q1 2003.
+  This is the authoritative total: the age bands exclude filers with an unknown
+  birth year, so they sum to as much as 12% below it in the early 2000s
+  (converging to ~0.2% today). Never substitute the band sum for it.
 
 "Other" is a catch-all that includes medical debt, personal loans, and retail
 financing — it is the only publicly available proxy for medical debt at this
@@ -21,38 +28,54 @@ Balance CSVs use millions of dollars (consistent with FRED series) so the
 viz layer can treat all debt series uniformly. Delinquency CSVs are in percent.
 """
 
-from datetime import date
-from pathlib import Path
 import json
 import re
+from datetime import UTC, datetime
+from pathlib import Path
 
 import polars as pl
 import requests
 
-
-BASE_URL = "https://www.newyorkfed.org/medialibrary/interactives/householdcredit/data/xls"
+BASE_URL = (
+    "https://www.newyorkfed.org/medialibrary/interactives/householdcredit/data/xls"
+)
 FILENAME_PATTERN = "HHD_C_Report_{year}Q{quarter}.xlsx"
 
 # Output CSV names → column name in the Excel sheet (exact match preferred,
 # case-insensitive substring as fallback)
 SERIES = {
-    "nyfed_mortgage":    "Mortgage",
+    "nyfed_mortgage": "Mortgage",
     "nyfed_he_revolving": "HE Revolving",
-    "nyfed_auto":        "Auto Loan",
+    "nyfed_auto": "Auto Loan",
     "nyfed_credit_card": "Credit Card",
-    "nyfed_student":     "Student Loan",
-    "nyfed_other":       "Other",
-    "nyfed_total":       "Total",
+    "nyfed_student": "Student Loan",
+    "nyfed_other": "Other",
+    "nyfed_total": "Total",
 }
 
 DELINQ_SERIES = {
-    "nyfed_delinq_mortgage":     "MORTGAGE",
+    "nyfed_delinq_mortgage": "MORTGAGE",
     "nyfed_delinq_he_revolving": "HELOC",
-    "nyfed_delinq_auto":         "AUTO",
-    "nyfed_delinq_credit_card":  "CC",
-    "nyfed_delinq_student":      "STUDENT LOAN",
-    "nyfed_delinq_other":        "OTHER",
-    "nyfed_delinq_total":        "ALL",
+    "nyfed_delinq_auto": "AUTO",
+    "nyfed_delinq_credit_card": "CC",
+    "nyfed_delinq_student": "STUDENT LOAN",
+    "nyfed_delinq_other": "OTHER",
+    "nyfed_delinq_total": "ALL",
+}
+
+# Age bands are an ordered ladder, so the output CSV is wide (one column per
+# band) rather than one file per band — mirrors fed_dfa_wealth_by_percentile.csv
+AGE_BANKRUPTCY_SERIES = {
+    "age_18_29": "18-29",
+    "age_30_39": "30-39",
+    "age_40_49": "40-49",
+    "age_50_59": "50-59",
+    "age_60_69": "60-69",
+    "age_70up": "70+",
+}
+
+BANKRUPTCY_TOTAL_SERIES = {
+    "nyfed_bankruptcy_total": "bankruptcy",
 }
 
 # Sheet configs: how to locate each sheet and scale its values
@@ -70,6 +93,23 @@ DELINQ_SHEET = {
     # Values are already in percent
     "scale": 1,
 }
+AGE_BANKRUPTCY_SHEET = {
+    "name_pattern": r"page.?30\b",
+    "title_hint": "New Bankruptcy By Age",
+    "series_map": AGE_BANKRUPTCY_SERIES,
+    # Values are in thousands of consumers → convert to whole persons
+    "scale": 1_000,
+    "round": True,
+    "wide_name": "nyfed_bankruptcy_by_age",
+}
+BANKRUPTCY_TOTAL_SHEET = {
+    "name_pattern": r"page.?17\b",
+    "title_hint": "New Foreclosures and Bankruptcies",
+    "series_map": BANKRUPTCY_TOTAL_SERIES,
+    # Values are in thousands of consumers → convert to whole persons
+    "scale": 1_000,
+    "round": True,
+}
 
 _NYFED_COMMON = {
     "frequency": "Quarterly",
@@ -79,20 +119,86 @@ _NYFED_COMMON = {
 }
 
 METADATA = {
-    "nyfed_mortgage":     {"title": "NY Fed: Mortgage Debt Balance",             "units": "Millions of U.S. Dollars", **_NYFED_COMMON},
-    "nyfed_he_revolving": {"title": "NY Fed: Home Equity Revolving (HELOC) Balance", "units": "Millions of U.S. Dollars", **_NYFED_COMMON},
-    "nyfed_auto":         {"title": "NY Fed: Auto Loan Balance",                 "units": "Millions of U.S. Dollars", **_NYFED_COMMON},
-    "nyfed_credit_card":  {"title": "NY Fed: Credit Card Balance",               "units": "Millions of U.S. Dollars", **_NYFED_COMMON},
-    "nyfed_student":      {"title": "NY Fed: Student Loan Balance",              "units": "Millions of U.S. Dollars", **_NYFED_COMMON},
-    "nyfed_other":        {"title": "NY Fed: Other Debt Balance (incl. medical)", "units": "Millions of U.S. Dollars", **_NYFED_COMMON},
-    "nyfed_total":        {"title": "NY Fed: Total Household Debt Balance",       "units": "Millions of U.S. Dollars", **_NYFED_COMMON},
-    "nyfed_delinq_mortgage":     {"title": "NY Fed: Mortgage Balance 90+ Days Delinquent",      "units": "Percent of Balance", **_NYFED_COMMON},
-    "nyfed_delinq_he_revolving": {"title": "NY Fed: HELOC Balance 90+ Days Delinquent",         "units": "Percent of Balance", **_NYFED_COMMON},
-    "nyfed_delinq_auto":         {"title": "NY Fed: Auto Loan Balance 90+ Days Delinquent",     "units": "Percent of Balance", **_NYFED_COMMON},
-    "nyfed_delinq_credit_card":  {"title": "NY Fed: Credit Card Balance 90+ Days Delinquent",   "units": "Percent of Balance", **_NYFED_COMMON},
-    "nyfed_delinq_student":      {"title": "NY Fed: Student Loan Balance 90+ Days Delinquent",  "units": "Percent of Balance", **_NYFED_COMMON},
-    "nyfed_delinq_other":        {"title": "NY Fed: Other Debt Balance 90+ Days Delinquent",    "units": "Percent of Balance", **_NYFED_COMMON},
-    "nyfed_delinq_total":        {"title": "NY Fed: All Debt Balance 90+ Days Delinquent",      "units": "Percent of Balance", **_NYFED_COMMON},
+    "nyfed_mortgage": {
+        "title": "NY Fed: Mortgage Debt Balance",
+        "units": "Millions of U.S. Dollars",
+        **_NYFED_COMMON,
+    },
+    "nyfed_he_revolving": {
+        "title": "NY Fed: Home Equity Revolving (HELOC) Balance",
+        "units": "Millions of U.S. Dollars",
+        **_NYFED_COMMON,
+    },
+    "nyfed_auto": {
+        "title": "NY Fed: Auto Loan Balance",
+        "units": "Millions of U.S. Dollars",
+        **_NYFED_COMMON,
+    },
+    "nyfed_credit_card": {
+        "title": "NY Fed: Credit Card Balance",
+        "units": "Millions of U.S. Dollars",
+        **_NYFED_COMMON,
+    },
+    "nyfed_student": {
+        "title": "NY Fed: Student Loan Balance",
+        "units": "Millions of U.S. Dollars",
+        **_NYFED_COMMON,
+    },
+    "nyfed_other": {
+        "title": "NY Fed: Other Debt Balance (incl. medical)",
+        "units": "Millions of U.S. Dollars",
+        **_NYFED_COMMON,
+    },
+    "nyfed_total": {
+        "title": "NY Fed: Total Household Debt Balance",
+        "units": "Millions of U.S. Dollars",
+        **_NYFED_COMMON,
+    },
+    "nyfed_delinq_mortgage": {
+        "title": "NY Fed: Mortgage Balance 90+ Days Delinquent",
+        "units": "Percent of Balance",
+        **_NYFED_COMMON,
+    },
+    "nyfed_delinq_he_revolving": {
+        "title": "NY Fed: HELOC Balance 90+ Days Delinquent",
+        "units": "Percent of Balance",
+        **_NYFED_COMMON,
+    },
+    "nyfed_delinq_auto": {
+        "title": "NY Fed: Auto Loan Balance 90+ Days Delinquent",
+        "units": "Percent of Balance",
+        **_NYFED_COMMON,
+    },
+    "nyfed_delinq_credit_card": {
+        "title": "NY Fed: Credit Card Balance 90+ Days Delinquent",
+        "units": "Percent of Balance",
+        **_NYFED_COMMON,
+    },
+    "nyfed_delinq_student": {
+        "title": "NY Fed: Student Loan Balance 90+ Days Delinquent",
+        "units": "Percent of Balance",
+        **_NYFED_COMMON,
+    },
+    "nyfed_delinq_other": {
+        "title": "NY Fed: Other Debt Balance 90+ Days Delinquent",
+        "units": "Percent of Balance",
+        **_NYFED_COMMON,
+    },
+    "nyfed_delinq_total": {
+        "title": "NY Fed: All Debt Balance 90+ Days Delinquent",
+        "units": "Percent of Balance",
+        **_NYFED_COMMON,
+    },
+    "nyfed_bankruptcy_by_age": {
+        "title": "NY Fed: Consumers with New Bankruptcies by Age",
+        "units": "Consumers",
+        **_NYFED_COMMON,
+    },
+    "nyfed_bankruptcy_total": {
+        "title": "NY Fed: Consumers with New Bankruptcies",
+        "units": "Consumers",
+        **_NYFED_COMMON,
+    },
 }
 
 
@@ -104,7 +210,7 @@ class NyFedCollector:
 
     def _latest_report_url(self) -> tuple[str, str]:
         """Return (url, label) for the most recent available quarterly report."""
-        today = date.today()
+        today = datetime.now(UTC).date()
         # Current quarter — NY Fed publishes ~5–6 weeks after quarter-end,
         # so subtract one quarter as the most likely published quarter.
         current_q = (today.month - 1) // 3 + 1
@@ -127,11 +233,17 @@ class NyFedCollector:
             filename = FILENAME_PATTERN.format(year=year, quarter=quarter)
             url = f"{BASE_URL}/{filename}"
             try:
-                r = requests.head(url, timeout=10, allow_redirects=True,
-                                  headers={"User-Agent": "Mozilla/5.0"})
+                r = requests.head(
+                    url,
+                    timeout=10,
+                    allow_redirects=True,
+                    headers={"User-Agent": "Mozilla/5.0"},
+                )
                 ct = r.headers.get("Content-Type", "")
                 # xlsx files are application/vnd.openxmlformats... or application/zip/octet-stream
-                if r.status_code == 200 and ("spreadsheet" in ct or "zip" in ct or "octet" in ct or "excel" in ct):
+                if r.status_code == 200 and (
+                    "spreadsheet" in ct or "zip" in ct or "octet" in ct or "excel" in ct
+                ):
                     return url, f"{year}Q{quarter}"
             except requests.RequestException:
                 continue
@@ -141,8 +253,9 @@ class NyFedCollector:
             filename = FILENAME_PATTERN.format(year=year, quarter=quarter)
             url = f"{BASE_URL}/{filename}"
             try:
-                r = requests.get(url, timeout=30, stream=True,
-                                 headers={"User-Agent": "Mozilla/5.0"})
+                r = requests.get(
+                    url, timeout=30, stream=True, headers={"User-Agent": "Mozilla/5.0"}
+                )
                 first_bytes = next(r.iter_content(4), b"")
                 r.close()
                 # xlsx (zip) magic: PK\x03\x04
@@ -151,7 +264,9 @@ class NyFedCollector:
             except requests.RequestException:
                 continue
 
-        raise RuntimeError("Could not find a valid NY Fed report. Try: python main.py --source nyfed --nyfed-quarter 2025Q1")
+        raise RuntimeError(
+            "Could not find a valid NY Fed report. Try: python main.py --source nyfed --nyfed-quarter 2025Q1"
+        )
 
     def _download_workbook(self, url: str):
         """Download the Excel workbook and return as bytes."""
@@ -197,14 +312,19 @@ class NyFedCollector:
         for i, row in enumerate(rows):
             cells = [str(v or "").strip() for v in row]
             hits = sum(
-                any(label.lower() == c.lower() or label.lower() in c.lower() for c in cells)
+                any(
+                    label.lower() == c.lower() or label.lower() in c.lower()
+                    for c in cells
+                )
                 for label in series_map.values()
             )
             if hits >= len(series_map) / 2:
                 header_idx = i
                 break
         if header_idx is None:
-            raise RuntimeError(f"Could not find header row for '{config['title_hint']}'")
+            raise RuntimeError(
+                f"Could not find header row for '{config['title_hint']}'"
+            )
 
         headers = [str(v or "").strip() for v in rows[header_idx]]
 
@@ -225,7 +345,7 @@ class NyFedCollector:
         date_col = 0  # usually column 0
 
         records = []
-        for row in rows[header_idx + 1:]:
+        for row in rows[header_idx + 1 :]:
             if not row or row[date_col] is None:
                 continue
             raw_date = str(row[date_col]).strip()
@@ -238,21 +358,26 @@ class NyFedCollector:
                 try:
                     val = row[col_idx]
                     if val is not None:
-                        record[series_key] = float(val) * config["scale"]
+                        scaled = float(val) * config["scale"]
+                        # Counts of people are whole numbers; scaling a value the
+                        # sheet gives in thousands leaves float dust otherwise
+                        record[series_key] = (
+                            round(scaled) if config.get("round") else scaled
+                        )
                 except (TypeError, ValueError):
                     pass
             records.append(record)
 
         return pl.DataFrame(records)
 
-    def save_metadata(self, series_id: str, extra: dict = None):
+    def save_metadata(self, series_id: str, extra: dict | None = None):
         if self.metadata_file.exists():
             with open(self.metadata_file) as f:
                 all_meta = json.load(f)
         else:
             all_meta = {}
         entry = dict(METADATA[series_id])
-        entry["last_updated"] = date.today().isoformat()
+        entry["last_updated"] = datetime.now(UTC).date().isoformat()
         if extra:
             entry.update(extra)
         all_meta[series_id] = entry
@@ -264,13 +389,35 @@ class NyFedCollector:
             if series_key not in df.columns:
                 print(f"⚠️  Column missing for {series_key}, skipping")
                 continue
-            out = df.select(["date", series_key]).rename({series_key: "value"}).drop_nulls()
+            out = (
+                df.select(["date", series_key])
+                .rename({series_key: "value"})
+                .drop_nulls()
+            )
             filepath = self.output_dir / f"{series_key}.csv"
             out.write_csv(filepath)
             self.save_metadata(series_key)
-            print(f"✅ Saved {series_key}.csv ({len(out)} rows, {out['date'].min()} to {out['date'].max()})")
+            print(
+                f"✅ Saved {series_key}.csv ({len(out)} rows, {out['date'].min()} to {out['date'].max()})"
+            )
 
-    def collect_all(self, quarter: str = None):
+    def _write_wide(self, df: pl.DataFrame, config: dict):
+        """Write one wide CSV — a column per series — for grouped distributions."""
+        series_map = config["series_map"]
+        missing = [k for k in series_map if k not in df.columns]
+        if missing:
+            print(f"⚠️  Columns missing for {config['wide_name']}: {missing}, skipping")
+            return
+        name = config["wide_name"]
+        out = df.select(["date", *series_map]).drop_nulls().sort("date")
+        filepath = self.output_dir / f"{name}.csv"
+        out.write_csv(filepath)
+        self.save_metadata(name)
+        print(
+            f"✅ Saved {name}.csv ({len(out)} rows, {out['date'].min()} to {out['date'].max()})"
+        )
+
+    def collect_all(self, quarter: str | None = None):
         if quarter:
             m = re.match(r"(\d{4})Q(\d)", quarter.upper())
             if not m:
@@ -286,19 +433,31 @@ class NyFedCollector:
         content = self._download_workbook(url)
 
         import io
+
         from openpyxl import load_workbook
+
         wb = load_workbook(io.BytesIO(content), data_only=True)
 
-        for config in (BALANCE_SHEET, DELINQ_SHEET):
+        for config in (
+            BALANCE_SHEET,
+            DELINQ_SHEET,
+            AGE_BANKRUPTCY_SHEET,
+            BANKRUPTCY_TOTAL_SHEET,
+        ):
             try:
                 df = self._parse_sheet(wb, config)
             except RuntimeError as e:
                 print(f"❌ {e}")
                 continue
             if df.is_empty():
-                print(f"❌ Parsed DataFrame for '{config['title_hint']}' is empty — check sheet structure")
+                print(
+                    f"❌ Parsed DataFrame for '{config['title_hint']}' is empty — check sheet structure"
+                )
                 continue
-            self._write_series(df, config["series_map"])
+            if "wide_name" in config:
+                self._write_wide(df, config)
+            else:
+                self._write_series(df, config["series_map"])
 
 
 def _parse_quarter_date(raw: str) -> str | None:

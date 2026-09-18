@@ -24,7 +24,7 @@ A FRED API key is free. Register at [fred.stlouisfed.org/docs/api/api_key.html](
 
 - **FRED (Federal Reserve Economic Data)**: CPI, GDP, Consumer Confidence, Unemployment, Household Debt
 - **BLS (Bureau of Labor Statistics)**: Additional labor and economic statistics
-- **NY Fed Consumer Credit Panel / Equifax**: Household debt by category (mortgage, HELOC, auto, credit card, student, other)
+- **NY Fed Consumer Credit Panel / Equifax**: Household debt by category (mortgage, HELOC, auto, credit card, student, other), delinquency, and new bankruptcies by age
 - **Yahoo Finance (via yfinance)**: Brent crude oil futures curve (estimated from WTI contracts + live Brent–WTI spread)
 - **USDA Food and Nutrition Service**: SNAP national participation (persons)
 - **CMS (Centers for Medicare & Medicaid Services)**: Medicare national total enrollment, Medicaid & CHIP national total enrollment
@@ -164,6 +164,40 @@ The same workbook's "Page 12 Data" sheet provides **percent of balance 90+ days 
 | **nyfed_delinq_student**        | Student loan balance 90+ days delinquent — artificially low 2020–2024 while pandemic forbearance paused delinquency reporting | Q1 2003–present |
 | **nyfed_delinq_other**          | Other debt balance 90+ days delinquent  | Q1 2003–present |
 | **nyfed_delinq_total**          | All debt balance 90+ days delinquent    | Q1 2003–present |
+
+The same workbook's "Page 30 Data" sheet provides **consumers entering bankruptcy
+by age of the filer**. The six age bands are an ordered distribution that only
+means anything read together, so they are stored as a single **wide** CSV — one
+column per band — rather than one file per band:
+
+| File                                | Columns                                                              | Coverage        |
+| ----------------------------------- | -------------------------------------------------------------------- | --------------- |
+| **nyfed_bankruptcy_by_age.csv**     | `age_18_29`, `age_30_39`, `age_40_49`, `age_50_59`, `age_60_69`, `age_70up` | Q1 2000–present |
+
+"Page 17 Data" supplies the matching national figure:
+
+| Series                       | Description                                  | Coverage        |
+| ---------------------------- | -------------------------------------------- | --------------- |
+| **nyfed_bankruptcy_total**   | Consumers with a new bankruptcy, national     | Q1 2003–present |
+
+Both are published in **thousands of consumers** and stored as **whole persons**
+(×10³). The viz divides by 10³ before displaying.
+
+**The age bands do not sum to the national total.** Filers whose birth year is
+unknown are counted in the total but fall into no band, so the bands sum to as
+much as 13% below it in the early 2000s, narrowing to ~0.2% today. The two come
+from separately computed sheets, so the gap is not strictly one-signed — in
+2024:Q3 the bands run 1.4% *above* the total. Use `nyfed_bankruptcy_total`
+whenever a total is needed — never the band sum.
+
+The Q4 2005 spike in every band is the filing rush ahead of BAPCPA, which
+tightened Chapter 7 eligibility on 17 October 2005.
+
+**On age and cause**: this is the only regularly updated US series that breaks
+consumer bankruptcy down by age. No statistical agency — BLS included — publishes
+one, and none publishes *cause* of filing at all: bankruptcy petitions do not
+record a reason. Survey estimates of cause (income loss, medical debt) come from
+the academic Consumer Bankruptcy Project, which has no machine-readable feed.
 
 ---
 

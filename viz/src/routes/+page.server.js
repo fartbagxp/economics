@@ -25,6 +25,7 @@ const NYFED_SERIES = [
   'nyfed_delinq_mortgage', 'nyfed_delinq_he_revolving', 'nyfed_delinq_auto',
   'nyfed_delinq_credit_card', 'nyfed_delinq_student', 'nyfed_delinq_other',
   'nyfed_delinq_total',
+  'nyfed_bankruptcy_total',
 ];
 
 // Oil futures curve is optional — populated by: python main.py --source oil
@@ -57,6 +58,10 @@ const CE_SERIES = [
 // column per percentile group rather than the usual date,value pair.
 // Populated by: python main.py --source dfa
 const WEALTH_COLUMNS = ['top_1pct', 'pct_90_99', 'pct_50_90', 'bottom_50pct'];
+
+const BANKRUPTCY_AGE_COLUMNS = [
+  'age_18_29', 'age_30_39', 'age_40_49', 'age_50_59', 'age_60_69', 'age_70up',
+];
 
 const DERIVED_SERIES = [
   'cpiaucsl_mom', 'cpiaucsl_yoy',
@@ -155,6 +160,10 @@ export function load() {
     join(process.cwd(), '..', 'data', 'raw', 'fed_dfa_wealth_by_percentile.csv'),
     WEALTH_COLUMNS
   );
+  const bankruptcyByAge = loadWideCsvOptional(
+    join(process.cwd(), '..', 'data', 'raw', 'nyfed_bankruptcy_by_age.csv'),
+    BANKRUPTCY_AGE_COLUMNS
+  );
   const treasuryDebtLatest = loadLatestOptional(
     join(process.cwd(), '..', 'data', 'raw', 'treasury_national_debt.csv')
   );
@@ -167,6 +176,7 @@ export function load() {
   return {
     series: { ...raw, ...nyfed, ...oil, ...bls, ...gscpi, ...manufacturing, ...social, ...ce, ...derived, ...derivedOptional },
     wealth,
+    bankruptcyByAge,
     treasuryDebtLatest,
     metadata,
   };
