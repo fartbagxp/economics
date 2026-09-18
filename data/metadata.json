@@ -130,7 +130,7 @@
     "units": "Number",
     "frequency": "Weekly, Ending Saturday",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-09-10 10:16:53-05",
+    "last_updated": "2026-09-17 07:34:24-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/ICSA"
   },
@@ -139,7 +139,7 @@
     "units": "Number",
     "frequency": "Weekly, Ending Saturday",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-09-10 10:16:36-05",
+    "last_updated": "2026-09-17 07:34:24-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/CCSA"
   },
@@ -319,7 +319,7 @@
     "units": "Percent",
     "frequency": "Daily",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-09-11 16:03:36-05",
+    "last_updated": "2026-09-17 16:03:35-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/T5YIE"
   },
@@ -328,7 +328,7 @@
     "units": "Percent",
     "frequency": "Daily",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-09-11 16:03:35-05",
+    "last_updated": "2026-09-17 16:03:33-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/T10YIE"
   },
@@ -454,7 +454,7 @@
     "units": "Dollars per Barrel",
     "frequency": "Daily",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-09-10 13:15:35-05",
+    "last_updated": "2026-09-16 12:17:28-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/DCOILBRENTEU"
   },
@@ -499,7 +499,7 @@
     "units": "Percent",
     "frequency": "Daily, 7-Day",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-09-12 07:01:26-05",
+    "last_updated": "2026-09-18 07:01:25-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/DFEDTARU"
   },
@@ -508,7 +508,7 @@
     "units": "Percent",
     "frequency": "Daily, 7-Day",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-09-12 07:01:26-05",
+    "last_updated": "2026-09-18 07:01:25-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/DFEDTARL"
   },
@@ -607,7 +607,7 @@
     "units": "Percent",
     "frequency": "Weekly, Ending Thursday",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-09-10 11:02:25-05",
+    "last_updated": "2026-09-17 11:01:33-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/MORTGAGE30US"
   },
@@ -616,7 +616,7 @@
     "units": "Percent",
     "frequency": "Weekly, Ending Thursday",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-09-10 11:02:29-05",
+    "last_updated": "2026-09-17 11:01:33-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/MORTGAGE15US"
   },
@@ -627,7 +627,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "Federal Reserve Bank of New York",
     "source_url": "https://www.newyorkfed.org/research/policy/gscpi",
-    "last_updated": "2026-09-12"
+    "last_updated": "2026-09-18"
   },
   "snap_persons": {
     "title": "SNAP: Persons Participating (National)",
@@ -636,7 +636,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "USDA Food and Nutrition Service, National Data Bank",
     "source_url": "https://www.fna.usda.gov/pd/supplemental-nutrition-assistance-program-snap",
-    "last_updated": "2026-09-12"
+    "last_updated": "2026-09-18"
   },
   "medicare_total_enrollment": {
     "title": "Medicare: Total Beneficiaries Enrolled (National)",
@@ -645,7 +645,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "CMS Medicare Monthly Enrollment",
     "source_url": "https://data.cms.gov/summary-statistics-on-beneficiary-enrollment/medicare-and-medicaid-reports/medicare-monthly-enrollment",
-    "last_updated": "2026-09-12"
+    "last_updated": "2026-09-18"
   },
   "medicaid_chip_enrollment": {
     "title": "Medicaid & CHIP: Total Enrollment (National)",
@@ -654,14 +654,14 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "CMS Performance Indicator Dataset",
     "source_url": "https://www.medicaid.gov/medicaid/national-medicaid-chip-program-information/medicaid-chip-enrollment-data",
-    "last_updated": "2026-09-12"
+    "last_updated": "2026-09-18"
   },
   "gacdisa066msfrbny": {
     "title": "Current General Business Conditions; Diffusion Index for New York",
     "units": "Index",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-08-17 07:33:31-05",
+    "last_updated": "2026-09-15 07:33:28-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/GACDISA066MSFRBNY"
   },
@@ -679,7 +679,7 @@
     "units": "Index",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted",
-    "last_updated": "2026-08-20 07:48:35-05",
+    "last_updated": "2026-09-17 07:47:53-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/GACDFSA066MSFRBPHI"
   },
@@ -697,7 +697,7 @@
     "units": "Dollars per Gallon",
     "frequency": "Weekly, Ending Monday",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-09-09 09:04:17-05",
+    "last_updated": "2026-09-15 09:03:26-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/GASREGW"
   },
@@ -706,7 +706,7 @@
     "units": "Dollars per Gallon",
     "frequency": "Weekly, Ending Monday",
     "seasonal_adjustment": "Not Seasonally Adjusted",
-    "last_updated": "2026-09-09 09:04:05-05",
+    "last_updated": "2026-09-15 14:29:25-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/GASDESW"
   },
@@ -717,7 +717,7 @@
     "source": "U.S. Bureau of Labor Statistics \u2014 Consumer Expenditure Surveys",
     "source_url": "https://www.bls.gov/cex/tables.htm",
     "title": "Total Average Annual Expenditures \u2014 All consumer units",
-    "last_updated": "2026-09-12"
+    "last_updated": "2026-09-18"
   },
   "ce_totalexp_lt25": {
     "units": "U.S. Dollars",
@@ -726,7 +726,7 @@
     "source": "U.S. Bureau of Labor Statistics \u2014 Consumer Expenditure Surveys",
     "source_url": "https://www.bls.gov/cex/tables.htm",
     "title": "Total Average Annual Expenditures \u2014 Reference person under 25",
-    "last_updated": "2026-09-12"
+    "last_updated": "2026-09-18"
   },
   "ce_totalexp_25_34": {
     "units": "U.S. Dollars",
@@ -735,7 +735,7 @@
     "source": "U.S. Bureau of Labor Statistics \u2014 Consumer Expenditure Surveys",
     "source_url": "https://www.bls.gov/cex/tables.htm",
     "title": "Total Average Annual Expenditures \u2014 Reference person 25 to 34",
-    "last_updated": "2026-09-12"
+    "last_updated": "2026-09-18"
   },
   "ce_totalexp_35_44": {
     "units": "U.S. Dollars",
@@ -744,7 +744,7 @@
     "source": "U.S. Bureau of Labor Statistics \u2014 Consumer Expenditure Surveys",
     "source_url": "https://www.bls.gov/cex/tables.htm",
     "title": "Total Average Annual Expenditures \u2014 Reference person 35 to 44",
-    "last_updated": "2026-09-12"
+    "last_updated": "2026-09-18"
   },
   "ce_totalexp_45_54": {
     "units": "U.S. Dollars",
@@ -753,7 +753,7 @@
     "source": "U.S. Bureau of Labor Statistics \u2014 Consumer Expenditure Surveys",
     "source_url": "https://www.bls.gov/cex/tables.htm",
     "title": "Total Average Annual Expenditures \u2014 Reference person 45 to 54",
-    "last_updated": "2026-09-12"
+    "last_updated": "2026-09-18"
   },
   "ce_totalexp_55_64": {
     "units": "U.S. Dollars",
@@ -762,7 +762,7 @@
     "source": "U.S. Bureau of Labor Statistics \u2014 Consumer Expenditure Surveys",
     "source_url": "https://www.bls.gov/cex/tables.htm",
     "title": "Total Average Annual Expenditures \u2014 Reference person 55 to 64",
-    "last_updated": "2026-09-12"
+    "last_updated": "2026-09-18"
   },
   "ce_totalexp_65up": {
     "units": "U.S. Dollars",
@@ -771,7 +771,7 @@
     "source": "U.S. Bureau of Labor Statistics \u2014 Consumer Expenditure Surveys",
     "source_url": "https://www.bls.gov/cex/tables.htm",
     "title": "Total Average Annual Expenditures \u2014 Reference person 65 and older",
-    "last_updated": "2026-09-12"
+    "last_updated": "2026-09-18"
   },
   "ce_totalexp_65_74": {
     "units": "U.S. Dollars",
@@ -780,7 +780,7 @@
     "source": "U.S. Bureau of Labor Statistics \u2014 Consumer Expenditure Surveys",
     "source_url": "https://www.bls.gov/cex/tables.htm",
     "title": "Total Average Annual Expenditures \u2014 Reference person 65 to 74",
-    "last_updated": "2026-09-12"
+    "last_updated": "2026-09-18"
   },
   "ce_totalexp_75up": {
     "units": "U.S. Dollars",
@@ -789,7 +789,7 @@
     "source": "U.S. Bureau of Labor Statistics \u2014 Consumer Expenditure Surveys",
     "source_url": "https://www.bls.gov/cex/tables.htm",
     "title": "Total Average Annual Expenditures \u2014 Reference person 75 and older",
-    "last_updated": "2026-09-12"
+    "last_updated": "2026-09-18"
   },
   "fed_dfa_wealth_by_percentile": {
     "title": "Household Net Worth by Wealth Percentile (DFA)",
@@ -798,7 +798,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "Federal Reserve Board, Distributional Financial Accounts",
     "source_url": "https://www.federalreserve.gov/releases/z1/dataviz/dfa/",
-    "last_updated": "2026-09-12"
+    "last_updated": "2026-09-18"
   },
   "treasury_national_debt": {
     "title": "Total Public Debt Outstanding (Debt to the Penny)",
@@ -807,7 +807,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "U.S. Treasury, Fiscal Data",
     "source_url": "https://fiscaldata.treasury.gov/datasets/debt-to-the-penny/",
-    "last_updated": "2026-09-12"
+    "last_updated": "2026-09-18"
   },
   "gfdebtn": {
     "title": "Federal Debt: Total Public Debt",

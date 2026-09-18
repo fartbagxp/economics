@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-09-18 12:40 UTC_
+_Last updated: 2026-09-18 13:33 UTC_
 
 _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly), or 8 points (quarterly)._
 
@@ -32,8 +32,8 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 | Unemployment Rate (U-3)   | `▃▂▂▃▂▁▃▃▃▅▂▅▅▆█▆▅▆▅▅▅▃▂▂` | 4.1%      | +0.0pp     | -0.2pp   | 2026-08-01 |
 | Total Nonfarm Payrolls    | `▁▁▂▃▃▃▃▄▄▄▄▄▄▃▄▄▅▄▅▆▆▆▇█` | 159,075K  | +162K      | +603K    | 2026-08-01 |
 | Labor Force Participation | `██▆▆▆▇▆▆▇▆▅▅▅▆▆▆▄▄▃▃▃▁▁▂` | 61.6%     | +0.2pp     | -0.6pp   | 2026-08-01 |
-| Initial Jobless Claims    | `▃▅▄▅▁▂▄▄▄▇█▇▅▅▅▄▁▂▂▄▄▃▄▃` | 206,000   | -1,000     | -53,000  | 2026-09-05 |
-| Continued Claims          | `█▃▅▅▂▁▂▂▃▂▃▄▆▅▆▄▃▂▄▃▄▂▂▂` | 1,774,000 | -1,000     | -153,000 | 2026-08-29 |
+| Initial Jobless Claims    | `▅▄▅▁▂▄▄▄▇█▇▅▅▅▄▁▂▂▄▄▃▄▃▂` | 196,000   | -10,000    | -37,000  | 2026-09-12 |
+| Continued Claims          | `▅▇▇▄▃▄▄▅▄▅▆▇▆█▆▅▄▆▄▆▄▄▄▁` | 1,730,000 | -39,000    | -195,000 | 2026-09-05 |
 
 ### Unemployment Measures (U1–U6)
 
@@ -69,16 +69,16 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 
 | Indicator             | Trend                      | Latest | MoM    | YoY (12m) | As of      |
 | --------------------- | -------------------------- | ------ | ------ | --------- | ---------- |
-| Philadelphia Fed      | `▂▃▂▁▆▄▃▁▂▂▃▂▄▁▂▁▃▄▄▅▂▃▇█` | 47.40  | +6.00  | +46.70    | 2026-08-01 |
-| Empire State (NY Fed) | `▄▁▇▄▂▄▁▂▂▁▄▅▂▅▆▃▅▅▃▆▇▅▇█` | 20.60  | +5.00  | +11.50    | 2026-08-01 |
+| Philadelphia Fed      | `▃▂▁▆▄▃▁▂▂▃▂▄▁▂▁▃▄▄▅▂▃▇█▆` | 37.80  | -9.60  | +18.30    | 2026-09-01 |
+| Empire State (NY Fed) | `▁▇▄▂▄▁▂▂▁▄▅▂▅▆▃▅▅▃▆▇▅▇█▅` | 7.60   | -13.00 | +14.60    | 2026-09-01 |
 | Dallas Fed            | `▄▅▅▆█▄▃▁▃▄▆▅▄▅▄▄▅▆▅▅▆▅▆▇` | 11.60  | +10.30 | +13.30    | 2026-08-01 |
 
 ### Mortgage Rates
 
 | Indicator     | Trend                      | Latest | WoW    | YoY (52w) | As of      |
 | ------------- | -------------------------- | ------ | ------ | --------- | ---------- |
-| 30-Year Fixed | `▄▂▁▁▁▂▂▄▄▄▄▄▄▃▄▅▅▆▇▆▆▆▇█` | 6.8%   | +0.0pp | +0.4pp    | 2026-09-10 |
-| 15-Year Fixed | `▃▃▁▁▁▂▂▄▄▃▄▄▄▃▄▅▆▇▆▆▆▆▇█` | 6.1%   | +0.0pp | +0.6pp    | 2026-09-10 |
+| 30-Year Fixed | `▂▁▁▁▂▂▃▃▃▃▃▃▂▃▄▄▅▅▅▅▅▅▆█` | 7.0%   | +0.2pp | +0.7pp    | 2026-09-17 |
+| 15-Year Fixed | `▂▁▁▁▂▂▃▃▃▃▃▃▃▃▄▄▅▅▄▄▅▅▆█` | 6.3%   | +0.2pp | +0.8pp    | 2026-09-17 |
 
 ### Consumer Spending by Age (BLS Consumer Expenditure Survey, annual)
 
