@@ -8,8 +8,11 @@ Freshness thresholds are based on typical release lags per frequency:
     a release as late as the 7th, e.g. Jul 1 -> Aug 1 (31) -> Sep 1 (31) -> Sep 7
     release (7) = 69 days just before the next release (70-day threshold)
   - Monthly (CPI/PPI): BLS releases ~2-3 weeks after month end; 75-day threshold
-  - Monthly (PCE/PI/Michigan): BEA/UMich releases at end of following month;
-    worst-case age just before next release is ~88 days (90-day threshold)
+  - Monthly (Michigan): UMich releases at end of the month; 90-day threshold
+  - Monthly (PCE/PI): BEA's Personal Income and Outlays release lands at the end
+    of the following month, but some months it slips into the first days of the
+    month after, e.g. Jul 1 -> Aug 1 (31) -> Sep 1 (31) -> Oct 1 (30) release
+    = ~92 days just before it arrives (100-day threshold)
   - Monthly (JOLTS): BLS releases ~5-6 weeks after month end; worst-case ~93 days
     (95-day threshold)
   - Quarterly (GDP): advance estimate ~30 days after quarter end; observation date
@@ -53,18 +56,19 @@ SERIES_MAX_AGE = [
     ("cpiaucsl", 75),
     ("cpilfesl", 75),
     ("umcsent", 90),
-    ("pcepi", 90),
-    ("pcepilfe", 90),
+    ("pcepi", 100),
+    ("pcepilfe", 100),
     ("ppifid", 75),
     ("ppifes", 75),
     # Quarterly — observation date is quarter start, not release date
     ("gdp", 215),
-    # Monthly — personal income & outlays (released end of following month)
-    ("pi", 90),
-    ("dspi", 90),
-    ("pce", 90),
+    # Monthly — BEA personal income & outlays (released end of following month,
+    # occasionally the first days of the month after)
+    ("pi", 100),
+    ("dspi", 100),
+    ("pce", 100),
     ("psave", 215),
-    ("psavert", 90),
+    ("psavert", 100),
     ("mich", 90),
     # Daily — TIPS-based breakeven rates
     ("t5yie", 21),
