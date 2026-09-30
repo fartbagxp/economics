@@ -126,7 +126,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Raw series stored as
 
 - Downloads the Federal Reserve Distributional Financial Accounts bulk archive (`dfa.zip`) and extracts `dfa-networth-levels.csv`
 - Writes a **wide** CSV — one column per wealth percentile group instead of the usual single `value` column — since the groups only mean anything read together as a distribution
-- The Fed publishes five groups; the top 0.1% and next 0.9% are summed into one top-1% column
+- Keeps all five Fed groups (top 0.1%, next 0.9%, next 9%, next 40%, bottom 50%); the viz regroups them into top 1% for the wealth-vs-debt chart and top 0.1% / next 9.9% for the wealth-share chart
 - Saves `fed_dfa_wealth_by_percentile.csv` in millions of dollars; quarterly, covers 1989:Q3–present
 
 **src/treasury.py (TreasuryCollector):**
@@ -217,7 +217,7 @@ See `docs/collection.md` for the full catalog. Key series:
 
 **Social Programs:** snap_persons (USDA, national SNAP participants, monthly since Oct 1988), medicare_total_enrollment (CMS, national Medicare beneficiaries, monthly since Jan 2013), medicaid_chip_enrollment (CMS, national Medicaid+CHIP enrollees, monthly since Jun 2017 with a Sep 2013 data point)
 
-**Household Wealth (Fed DFA):** fed_dfa_wealth_by_percentile — household net worth by wealth percentile (top 1%, 90th–99th, 50th–90th, bottom 50%), quarterly since 1989:Q3, millions of dollars, wide CSV
+**Household Wealth (Fed DFA):** fed_dfa_wealth_by_percentile — household net worth by wealth percentile (top 0.1%, 99th–99.9th, 90th–99th, 50th–90th, bottom 50%), quarterly since 1989:Q3, millions of dollars, wide CSV
 
 **Government Debt:** treasury_national_debt (Treasury Debt to the Penny, daily since April 1993, dollars), GFDEBTN (FRED, quarterly end-of-period since 1966, millions of dollars)
 

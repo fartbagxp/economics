@@ -26,16 +26,16 @@ Muted, desaturated tones throughout — nothing neon or overly saturated. Every 
 
 ## Ordered Ramps
 
-The anchor colors above encode *identity* — series that have no natural order. Where the series are an ordered ladder instead (wealth percentile groups, age bands), a single hue stepped light-to-dark carries the order that separate hues would throw away. Two charts use one.
+The anchor colors above encode *identity* — series that have no natural order. Where the series are an ordered ladder instead (wealth percentile groups, age bands), a ramp stepped light-to-dark carries the order that unrelated hues would throw away. Two charts use one.
 
-**Wealth percentile bands** (`--wealth-1` … `--wealth-4`), blue:
+**Wealth percentile bands** (`--wealth-1` … `--wealth-4`), multi-hue green → teal → blue → indigo. A single blue stepped four ways left neighbors at ΔE ~10 (OKLab ×100) — below the 15 floor for telling colors apart with normal vision — so the hue walks as the lightness steps. Worst adjacent pair is now ΔE 16.9 light / 15.6 dark, and ≥ 12.8 under simulated protan/deutan vision. The ramp stays clear of red (the debt line) and violet (the bankruptcy ramp):
 
 | Slot | Light | Dark | Use |
 | --- | --- | --- | --- |
-| 1 | `#86b6ef` | `#9ec5f4` | Bottom 50% (lowest rung) |
-| 2 | `#5598e7` | `#6da7ec` | 50th–90th |
-| 3 | `#2a78d6` | `#3987e5` | 90th–99th |
-| 4 | `#184f95` | `#1c5cab` | Top 1% (highest rung) |
+| 1 | `#76bf64` | `#ade08a` | Bottom 50% (lowest rung) |
+| 2 | `#17958d` | `#38bbad` | 50th–90th / Next 40% |
+| 3 | `#3564cc` | `#4a8ae8` | 90th–99th / Next 9.9% |
+| 4 | `#2a2676` | `#5f4cc4` | Top 1% / Top 0.1% (highest rung) |
 | — | `#d03b3b` | `#e66767` | National debt, the contrasting overlay line |
 
 **Bankruptcy age bands** (`--age-1` … `--age-6`), violet — a second hue so the two stacked-area charts never read as the same quantity:
@@ -50,7 +50,7 @@ The anchor colors above encode *identity* — series that have no natural order.
 | 6 | `#5a3a89` | `#744faa` | 70+ (oldest, top of stack) |
 | — | `#e3770e` | `#ff9b45` | National total, the contrasting overlay line |
 
-Both columns are stepped for their own background rather than flipped automatically, and each keeps monotone lightness, adjacent gaps of at least 0.06 L, and the surface-facing end clear of the background. The six-step violet ramp holds gaps of 0.069–0.073 L across the same lightness range the four-step blue one spans. Ramp colors live as CSS custom properties so the two themes swap in one place.
+Both columns are stepped for their own background rather than flipped automatically, and each keeps monotone lightness, adjacent gaps of at least 0.06 L, and the surface-facing end clear of the background. The six-step violet ramp holds gaps of 0.069–0.073 L across roughly the lightness range the four-step wealth ramp spans. Ramp colors live as CSS custom properties so the two themes swap in one place.
 
 A ramp pairs with one contrasting overlay line drawn on top of the stack — warm against the cool ramp — reserved for a total or comparison series rather than another member of the ladder.
 

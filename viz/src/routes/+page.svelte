@@ -258,7 +258,9 @@
       const bottom50 = d.bottom_50pct / 1e6;
       const mid40    = d.pct_50_90 / 1e6;
       const next9    = d.pct_90_99 / 1e6;
-      const top1     = d.top_1pct / 1e6;
+      const top01    = d.top_0_1pct / 1e6;
+      const next09   = d.pct_99_99_9 / 1e6;
+      const top1     = top01 + next09;
       // cumulative band edges, stacked from the baseline up: poorest at the bottom
       const e1 = bottom50;
       const e2 = e1 + mid40;
@@ -266,7 +268,7 @@
       const e4 = e3 + top1;
       return {
         date: new Date(d.date + 'T12:00:00'),
-        bottom50, mid40, next9, top1,
+        bottom50, mid40, next9, top1, top01, next99: next09 + next9,
         base: 0, e1, e2, e3, e4, total: e4,
       };
     })
@@ -275,6 +277,33 @@
   const wealthDomain  = $derived(dataDomain(wealthRows));
   const wealthStart   = $derived(wealthHasData ? wealthRows[0].date : cutoff);
   const wealthByDate  = $derived(new Map(wealthRows.map((d) => [d.date.getTime(), d])));
+
+  // Share of total household net worth, regrouped the way the Fed and press
+  // usually quote it: top 0.1%, next 9.9% (90th–99.9th), next 40%, bottom 50%.
+  // Shares rather than levels, because the levels chart is dominated by overall
+  // asset-price growth and hides the shift between groups.
+  const wealthShareGroups = [
+    { key: 'top01',    label: 'Top 0.1%',   color: 'var(--wealth-4)' },
+    { key: 'next99',   label: 'Next 9.9%',  color: 'var(--wealth-3)' },
+    { key: 'mid40',    label: 'Next 40%',   color: 'var(--wealth-2)' },
+    { key: 'bottom50', label: 'Bottom 50%', color: 'var(--wealth-1)' },
+  ];
+  const wealthShareRows = $derived(
+    wealthRows.map((d) => ({
+      date: d.date,
+      ...Object.fromEntries(wealthShareGroups.map((g) => [g.key, (d[g.key] / d.total) * 100])),
+    }))
+  );
+  const wealthShareSeries = $derived(
+    wealthShareGroups.map((g) => ({
+      ...g,
+      points: wealthShareRows.map((d) => ({ date: d.date, value: d[g.key] })),
+    }))
+  );
+  const wealthShareByDate    = $derived(new Map(wealthShareRows.map((d) => [d.date.getTime(), d])));
+  const wealthShareTipPoints = $derived(wealthShareSeries.flatMap((s) => s.points));
+  const wealthShareFirst     = $derived(wealthShareRows[0]);
+  const wealthShareLast      = $derived(wealthShareRows[wealthShareRows.length - 1]);
 
   // Quarterly total public debt, trimmed to the wealth window. FRED dates each
   // quarter at its first day and stores the end-of-quarter level — the same
@@ -1743,6 +1772,55 @@
       </p>
     </div>
 
+    <!-- Share of household net worth by wealth group — the top 0.1% / next 9.9%
+         / next 40% / bottom 50% split. Lines rather than a 100% stack so the
+         top group's trend reads off a common baseline. -->
+    <div class="card wide" id="wealth-share">
+      <h2>Share of US Household Wealth <a class="anchor-link" href="#wealth-share">#</a></h2>
+      <p class="meta">
+        Quarterly · Not Seasonally Adjusted · Percent of Total Net Worth · Q3 1989–present ·
+        {#each wealthShareGroups as g}<span class="legend-swatch" style="background:{g.color}"></span> {g.label} &nbsp;{/each}
+      </p>
+      <LazyChart height={320}>
+      <Plot height={320} marginLeft={44} marginRight={24} x={{ type: 'time', domain: wealthDomain }} y={{ label: '%', grid: true, domain: [0, 60] }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <RuleX data={wealthRecessionLines} stroke="var(--rule-color)" strokeOpacity={0.55} />
+        {#each wealthShareSeries as s}
+          <Line data={s.points} x="date" y="value" stroke={s.color} strokeWidth={2} />
+        {/each}
+        {#snippet overlay()}<RecessionHover bands={wealthRecessions} />
+          <HTMLTooltip data={wealthShareTipPoints} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const w = wealthShareByDate.get(datum.date.getTime())}
+                <div class="tip" style:transform={tipTransform(datum)}>
+                  <span class="tip-label">Share of Household Wealth</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date, [early90sRecession]) as note}<span class="tip-note">{note}</span>{/each}
+                  {#if w}
+                    {#each wealthShareGroups as g}
+                      <span class="tip-edu-row"><span><span style="color:{g.color}">●</span> {g.label}</span><b>{w[g.key].toFixed(1)}%</b></span>
+                    {/each}
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      {#if wealthShareFirst && wealthShareLast}
+        <p class="source">
+          Since {fmt(wealthShareFirst.date)}:
+          {#each wealthShareGroups as g, i}{g.label} {wealthShareFirst[g.key].toFixed(1)}% → {wealthShareLast[g.key].toFixed(1)}%{i < wealthShareGroups.length - 1 ? ' · ' : ''}{/each}
+        </p>
+      {/if}
+      <p class="source">
+        Source: <a href="https://www.federalreserve.gov/releases/z1/dataviz/dfa/" target="_blank" rel="noopener">Federal Reserve Distributional Financial Accounts</a>
+        (net worth by wealth percentile; "Next 9.9%" combines the DFA's next 0.9% and next 9% groups, i.e. the 90th–99.9th percentiles)
+      </p>
+    </div>
+
   </section>
   {/if}
 
@@ -2247,12 +2325,13 @@
     --badge-actual-bg: #e6f4ef;
     --badge-actual-text: #1a7a5e;
     --toggle-hover-bg: rgba(0, 0, 0, 0.06);
-    /* Wealth percentile bands: one blue hue stepped light-to-dark, because the
-       four groups are an ordered ladder rather than unrelated categories */
-    --wealth-1: #86b6ef;
-    --wealth-2: #5598e7;
-    --wealth-3: #2a78d6;
-    --wealth-4: #184f95;
+    /* Wealth percentile bands: an ordered ladder, so lightness steps light-to-dark,
+       but the hue also walks green → teal → blue → indigo — four steps of one
+       blue sat too close together (adjacent ΔE ~10) to tell apart */
+    --wealth-1: #76bf64;
+    --wealth-2: #17958d;
+    --wealth-3: #3564cc;
+    --wealth-4: #2a2676;
     --debt-line: #d03b3b;
     /* Bankruptcy age bands: one violet hue stepped light-to-dark — same ordered
        ladder treatment as the wealth bands, in a hue that keeps the two apart */
@@ -2291,10 +2370,10 @@
     --badge-actual-text: #4fcfa0;
     --toggle-hover-bg: rgba(255, 255, 255, 0.08);
     /* Same ramp restepped for the dark surface, not an automatic flip */
-    --wealth-1: #9ec5f4;
-    --wealth-2: #6da7ec;
-    --wealth-3: #3987e5;
-    --wealth-4: #1c5cab;
+    --wealth-1: #ade08a;
+    --wealth-2: #38bbad;
+    --wealth-3: #4a8ae8;
+    --wealth-4: #5f4cc4;
     --debt-line: #e66767;
     /* Same ramp restepped for the dark surface, not an automatic flip */
     --age-1: #d8c6fc;
