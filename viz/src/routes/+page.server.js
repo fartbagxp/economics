@@ -57,7 +57,7 @@ const CE_SERIES = [
 // Household wealth by percentile (Fed DFA) is optional and wide-format — one
 // column per percentile group rather than the usual date,value pair.
 // Populated by: python main.py --source dfa
-const WEALTH_COLUMNS = ['top_1pct', 'pct_90_99', 'pct_50_90', 'bottom_50pct'];
+const WEALTH_COLUMNS = ['top_0_1pct', 'pct_99_99_9', 'pct_90_99', 'pct_50_90', 'bottom_50pct'];
 
 const BANKRUPTCY_AGE_COLUMNS = [
   'age_18_29', 'age_30_39', 'age_40_49', 'age_50_59', 'age_60_69', 'age_70up',

@@ -7,11 +7,12 @@ https://www.federalreserve.gov/releases/z1/dataviz/dfa/
 Downloads the DFA bulk archive and extracts `dfa-networth-levels.csv`, which
 reports household net worth by wealth percentile group for every quarter since
 1989:Q3. The Fed publishes five groups (top 0.1%, next 0.9%, next 9%, next 40%,
-bottom 50%); this collector emits the four the dashboard charts, summing the
-top two into a single top-1% column.
+bottom 50%); this collector keeps all five as published so charts can regroup
+them either way — top 1% / next 9% / next 40% / bottom 50%, or the top 0.1% /
+next 9.9% / next 40% / bottom 50% split the Fed and press often quote.
 
 Unlike most collectors here this one writes a wide CSV — one column per
-percentile group rather than a single `value` column — because the four groups
+percentile group rather than a single `value` column — because the groups
 are only meaningful read together as a distribution.
 
 Levels stay in the units the Fed publishes: millions of dollars.
@@ -33,7 +34,8 @@ QUARTER_START_MONTH = {"Q1": 1, "Q2": 4, "Q3": 7, "Q4": 10}
 
 # Output column -> source category / categories in dfa-networth-levels.csv
 PERCENTILE_GROUPS = {
-    "top_1pct": ("TopPt1", "RemainingTop1"),
+    "top_0_1pct": ("TopPt1",),
+    "pct_99_99_9": ("RemainingTop1",),
     "pct_90_99": ("Next9",),
     "pct_50_90": ("Next40",),
     "bottom_50pct": ("Bottom50",),

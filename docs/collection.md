@@ -237,9 +237,9 @@ Collected via `uv run python main.py --source dfa`.
 
 - **fed_dfa_wealth_by_percentile**: Household net worth by wealth percentile group, quarterly, in millions of dollars. Coverage: 1989:Q3–present.
 
-Unlike every other file in `data/raw/`, this one is **wide**: `date` plus one column per percentile group (`top_1pct`, `pct_90_99`, `pct_50_90`, `bottom_50pct`), because the groups are only meaningful read together as a distribution.
+Unlike every other file in `data/raw/`, this one is **wide**: `date` plus one column per percentile group (`top_0_1pct`, `pct_99_99_9`, `pct_90_99`, `pct_50_90`, `bottom_50pct`), because the groups are only meaningful read together as a distribution.
 
-**Source page**: [federalreserve.gov — Distributional Financial Accounts](https://www.federalreserve.gov/releases/z1/dataviz/dfa/). The DFA bulk archive (`dfa.zip`) is downloaded and `dfa-networth-levels.csv` extracted from it. The Fed publishes five groups — top 0.1%, next 0.9%, next 9%, next 40%, bottom 50% — and the first two are summed into a single top-1% column; units are left as published. Quarters labelled `1989:Q3` are stored as the first day of the quarter (`1989-07-01`), matching how FRED dates the equivalent `WFRBL*` series, though the value is the level at the quarter's **end**.
+**Source page**: [federalreserve.gov — Distributional Financial Accounts](https://www.federalreserve.gov/releases/z1/dataviz/dfa/). The DFA bulk archive (`dfa.zip`) is downloaded and `dfa-networth-levels.csv` extracted from it. The Fed publishes five groups — top 0.1%, next 0.9%, next 9%, next 40%, bottom 50% — and all five are kept as published, so the viz can regroup them as top 1% or as top 0.1% / next 9.9%; units are left as published. Quarters labelled `1989:Q3` are stored as the first day of the quarter (`1989-07-01`), matching how FRED dates the equivalent `WFRBL*` series, though the value is the level at the quarter's **end**.
 
 ---
 

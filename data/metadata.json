@@ -798,7 +798,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "Federal Reserve Board, Distributional Financial Accounts",
     "source_url": "https://www.federalreserve.gov/releases/z1/dataviz/dfa/",
-    "last_updated": "2026-09-26"
+    "last_updated": "2026-09-30"
   },
   "treasury_national_debt": {
     "title": "Total Public Debt Outstanding (Debt to the Penny)",

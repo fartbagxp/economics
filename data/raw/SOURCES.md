@@ -18,18 +18,19 @@ chart. Retrieval date for every dataset below: **2026-09-09**.
 | Coverage            | 1989:Q3 – 2026:Q1                                                          |
 
 Columns are the `Net worth` measure from the source file, reshaped from long to
-wide. The source publishes five wealth-percentile categories; the work order
-asks for four, so the top two are added together:
+wide. All five wealth-percentile categories the source publishes are kept
+one-to-one, so charts can regroup them (top 1% = `top_0_1pct` + `pct_99_99_9`;
+next 9.9% = `pct_99_99_9` + `pct_90_99`):
 
-| Output column  | Source category / categories | Meaning              |
-| -------------- | ---------------------------- | -------------------- |
-| `top_1pct`     | `TopPt1` + `RemainingTop1`   | Top 1%               |
-| `pct_90_99`    | `Next9`                      | 90th–99th percentile |
-| `pct_50_90`    | `Next40`                     | 50th–90th percentile |
-| `bottom_50pct` | `Bottom50`                   | Bottom 50%           |
+| Output column  | Source category | Meaning                  |
+| -------------- | --------------- | ------------------------ |
+| `top_0_1pct`   | `TopPt1`        | Top 0.1%                 |
+| `pct_99_99_9`  | `RemainingTop1` | 99th–99.9th percentile   |
+| `pct_90_99`    | `Next9`         | 90th–99th percentile     |
+| `pct_50_90`    | `Next40`        | 50th–90th percentile     |
+| `bottom_50pct` | `Bottom50`      | Bottom 50%               |
 
-Summing `TopPt1` (top 0.1%) and `RemainingTop1` (next 0.9%) is an aggregation,
-not a unit conversion — values stay in millions of dollars as published.
+Values stay in millions of dollars as published.
 
 Dates: the source labels quarters as `1989:Q3`. These are converted to the first
 day of the quarter (`1989-07-01`), matching how FRED dates the equivalent
