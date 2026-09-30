@@ -2325,12 +2325,13 @@
     --badge-actual-bg: #e6f4ef;
     --badge-actual-text: #1a7a5e;
     --toggle-hover-bg: rgba(0, 0, 0, 0.06);
-    /* Wealth percentile bands: one blue hue stepped light-to-dark, because the
-       four groups are an ordered ladder rather than unrelated categories */
-    --wealth-1: #86b6ef;
-    --wealth-2: #5598e7;
-    --wealth-3: #2a78d6;
-    --wealth-4: #184f95;
+    /* Wealth percentile bands: an ordered ladder, so lightness steps light-to-dark,
+       but the hue also walks green → teal → blue → indigo — four steps of one
+       blue sat too close together (adjacent ΔE ~10) to tell apart */
+    --wealth-1: #76bf64;
+    --wealth-2: #17958d;
+    --wealth-3: #3564cc;
+    --wealth-4: #2a2676;
     --debt-line: #d03b3b;
     /* Bankruptcy age bands: one violet hue stepped light-to-dark — same ordered
        ladder treatment as the wealth bands, in a hue that keeps the two apart */
@@ -2369,10 +2370,10 @@
     --badge-actual-text: #4fcfa0;
     --toggle-hover-bg: rgba(255, 255, 255, 0.08);
     /* Same ramp restepped for the dark surface, not an automatic flip */
-    --wealth-1: #9ec5f4;
-    --wealth-2: #6da7ec;
-    --wealth-3: #3987e5;
-    --wealth-4: #1c5cab;
+    --wealth-1: #ade08a;
+    --wealth-2: #38bbad;
+    --wealth-3: #4a8ae8;
+    --wealth-4: #5f4cc4;
     --debt-line: #e66767;
     /* Same ramp restepped for the dark surface, not an automatic flip */
     --age-1: #d8c6fc;
