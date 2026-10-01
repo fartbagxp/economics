@@ -171,6 +171,13 @@ def build_dashboard(data_dir: str = "data/raw") -> str:
             ],
         ),
         (
+            "Income & Poverty (Census CPS ASEC, annual)",
+            [
+                ("mehoinusa672n", "Real Median Household Income"),
+                ("census_poverty_rate", "Official Poverty Rate"),
+            ],
+        ),
+        (
             "Manufacturing (Regional Fed Surveys — ISM PMI Proxies)",
             [
                 ("gacdfsa066msfrbphi", "Philadelphia Fed"),

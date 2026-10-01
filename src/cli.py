@@ -18,6 +18,7 @@ class Cli:
                 "medicaid",
                 "dfa",
                 "treasury",
+                "census",
                 "all",
             ],
             default="all",

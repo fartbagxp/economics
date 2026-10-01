@@ -5,6 +5,7 @@ import xlrd
 
 from src.bls import BlsCollector
 from src.ce import CeCollector
+from src.census import CensusPovertyCollector
 from src.chart import EconomicChart
 from src.cli import Cli
 from src.config import Config
@@ -51,6 +52,7 @@ _DFA_ERRORS = (
     pl.exceptions.PolarsError,
 )
 _TREASURY_ERRORS = (OSError, RuntimeError, ValueError, pl.exceptions.PolarsError)
+_CENSUS_ERRORS = (OSError, RuntimeError, zipfile.BadZipFile, pl.exceptions.PolarsError)
 
 
 def main():
@@ -154,6 +156,13 @@ def main():
             treasury_collector.collect_all()
         except _TREASURY_ERRORS as e:
             print(f"❌ Treasury debt collection failed: {e}")
+
+    if args.source in ["census", "all"]:
+        census_collector = CensusPovertyCollector(args.output)
+        try:
+            census_collector.collect_all()
+        except _CENSUS_ERRORS as e:
+            print(f"❌ Census poverty collection failed: {e}")
 
     print("\n📐 Computing derived statistics...")
     Deriver(args.output).derive_all()

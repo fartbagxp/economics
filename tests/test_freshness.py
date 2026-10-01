@@ -114,6 +114,12 @@ SERIES_MAX_AGE = [
     ("ce_totalexp_65up", 1050),
     ("ce_totalexp_65_74", 1050),
     ("ce_totalexp_75up", 1050),
+    # Annual — Census CPS ASEC income and poverty, released each September for
+    # the prior calendar year and dated Jan 1 of the data year, so the latest
+    # point is ~20 months old on release day and ~32 months just before the
+    # next. Same 1050-day budget as the CE survey above.
+    ("mehoinusa672n", 1050),
+    ("census_poverty_rate", 1050),
     # Quarterly — Treasury total public debt via FRED. Observation date is the
     # quarter start but the value is the quarter-end level, and the release
     # follows quarter end by ~2.5 months, so the latest point is ~5.5 months old
