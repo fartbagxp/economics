@@ -33,6 +33,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Raw series stored as
 - `uv run python main.py --source medicaid` - Collect CMS Medicaid & CHIP national total enrollment
 - `uv run python main.py --source dfa` - Collect Fed Distributional Financial Accounts household net worth by wealth percentile
 - `uv run python main.py --source treasury` - Collect Treasury Debt to the Penny total public debt outstanding
+- `uv run python main.py --source census` - Collect Census official poverty rate (CPS ASEC Historical Poverty Table 2)
 - `uv run python main.py --source all` - Collect from all sources
 - `uv run python main.py --source fred --series CPIAUCSL` - Collect specific series
 
@@ -136,6 +137,13 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Raw series stored as
 - Saves `treasury_national_debt.csv` in dollars; daily (business days), covers April 1993–present
 - For years before 1993, and for a quarterly series aligned to the DFA wealth quarters, the dashboard uses FRED's `GFDEBTN` instead
 
+**src/census.py (CensusPovertyCollector):**
+
+- Downloads Census Historical Poverty Table 2 (`hstpov2.xlsx`) and keeps the "All Races" all-people poverty percent
+- FRED only has the SAIPE/ACS estimate, not the official CPS ASEC rate, so the workbook is read directly
+- Years repeated across methodology breaks (2013, 2017) keep the first (newer-method) row
+- Saves annual `census_poverty_rate.csv` dated Jan 1 of the data year; covers 1959–present
+
 **src/derive.py (Deriver):**
 
 - Computes derived series from raw CSVs (YoY inflation, income growth)
@@ -198,6 +206,8 @@ See `docs/collection.md` for the full catalog. Key series:
 **Labor Market:** UNRATE (U-3), U1RATE-U6RATE, CIVPART, initial/continued jobless claims, unemployment by age group (LNS series)
 
 **Economy:** GDP, CPIAUCSL (+ core/PCE/PPI variants), UMCSENT, real disposable income (W875RX1)
+
+**Income & Poverty (Census CPS ASEC, annual):** MEHOINUSA672N (real median household income via FRED, since 1984, constant latest-year C-CPI-U dollars), census_poverty_rate (official poverty rate, all people, since 1959)
 
 **Consumer Spending by Age (BLS CE Survey):** ce_totalexp_all + ce_totalexp_{lt25,25_34,35_44,45_54,55_64,65up,65_74,75up} — total average annual expenditures per consumer unit by age of reference person, annual since 1984
 

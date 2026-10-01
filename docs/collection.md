@@ -113,6 +113,15 @@ Total average annual expenditures per consumer unit, broken out by the age of th
 
 `Deriver` computes `ces0500000003_yoy`, the year-over-year percent change — the standard "wage growth" figure reported in the news. The viz dashboard's "Wage Growth vs. Inflation" chart plots it against CPI YoY inflation (`cpiaucsl_yoy`) and 1-year inflation expectations (`MICH`) so you can see whether pay is keeping pace with prices.
 
+### Income & Poverty (Census CPS ASEC)
+
+- **MEHOINUSA672N**: Real Median Household Income in the United States (FRED, annual since 1984). Expressed in constant dollars of the latest data year; Census rebases every September, so the whole history shifts with each release. Census now deflates with C-CPI-U (FRED units read "2025 C-CPI-U Dollars").
+- **census_poverty_rate**: Official Poverty Rate, all people, percent (annual since 1959). Collected via `uv run python main.py --source census`.
+
+**Source for the poverty rate**: [Census Historical Poverty Tables, Table 2](https://www.census.gov/data/tables/time-series/demo/income-poverty/historical-poverty-people.html) ([`hstpov2.xlsx`](https://www2.census.gov/programs-surveys/cps/tables/time-series/historical-poverty-people/hstpov2.xlsx)), "All Races" block, "All people / Below poverty / Percent" column. FRED doesn't carry the official CPS ASEC rate, only the SAIPE/ACS model estimate (`PPAAUS00000A156NCEN`), which is a different measure and runs about 1pp higher. The table lists 2013 and 2017 twice because of methodology changes (redesigned income questions, then an updated processing system). The first row of each pair uses the newer method, which matches every later year, so that row is kept.
+
+Both are released each September for the prior calendar year and dated Jan 1 of the data year.
+
 ### Household Debt
 
 All series are stored in **millions of dollars** and displayed as **trillions** in the dashboard.

@@ -54,6 +54,10 @@ const CE_SERIES = [
   'ce_totalexp_65_74', 'ce_totalexp_75up',
 ];
 
+// Census CPS ASEC income and poverty are optional — populated by:
+// python main.py --source fred (MEHOINUSA672N) / --source census
+const INCOME_POVERTY_SERIES = ['mehoinusa672n', 'census_poverty_rate'];
+
 // Household wealth by percentile (Fed DFA) is optional and wide-format — one
 // column per percentile group rather than the usual date,value pair.
 // Populated by: python main.py --source dfa
@@ -156,6 +160,9 @@ export function load() {
   const ce = Object.fromEntries(
     CE_SERIES.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'raw', `${id}.csv`))])
   );
+  const incomePoverty = Object.fromEntries(
+    INCOME_POVERTY_SERIES.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'raw', `${id}.csv`))])
+  );
   const wealth = loadWideCsvOptional(
     join(process.cwd(), '..', 'data', 'raw', 'fed_dfa_wealth_by_percentile.csv'),
     WEALTH_COLUMNS
@@ -174,7 +181,7 @@ export function load() {
     DERIVED_SERIES_OPTIONAL.map((id) => [id, loadCsvOptional(join(process.cwd(), '..', 'data', 'derived', `${id}.csv`))])
   );
   return {
-    series: { ...raw, ...nyfed, ...oil, ...bls, ...gscpi, ...manufacturing, ...social, ...ce, ...derived, ...derivedOptional },
+    series: { ...raw, ...nyfed, ...oil, ...bls, ...gscpi, ...manufacturing, ...social, ...ce, ...incomePoverty, ...derived, ...derivedOptional },
     wealth,
     bankruptcyByAge,
     treasuryDebtLatest,

@@ -131,6 +131,8 @@ class FredCollector:
             "PSAVE": "Personal Saving",
             "PSAVERT": "Personal Saving Rate",
             "CES0500000003": "Average Hourly Earnings, Total Private",
+            # Census CPS ASEC, annual, in constant dollars of the latest data year
+            "MEHOINUSA672N": "Real Median Household Income in the United States",
             "MICH": "University of Michigan: Inflation Expectation (1-Year)",
             "T5YIE": "5-Year Breakeven Inflation Rate",
             "T10YIE": "10-Year Breakeven Inflation Rate",

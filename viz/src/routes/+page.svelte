@@ -217,6 +217,15 @@
   const ceMid = $derived(ceHasData ? new Date((ceAll[0].date.getTime() + ceAll[ceAll.length - 1].date.getTime()) / 2) : midDate);
   const ceDomain = $derived(dataDomain(ceAll));
 
+  const medianIncome    = $derived(parse(data.series.mehoinusa672n ?? []));
+  const povertyRate     = $derived(parse(data.series.census_poverty_rate ?? []));
+  const incomeHasData   = $derived(medianIncome.length > 0);
+  const povertyHasData  = $derived(povertyRate.length > 0);
+  const medianIncomeMid = $derived(incomeHasData ? new Date((medianIncome[0].date.getTime() + medianIncome[medianIncome.length - 1].date.getTime()) / 2) : midDate);
+  const povertyRateMid  = $derived(povertyHasData ? new Date((povertyRate[0].date.getTime() + povertyRate[povertyRate.length - 1].date.getTime()) / 2) : midDate);
+  // FRED units read e.g. "2025 C-CPI-U Dollars"; the base year moves each September
+  const incomeDollarYear = $derived(data.metadata.mehoinusa672n?.units?.match(/^\d{4}/)?.[0] ?? '');
+
   // Mortgage rates (Freddie Mac PMMS, weekly; stored sparse — monthly before the last 5 years)
   const mort30 = $derived(parse(data.series.mortgage30us).filter((d) => d.date >= ratesCutoff));
   const mort15 = $derived(parse(data.series.mortgage15us).filter((d) => d.date >= ratesCutoff));
@@ -1390,6 +1399,76 @@
         Not inflation-adjusted; the combined 65+ band starts in 1988.
       </p>
     </div>
+  </section>
+  {/if}
+
+  <!-- ── Income & Poverty ─────────────────────────────────────── -->
+  {#if incomeHasData || povertyHasData}
+  <h3 class="section-label">Income &amp; Poverty</h3>
+  <section class="grid">
+    {#if incomeHasData}
+    <!-- Real median household income -->
+    <div class="card" id="median-income">
+      <h2>Real Median Household Income <a class="anchor-link" href="#median-income">#</a></h2>
+      <p class="meta">Annual · Inflation-Adjusted{incomeDollarYear ? ` · ${incomeDollarYear} Dollars` : ''}</p>
+      <LazyChart height={240}>
+      <Plot height={240} marginLeft={60} marginRight={10} x={{ type: 'time', domain: dataDomain(medianIncome) }} y={{ label: '$', grid: true }}>
+        <Frame />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
+        <Line data={medianIncome} x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
+        {#snippet overlay()}<RecessionHover bands={recessions} />
+          <HTMLTooltip data={medianIncome} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                <div class="tip" style:transform={datum.date > medianIncomeMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
+                  <span class="tip-label">Real Median Household Income</span>
+                  <span class="tip-date">{datum.date.getFullYear()}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
+                  <span class="tip-val">${datum.value.toLocaleString('en-US', { maximumFractionDigits: 0 })}</span>
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      <p class="source">
+        Source: <a href={fredUrl('mehoinusa672n')} target="_blank" rel="noopener">FRED / MEHOINUSA672N</a>
+        (Census CPS ASEC). Census restates the full history in the latest year's dollars each September.
+      </p>
+    </div>
+    {/if}
+
+    {#if povertyHasData}
+    <!-- Official poverty rate -->
+    <div class="card" id="poverty-rate">
+      <h2>Official Poverty Rate <a class="anchor-link" href="#poverty-rate">#</a></h2>
+      <p class="meta">Annual · Percent of All People</p>
+      <LazyChart height={240}>
+      <Plot height={240} marginLeft={44} marginRight={10} x={{ type: 'time', domain: dataDomain(povertyRate) }} y={{ label: '%', grid: true }}>
+        <Frame />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
+        <Line data={povertyRate} x="date" y="value" stroke="#bc4749" strokeWidth={1.5} />
+        {#snippet overlay()}<RecessionHover bands={recessions} />
+          <HTMLTooltip data={povertyRate} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                <div class="tip" style:transform={datum.date > povertyRateMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
+                  <span class="tip-label">Official Poverty Rate</span>
+                  <span class="tip-date">{datum.date.getFullYear()}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
+                  <span class="tip-val">{datum.value.toFixed(1)}%</span>
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      <p class="source">
+        Source: <a href="https://www.census.gov/data/tables/time-series/demo/income-poverty/historical-poverty-people.html" target="_blank" rel="noopener">Census Historical Poverty Tables, Table 2</a>
+        (CPS ASEC). 2013 and 2017 use the newer of two published estimates.
+      </p>
+    </div>
+    {/if}
   </section>
   {/if}
 

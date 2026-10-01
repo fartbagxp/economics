@@ -11,7 +11,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
   <a href="https://github.com/fartbagxp/economics/actions/workflows/deploy-viz.yml"><img src="https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/deploy-viz.yml?label=deploy%20viz&style=flat-square" alt="Deploy Viz"></a>
   <a href="https://github.com/fartbagxp/economics/actions/workflows/lint.yml"><img src="https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/lint.yml?label=lint&style=flat-square" alt="Lint"></a>
   <a href="https://fartbagxp.github.io/economics/"><img src="https://img.shields.io/badge/dashboard-live-brightgreen?style=flat-square" alt="Live Dashboard"></a>
-  <!-- DATASET-COUNT --><img src="https://img.shields.io/badge/datasets-94-blue?style=flat-square" alt="94 datasets"><!-- /DATASET-COUNT -->
+  <!-- DATASET-COUNT --><img src="https://img.shields.io/badge/datasets-96-blue?style=flat-square" alt="96 datasets"><!-- /DATASET-COUNT -->
 </p>
 
 - [Setup](docs/setup.md): how to run the repo
@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-09-30 06:37 UTC_
+_Last updated: 2026-10-01 20:13 UTC_
 
 _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly), or 8 points (quarterly)._
 
@@ -64,6 +64,13 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 | Avg. Hourly Earnings (Wage Growth) | `▁▁▁▂▂▂▃▃▃▃▄▄▄▅▅▅▆▆▆▇▇▇▇█` | $38     | +$0        | +$1      | 2026-08-01 |
 | Consumer Sentiment (U. Mich.)      | `▇▇▇█▇▅▃▂▂▄▅▄▃▃▂▂▃▃▃▂▁▂▃▂` | 51.70   | -3.50      | -6.50    | 2026-08-01 |
 | Supply Chain Pressure (GSCPI)      | `▂▁▁▁▁▂▁▁▃▂▂▁▂▁▁▄▃▄▄█▇▅▅▅` | 1.06    | +0.13      | +1.15    | 2026-08-01 |
+
+### Income & Poverty (Census CPS ASEC, annual)
+
+| Indicator                    | Trend                      | Latest  | YoY (1y) | Chg (5y) | As of      |
+| ---------------------------- | -------------------------- | ------- | -------- | -------- | ---------- |
+| Real Median Household Income | `▂▂▂▂▂▃▂▂▁▁▁▁▁▃▄▄▅▇▆▆▅▆▇█` | $87,460 | +$2,250  | +$3,870  | 2025-01-01 |
+| Official Poverty Rate        | `▃▄▄▄▄▄▅▆█▇▇▇▇▅▄▄▃▁▂▃▂▂▁▁` | 10.2%   | -0.5pp   | -1.3pp   | 2025-01-01 |
 
 ### Manufacturing (Regional Fed Surveys — ISM PMI Proxies)
 
