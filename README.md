@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-10-03 18:53 UTC_
+_Last updated: 2026-10-10 23:04 UTC_
 
 _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly), or 8 points (quarterly)._
 
@@ -32,8 +32,8 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 | Unemployment Rate (U-3)   | `▂▂▃▂▁▃▃▃▅▂▅▅▆█▆▅▆▅▅▅▃▂▂▃` | 4.2%      | +0.1pp     | -0.1pp   | 2026-09-01 |
 | Total Nonfarm Payrolls    | `▁▁▃▃▃▃▄▄▄▄▄▄▃▄▄▅▄▅▆▆▇▆▇█` | 159,044K  | +29K       | +496K    | 2026-09-01 |
 | Labor Force Participation | `█▆▆▆▇▆▆▇▆▅▅▅▆▆▆▄▄▃▃▃▁▁▂▃` | 61.8%     | +0.2pp     | -0.5pp   | 2026-09-01 |
-| Initial Jobless Claims    | `▅▁▂▄▄▄▇█▇▅▅▅▄▁▂▂▄▄▃▄▄▂▂▂` | 197,000   | -1,000     | -28,000  | 2026-09-26 |
-| Continued Claims          | `▇▅▄▅▅▅▅▅▆▇▇█▆▆▅▆▅▆▅▅▄▁▁▁` | 1,701,000 | -11,000    | -220,000 | 2026-09-19 |
+| Initial Jobless Claims    | `▁▂▄▄▄▇█▇▅▅▅▄▁▂▂▄▄▃▄▄▂▂▂▂` | 197,000   | -2,000     | -36,000  | 2026-10-03 |
+| Continued Claims          | `▅▄▅▅▅▅▅▆▇▇█▆▆▅▆▅▆▅▅▄▂▁▁▁` | 1,716,000 | +17,000    | -213,000 | 2026-09-26 |
 
 ### Unemployment Measures (U1–U6)
 
@@ -63,7 +63,7 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 | CPI (All Urban)                    | `▁▁▁▁▂▂▂▂▃▃▃▃▄▄▄▅▅▅▆▇▇▇▇█` | 334.13  | +1.32      | +11.96   | 2026-08-01 |
 | Avg. Hourly Earnings (Wage Growth) | `▁▁▁▂▂▂▂▃▃▄▄▄▅▅▅▆▆▆▆▇▇▇▇█` | $38     | +$0        | +$1      | 2026-09-01 |
 | Consumer Sentiment (U. Mich.)      | `▇▇▇█▇▅▃▂▂▄▅▄▃▃▂▂▃▃▃▂▁▂▃▂` | 51.70   | -3.50      | -6.50    | 2026-08-01 |
-| Supply Chain Pressure (GSCPI)      | `▂▁▁▁▁▂▁▁▃▂▂▁▂▁▁▄▃▄▄█▇▅▅▅` | 1.06    | +0.13      | +1.15    | 2026-08-01 |
+| Supply Chain Pressure (GSCPI)      | `▁▁▁▁▁▁▁▂▂▂▁▂▁▁▃▃▃▄▇█▆▅▆▆` | 1.28    | +0.09      | +1.32    | 2026-09-01 |
 
 ### Income & Poverty (Census CPS ASEC, annual)
 
@@ -84,8 +84,8 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 
 | Indicator     | Trend                      | Latest | WoW    | YoY (52w) | As of      |
 | ------------- | -------------------------- | ------ | ------ | --------- | ---------- |
-| 30-Year Fixed | `▁▁▁▁▂▂▂▂▂▂▂▂▃▃▃▄▃▃▃▄▄▅▆█` | 7.3%   | +0.2pp | +0.9pp    | 2026-10-01 |
-| 15-Year Fixed | `▁▁▁▁▂▂▂▂▂▂▂▂▃▃▄▃▃▃▃▄▄▅▆█` | 6.6%   | +0.2pp | +1.0pp    | 2026-10-01 |
+| 30-Year Fixed | `▁▁▁▂▂▂▂▂▂▁▂▂▂▃▃▃▃▃▃▃▅▅▇█` | 7.4%   | +0.1pp | +1.1pp    | 2026-10-08 |
+| 15-Year Fixed | `▁▁▁▂▂▁▂▂▂▁▂▂▃▃▃▃▂▃▃▃▄▆▇█` | 6.7%   | +0.1pp | +1.2pp    | 2026-10-08 |
 
 ### Consumer Spending by Age (BLS Consumer Expenditure Survey, annual)
 
