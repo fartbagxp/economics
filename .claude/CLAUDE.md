@@ -237,7 +237,7 @@ See `docs/collection.md` for the full catalog. Key series:
 
 **Python backend:**
 - `uv`: package manager (pyproject.toml, no requirements.txt)
-- Python 3.13
+- Python 3.14 (pinned via `.python-version`)
 - `polars`: data manipulation
 - `fredapi`: FRED API client
 - `requests`: BLS and NY Fed HTTP requests
