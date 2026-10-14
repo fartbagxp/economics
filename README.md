@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-10-14 09:16 UTC_
+_Last updated: 2026-10-14 18:17 UTC_
 
 _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly), or 8 points (quarterly)._
 
@@ -60,7 +60,7 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 | Indicator                          | Trend                      | Latest  | Chg (prev) | Chg (1Y) | As of      |
 | ---------------------------------- | -------------------------- | ------- | ---------- | -------- | ---------- |
 | GDP                                | `▁▁▁▂▂▃▃▃▃▄▄▄▅▅▅▅▆▆▆▆▇▇▇█` | $32,563 | +$657      | +$1,933  | 2026-04-01 |
-| CPI (All Urban)                    | `▁▁▁▁▂▂▂▂▃▃▃▃▄▄▄▅▅▅▆▇▇▇▇█` | 334.13  | +1.32      | +11.96   | 2026-08-01 |
+| CPI (All Urban)                    | `▁▁▁▁▂▂▂▂▂▃▃▃▄▄▄▄▅▆▆▇▆▆▇█` | 336.30  | +2.17      | +13.01   | 2026-09-01 |
 | Avg. Hourly Earnings (Wage Growth) | `▁▁▁▂▂▂▂▃▃▄▄▄▅▅▅▆▆▆▆▇▇▇▇█` | $38     | +$0        | +$1      | 2026-09-01 |
 | Consumer Sentiment (U. Mich.)      | `▇▇▇█▇▅▃▂▂▄▅▄▃▃▂▂▃▃▃▂▁▂▃▂` | 51.70   | -3.50      | -6.50    | 2026-08-01 |
 | Supply Chain Pressure (GSCPI)      | `▁▁▁▁▁▁▁▂▂▂▁▂▁▁▃▃▃▄▇█▆▅▆▆` | 1.28    | +0.09      | +1.32    | 2026-09-01 |
