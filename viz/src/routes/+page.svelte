@@ -28,6 +28,24 @@
     return series.length ? [series[0].date, series[series.length - 1].date] : undefined;
   }
 
+  // The server loader drops NaN rows, so a <Line> would draw straight across a
+  // hole in the data — GS20's 1987–93 hiatus, Medicaid's 2013–17 gap, SNAP's
+  // distorted Jan–Feb 2019, or October 2025, when the shutdown cancelled BLS's
+  // household survey and CPI. This inserts a NaN point
+  // wherever consecutive points sit more than maxDays apart, which svelteplot
+  // treats as a line break. Only for monthly <Line> data: tooltips keep the
+  // unbroken series, and quarterly series would break at every point.
+  function breakGaps(series, maxDays = 45) {
+    const out = [];
+    for (let i = 0; i < series.length; i++) {
+      if (i > 0 && series[i].date - series[i - 1].date > maxDays * 864e5) {
+        out.push({ date: new Date((series[i].date.getTime() + series[i - 1].date.getTime()) / 2), value: NaN });
+      }
+      out.push(series[i]);
+    }
+    return out;
+  }
+
   // Merges named series into a flat array (for HTMLTooltip data) and a date→values Map
   function multiLine(named) {
     const entries = Object.entries(named);
@@ -111,6 +129,19 @@
   const wageHasData = $derived(wageYoy.length > 0);
   const wageVsInflML = $derived(multiLine({ wage: wageYoy, cpi: cpi_yoy, mich }));
   const wageMid = $derived(wageHasData ? new Date((wageYoy[0].date.getTime() + wageYoy[wageYoy.length - 1].date.getTime()) / 2) : midDate);
+
+  // Real wage growth — BLS Real Earnings (CPI-U deflated), populated by: python main.py --source bls.
+  // Above zero, pay is outrunning prices; below zero, it is losing ground.
+  const realHourlyYoy = $derived(parse(data.series.ces0500000013_yoy));
+  const realWeeklyYoy = $derived(parse(data.series.ces0500000012_yoy));
+  const realWageHasData = $derived(realHourlyYoy.length > 0);
+  const realWageML = $derived(multiLine({ hourly: realHourlyYoy, weekly: realWeeklyYoy }));
+  const realWageMid = $derived(realWageHasData ? new Date((realHourlyYoy[0].date.getTime() + realHourlyYoy[realHourlyYoy.length - 1].date.getTime()) / 2) : midDate);
+  // Split hourly into gain/loss bands so the shading flips color at zero
+  const realHourlyGain = $derived(breakGaps(realHourlyYoy).map((d) => ({ date: d.date, lo: 0, hi: Math.max(d.value, 0) })));
+  const realHourlyLoss = $derived(breakGaps(realHourlyYoy).map((d) => ({ date: d.date, lo: Math.min(d.value, 0), hi: 0 })));
+  const realHourlyLatest = $derived(realWageHasData ? realHourlyYoy[realHourlyYoy.length - 1] : null);
+  const realWeeklyLatest = $derived(realWeeklyYoy.length ? realWeeklyYoy[realWeeklyYoy.length - 1] : null);
 
   // FRED debt series (millions → trillions)
   const mortgage    = $derived(parse(data.series.hhmsdodns).filter((d) => d.date >= cutoff).map((d) => ({ ...d, value: d.value / 1e6 })));
@@ -498,7 +529,7 @@
         <Frame />
         <RuleY data={[0]} />
         <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
-        <Line data={unrate} x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
+        <Line data={breakGaps(unrate)} x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={unrate} x="date" y="value">
             {#snippet children({ datum })}
@@ -526,7 +557,7 @@
         <Frame />
         <RuleY data={[0]} />
         <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
-        <Line data={u6rate} x="date" y="value" stroke="#6a4c93" strokeWidth={1.5} />
+        <Line data={breakGaps(u6rate)} x="date" y="value" stroke="#6a4c93" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={u6rate} x="date" y="value">
             {#snippet children({ datum })}
@@ -554,7 +585,7 @@
         <Frame />
         <RuleY data={[0]} />
         <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
-        <Line data={ltunempPct} x="date" y="value" stroke="#d62828" strokeWidth={1.5} />
+        <Line data={breakGaps(ltunempPct)} x="date" y="value" stroke="#d62828" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={ltunempPct} x="date" y="value">
             {#snippet children({ datum })}
@@ -582,7 +613,7 @@
         <Frame />
         <RuleY data={[0]} />
         <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
-        <Line data={ltunempCount} x="date" y="value" stroke="#e07a5f" strokeWidth={1.5} />
+        <Line data={breakGaps(ltunempCount)} x="date" y="value" stroke="#e07a5f" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={ltunempCount} x="date" y="value">
             {#snippet children({ datum })}
@@ -647,7 +678,7 @@
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
-        <Line data={civpart} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
+        <Line data={breakGaps(civpart)} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={civpart} x="date" y="value">
             {#snippet children({ datum })}
@@ -674,7 +705,7 @@
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
-        <Line data={lfprMen} x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
+        <Line data={breakGaps(lfprMen)} x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={lfprMen} x="date" y="value">
             {#snippet children({ datum })}
@@ -701,7 +732,7 @@
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
-        <Line data={lfprWomen} x="date" y="value" stroke="#e76f51" strokeWidth={1.5} />
+        <Line data={breakGaps(lfprWomen)} x="date" y="value" stroke="#e76f51" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={lfprWomen} x="date" y="value">
             {#snippet children({ datum })}
@@ -734,10 +765,10 @@
       <Plot height={300} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
         <Frame />
         <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
-        <Line data={lfprLtHs}     x="date" y="value" stroke="#bc4749" strokeWidth={1.5} />
-        <Line data={lfprHsOnly}   x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
-        <Line data={lfprSomeCol}  x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
-        <Line data={lfprBachPlus} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
+        <Line data={breakGaps(lfprLtHs)}     x="date" y="value" stroke="#bc4749" strokeWidth={1.5} />
+        <Line data={breakGaps(lfprHsOnly)}   x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
+        <Line data={breakGaps(lfprSomeCol)}  x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
+        <Line data={breakGaps(lfprBachPlus)} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={eduAllPoints} x="date" y="value">
             {#snippet children({ datum })}
@@ -804,7 +835,7 @@
       <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: 'Index', grid: true }}>
         <Frame />
         <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
-        <Line data={cpiaucsl} x="date" y="value" stroke="#e76f51" strokeWidth={1.5} />
+        <Line data={breakGaps(cpiaucsl)} x="date" y="value" stroke="#e76f51" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={cpiaucsl} x="date" y="value">
             {#snippet children({ datum })}
@@ -898,8 +929,8 @@
         <RuleY data={[0]} />
         <RuleY data={[2]} stroke="var(--rule-color)" strokeDasharray="4,3" />
         <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
-        <Line data={core_cpi_yoy} x="date" y="value" stroke="#ff9f43" strokeWidth={1.5} strokeDasharray="5,3" />
-        <Line data={cpi_yoy} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
+        <Line data={breakGaps(core_cpi_yoy)} x="date" y="value" stroke="#ff9f43" strokeWidth={1.5} strokeDasharray="5,3" />
+        <Line data={breakGaps(cpi_yoy)} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={cpiYoyML.all} x="date" y="value">
             {#snippet children({ datum })}
@@ -1009,7 +1040,7 @@
         <RuleY data={[0]} />
         <RuleY data={[2]} stroke="var(--rule-color)" strokeDasharray="4,3" />
         <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
-        <Line data={core_cpi_yoy} x="date" y="value" stroke="#ff9f43" strokeWidth={1.5} />
+        <Line data={breakGaps(core_cpi_yoy)} x="date" y="value" stroke="#ff9f43" strokeWidth={1.5} />
         <Line data={core_pce_yoy} x="date" y="value" stroke="#52b788" strokeWidth={1.5} />
         <Line data={core_ppi_yoy} x="date" y="value" stroke="#74b3ce" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
@@ -1052,8 +1083,8 @@
         <Frame />
         <RuleY data={[0]} />
         <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
-        <Line data={core_cpi_mom} x="date" y="value" stroke="#ff9f43" strokeWidth={1.5} strokeDasharray="5,3" />
-        <Line data={cpi_mom} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
+        <Line data={breakGaps(core_cpi_mom)} x="date" y="value" stroke="#ff9f43" strokeWidth={1.5} strokeDasharray="5,3" />
+        <Line data={breakGaps(cpi_mom)} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={cpiMomML.all} x="date" y="value">
             {#snippet children({ datum })}
@@ -1161,7 +1192,7 @@
         <Frame />
         <RuleY data={[0]} />
         <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
-        <Line data={core_cpi_mom} x="date" y="value" stroke="#ff9f43" strokeWidth={1.5} />
+        <Line data={breakGaps(core_cpi_mom)} x="date" y="value" stroke="#ff9f43" strokeWidth={1.5} />
         <Line data={core_pce_mom} x="date" y="value" stroke="#52b788" strokeWidth={1.5} />
         <Line data={core_ppi_mom} x="date" y="value" stroke="#74b3ce" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
@@ -1287,7 +1318,7 @@
     <!-- Personal Savings Level -->
     <div class="card" id="psave">
       <h2>Personal Saving <a class="anchor-link" href="#psave">#</a></h2>
-      <p class="meta">Monthly · SAAR · Billions of Dollars</p>
+      <p class="meta">Quarterly · SAAR · Billions of Dollars</p>
       <LazyChart height={220}>
       <Plot height={220} marginLeft={64} marginRight={10} x={{ type: 'time' }} y={{ label: '$B', grid: true }}>
         <Frame />
@@ -1734,7 +1765,7 @@
     <!-- Nonrevolving consumer credit (auto + student combined, current) -->
     <div class="card" id="nonrevsl">
       <h2>Nonrevolving Consumer Credit <a class="anchor-link" href="#nonrevsl">#</a></h2>
-      <p class="meta">Monthly · Not Seasonally Adjusted · Trillions of Dollars · Auto + Student combined · FRED G.19</p>
+      <p class="meta">Monthly · Seasonally Adjusted · Trillions of Dollars · Auto + Student combined · FRED G.19</p>
       <LazyChart height={220}>
       <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: '$T', grid: true }}>
         <Frame />
@@ -1762,7 +1793,7 @@
     <!-- Revolving consumer credit (credit cards) -->
     <div class="card" id="revolsl">
       <h2>Revolving Consumer Credit (Credit Cards) <a class="anchor-link" href="#revolsl">#</a></h2>
-      <p class="meta">Monthly · Not Seasonally Adjusted · Trillions of Dollars · FRED G.19</p>
+      <p class="meta">Monthly · Seasonally Adjusted · Trillions of Dollars · FRED G.19</p>
       <LazyChart height={220}>
       <Plot height={220} marginLeft={54} marginRight={10} x={{ type: 'time' }} y={{ label: '$T', grid: true }}>
         <Frame />
@@ -2101,7 +2132,7 @@
       <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: 'Millions', grid: true }}>
         <Frame />
         <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
-        <Line data={snapPersons} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
+        <Line data={breakGaps(snapPersons)} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={snapPersons} x="date" y="value">
             {#snippet children({ datum })}
@@ -2159,7 +2190,7 @@
       <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time', domain: medicaidDomain }} y={{ label: 'Millions', grid: true }}>
         <Frame />
         <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
-        <Line data={medicaidEnrolled} x="date" y="value" stroke="#6d597a" strokeWidth={1.5} />
+        <Line data={breakGaps(medicaidEnrolled)} x="date" y="value" stroke="#6d597a" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={medicaidEnrolled} x="date" y="value">
             {#snippet children({ datum })}
@@ -2201,7 +2232,7 @@
         <RuleY data={[0]} />
         <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <Line data={mich} x="date" y="value" stroke="#f4a261" strokeWidth={1.5} strokeDasharray="5,3" />
-        <Line data={cpi_yoy} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
+        <Line data={breakGaps(cpi_yoy)} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
         <Line data={wageYoy} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
         {#snippet overlay()}<RecessionHover bands={recessions} />
           <HTMLTooltip data={wageVsInflML.all} x="date" y="value">
@@ -2230,6 +2261,57 @@
         &nbsp;· When the green line sits below the red, wages are losing ground to inflation
       </p>
     </div>
+
+    {#if realWageHasData}
+    <!-- Real Wage Growth: earnings after inflation -->
+    <div class="card wide" id="real-wage-growth">
+      <h2>Real Wage Growth (After Inflation) <span class="badge badge-actual">actual</span> <a class="anchor-link" href="#real-wage-growth">#</a></h2>
+      <p class="meta">
+        Monthly · Year-over-Year % Change in CPI-deflated earnings, all private employees &nbsp;·&nbsp;
+        <span class="legend-swatch" style="background:#2a9d8f"></span> Real Avg. Hourly Earnings &nbsp;
+        <span class="legend-swatch" style="background:#457b9d"></span> Real Avg. Weekly Earnings
+        {#if realHourlyLatest}
+          &nbsp;·&nbsp; Latest ({fmt(realHourlyLatest.date)}): hourly
+          <b style:color={realHourlyLatest.value >= 0 ? 'var(--gain)' : 'var(--loss)'}>{realHourlyLatest.value >= 0 ? '+' : ''}{realHourlyLatest.value.toFixed(1)}%</b>{#if realWeeklyLatest}, weekly
+          <b style:color={realWeeklyLatest.value >= 0 ? 'var(--gain)' : 'var(--loss)'}>{realWeeklyLatest.value >= 0 ? '+' : ''}{realWeeklyLatest.value.toFixed(1)}%</b>{/if}
+        {/if}
+      </p>
+      <LazyChart height={280}>
+      <Plot height={280} marginLeft={44} marginRight={10} x={{ type: 'time', domain: dataDomain(realHourlyYoy) }} y={{ label: '%', grid: true }}>
+        <Frame />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
+        <AreaY data={realHourlyGain} x="date" y1="lo" y2="hi" fill="var(--gain)" fillOpacity={0.18} />
+        <AreaY data={realHourlyLoss} x="date" y1="lo" y2="hi" fill="var(--loss)" fillOpacity={0.18} />
+        <RuleY data={[0]} />
+        <Line data={breakGaps(realWeeklyYoy)} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
+        <Line data={breakGaps(realHourlyYoy)} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
+        {#snippet overlay()}<RecessionHover bands={recessions} />
+          <HTMLTooltip data={realWageML.all} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const v = realWageML.byDate.get(datum.date.getTime())}
+                <div class="tip" style:transform={datum.date > realWageMid ? 'translate(calc(-100% - 8px), -50%)' : 'translate(8px, -50%)'}>
+                  <span class="tip-label">Real Wage Growth</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
+                  {#if v}
+                    {#if v.hourly != null}<span class="tip-edu-row"><span><span style="color:#2a9d8f">●</span> Real Hourly</span><b>{v.hourly >= 0 ? '+' : ''}{v.hourly.toFixed(1)}%</b></span>{/if}
+                    {#if v.weekly != null}<span class="tip-edu-row"><span><span style="color:#457b9d">●</span> Real Weekly</span><b>{v.weekly >= 0 ? '+' : ''}{v.weekly.toFixed(1)}%</b></span>{/if}
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      <p class="source">
+        Source: BLS Real Earnings — <a href={blsUrl('ces0500000013')} target="_blank" rel="noopener">CES0500000013</a> (hourly) ·
+        <a href={blsUrl('ces0500000012')} target="_blank" rel="noopener">CES0500000012</a> (weekly), in 1982–84 dollars deflated by CPI-U
+        &nbsp;· Green shading: hourly pay beating inflation; red: losing to it. Weekly earnings also move with average hours worked.
+        No October 2025 reading (no CPI was published during the appropriations lapse).
+      </p>
+    </div>
+    {/if}
 
   </section>
   {/if}
@@ -2338,7 +2420,7 @@
         <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
         <AreaY data={targetBand} x="date" y1="lower" y2="upper" fill="#6d6875" fillOpacity={0.15} stroke="none" />
         <Line data={gs30} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
-        <Line data={gs20} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
+        <Line data={breakGaps(gs20)} x="date" y="value" stroke="#457b9d" strokeWidth={1.5} />
         <Line data={gs10} x="date" y="value" stroke="#e63946" strokeWidth={1.5} />
         <Line data={gs2} x="date" y="value" stroke="#f4a261" strokeWidth={1.5} />
         <Line data={fedfunds} x="date" y="value" stroke="#6d6875" strokeWidth={1.5} />
@@ -2390,6 +2472,8 @@
     --card-border: #e5e7eb;
     --card-shadow: rgba(0, 0, 0, 0.04);
     --band-fill: #5b8dc7;
+    --gain: #1a7a5e;
+    --loss: #c62f3b;
     --rule-color: #bbb;
     --tooltip-bg: rgba(15, 15, 30, 0.88);
     --tooltip-text: #fff;
@@ -2434,6 +2518,8 @@
     --card-border: #2c3038;
     --card-shadow: rgba(0, 0, 0, 0.35);
     --band-fill: #7ab0f0;
+    --gain: #4fcfa0;
+    --loss: #ff6b74;
     --rule-color: #4d525e;
     --tooltip-bg: rgba(230, 232, 240, 0.95);
     --tooltip-text: #14161c;

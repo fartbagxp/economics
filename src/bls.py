@@ -33,6 +33,7 @@ class BlsCollector:
 
         with open(self.metadata_file, "w") as f:
             json.dump(all_metadata, f, indent=2)
+            f.write("\n")
 
     def _fetch_year_range(self, series_id: str, start_year: int, end_year: int):
         """Fetch one BLS API request. The public (unregistered) API silently
@@ -64,12 +65,13 @@ class BlsCollector:
 
         return json_data["Results"]["series"][0]["data"]
 
-    def collect_series(self, series_id: str, name: str, units: str = "Value"):
-        """Collect a single series from BLS, from 1990 to the current year."""
+    def collect_series(
+        self, series_id: str, name: str, units: str = "Value", start_year: int = 1990
+    ):
+        """Collect a single series from BLS, from start_year to the current year."""
         print(f"📊 Fetching {name} ({series_id}) from BLS...")
 
         current_year = datetime.now(UTC).year
-        start_year = 1990
         raw_items = []
         year = start_year
         while year <= current_year:
@@ -90,7 +92,12 @@ class BlsCollector:
                 # way (tz-aware here breaks strict=False parsing downstream —
                 # see sparkline.py's load_series and derive.py's _load).
                 dates.append(datetime.strptime(date_str, "%Y-%m-%d"))  # noqa: DTZ007
-                values.append(float(item["value"]))
+                # BLS reports months it never published as "-" (e.g. October
+                # 2025, when the appropriations lapse cancelled that month's
+                # CPI). Keep the row as NaN, as FRED does, so the Deriver's
+                # row-based 12-period shift stays 12 calendar months.
+                value = item["value"]
+                values.append(float("nan") if value == "-" else float(value))
 
         if not dates:
             print(f"❌ No data returned for {series_id}")
@@ -111,11 +118,25 @@ class BlsCollector:
             "CES0000000001": (
                 "Total Nonfarm Payroll Employment",
                 "Thousands of Persons",
+                1990,
+            ),
+            # Real (CPI-U deflated) earnings from the BLS Real Earnings release.
+            # FRED doesn't mirror these, and they only start in March 2006, so
+            # starting there saves requests against the 25/day unregistered limit.
+            "CES0500000013": (
+                "Real Average Hourly Earnings of All Employees, Total Private",
+                "1982-1984 Dollars per Hour",
+                2006,
+            ),
+            "CES0500000012": (
+                "Real Average Weekly Earnings of All Employees, Total Private",
+                "1982-1984 Dollars per Week",
+                2006,
             ),
         }
 
-        for series_id, (name, units) in series_map.items():
+        for series_id, (name, units, start_year) in series_map.items():
             try:
-                self.collect_series(series_id, name, units)
+                self.collect_series(series_id, name, units, start_year)
             except (OSError, ValueError, KeyError, pl.exceptions.PolarsError) as e:
                 print(f"❌ Error fetching {series_id}: {e}")

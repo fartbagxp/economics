@@ -636,7 +636,7 @@
     "seasonal_adjustment": "Not Seasonally Adjusted",
     "source": "USDA Food and Nutrition Service, National Data Bank",
     "source_url": "https://www.fna.usda.gov/pd/supplemental-nutrition-assistance-program-snap",
-    "last_updated": "2026-10-14"
+    "last_updated": "2026-10-16"
   },
   "medicare_total_enrollment": {
     "title": "Medicare: Total Beneficiaries Enrolled (National)",
@@ -853,5 +853,23 @@
     "last_updated": "2026-09-16 15:39:42-05",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/MEHOINUSA672N"
+  },
+  "ces0500000013": {
+    "title": "Real Average Hourly Earnings of All Employees, Total Private",
+    "units": "1982-1984 Dollars per Hour",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted",
+    "last_updated": "",
+    "source": "U.S. Bureau of Labor Statistics",
+    "source_url": "https://data.bls.gov/timeseries/CES0500000013"
+  },
+  "ces0500000012": {
+    "title": "Real Average Weekly Earnings of All Employees, Total Private",
+    "units": "1982-1984 Dollars per Week",
+    "frequency": "Monthly",
+    "seasonal_adjustment": "Seasonally Adjusted",
+    "last_updated": "",
+    "source": "U.S. Bureau of Labor Statistics",
+    "source_url": "https://data.bls.gov/timeseries/CES0500000012"
   }
 }

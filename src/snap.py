@@ -11,26 +11,49 @@ in a different, hand-formatted layout and are skipped — FY1989 onward already
 gives 35+ years of consistent monthly history.
 """
 
-from datetime import date
-from pathlib import Path
 import io
 import json
 import re
 import zipfile
+from datetime import UTC, datetime
+from pathlib import Path
 
 import polars as pl
 import requests
 
+PD_PAGE_URL = (
+    "https://www.fna.usda.gov/pd/supplemental-nutrition-assistance-program-snap"
+)
+# USDA bumps the numeric suffix on each monthly refresh (…-7, …-8, …-9) but
+# leaves the old files up, so a pinned URL keeps "working" while silently
+# serving stale data. The current link is scraped from PD_PAGE_URL; this is
+# only the fallback if that page can't be read.
+ZIP_URL = "https://www.fna.usda.gov/sites/default/files/resource-files/snap-zip-fy69tocurrent-9.zip"
+ZIP_LINK_RE = re.compile(
+    r"/sites/default/files/resource-files/snap-zip-fy69tocurrent-(\d+)\.zip"
+)
 
-ZIP_URL = "https://www.fna.usda.gov/sites/default/files/resource-files/snap-zip-fy69tocurrent-7.zip"
-
+# Anchored at the end on purpose: USDA footnotes Jan and Feb 2019 ("Jan 2019 /2")
+# because the shutdown pulled February benefits into January (Feb shows ~7M
+# persons vs. ~38M). Rejecting footnoted labels drops those two distorted months
+# instead of charting a fake collapse.
 MONTH_RE = re.compile(
     r"^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+(\d{2,4})$",
     re.IGNORECASE,
 )
 MONTH_NUM = {
-    "jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
-    "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12,
+    "jan": 1,
+    "feb": 2,
+    "mar": 3,
+    "apr": 4,
+    "may": 5,
+    "jun": 6,
+    "jul": 7,
+    "aug": 8,
+    "sep": 9,
+    "oct": 10,
+    "nov": 11,
+    "dec": 12,
 }
 
 METADATA = {
@@ -72,9 +95,29 @@ class SnapCollector:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.metadata_file = self.output_dir.parent / "metadata.json"
 
+    def _current_zip_url(self) -> str:
+        """Find the newest FY69-to-current zip linked from the USDA data page."""
+        try:
+            r = requests.get(
+                PD_PAGE_URL, timeout=30, headers={"User-Agent": "Mozilla/5.0"}
+            )
+            r.raise_for_status()
+        except requests.RequestException as e:
+            print(f"⚠️  Could not read {PD_PAGE_URL} ({e}); falling back to {ZIP_URL}")
+            return ZIP_URL
+        versions = [int(v) for v in ZIP_LINK_RE.findall(r.text)]
+        if not versions:
+            print(f"⚠️  No zip link found on {PD_PAGE_URL}; falling back to {ZIP_URL}")
+            return ZIP_URL
+        return (
+            "https://www.fna.usda.gov/sites/default/files/resource-files/"
+            f"snap-zip-fy69tocurrent-{max(versions)}.zip"
+        )
+
     def _download_zip(self) -> bytes:
-        print(f"⬇️  Downloading {ZIP_URL} ...")
-        r = requests.get(ZIP_URL, timeout=60, headers={"User-Agent": "Mozilla/5.0"})
+        url = self._current_zip_url()
+        print(f"⬇️  Downloading {url} ...")
+        r = requests.get(url, timeout=60, headers={"User-Agent": "Mozilla/5.0"})
         r.raise_for_status()
         return r.content
 
@@ -83,6 +126,7 @@ class SnapCollector:
         records = []
         if name.lower().endswith(".xlsx"):
             from openpyxl import load_workbook
+
             wb = load_workbook(io.BytesIO(content), data_only=True)
             sheet = _find_us_summary_sheet(wb)
             if sheet is None:
@@ -95,10 +139,11 @@ class SnapCollector:
                     continue
                 try:
                     records.append({"date": iso_date, "value": float(row[2])})
-                except (TypeError, ValueError):
+                except TypeError, ValueError:
                     continue
         elif name.lower().endswith(".xls"):
             import xlrd
+
             wb = xlrd.open_workbook(file_contents=content)
             sheet_name = next(
                 (s for s in wb.sheet_names() if s.strip().lower() == "us summary"), None
@@ -115,7 +160,7 @@ class SnapCollector:
                     continue
                 try:
                     records.append({"date": iso_date, "value": float(row[2])})
-                except (TypeError, ValueError):
+                except TypeError, ValueError:
                     continue
         return records
 
@@ -126,7 +171,7 @@ class SnapCollector:
         else:
             all_meta = {}
         entry = dict(METADATA)
-        entry["last_updated"] = date.today().isoformat()
+        entry["last_updated"] = datetime.now(UTC).date().isoformat()
         all_meta["snap_persons"] = entry
         with open(self.metadata_file, "w") as f:
             json.dump(all_meta, f, indent=2)
@@ -156,5 +201,7 @@ class SnapCollector:
         filepath = self.output_dir / "snap_persons.csv"
         df.write_csv(filepath)
         self.save_metadata()
-        print(f"✅ Saved snap_persons.csv ({len(df)} rows, {df['date'].min()} to {df['date'].max()})")
+        print(
+            f"✅ Saved snap_persons.csv ({len(df)} rows, {df['date'].min()} to {df['date'].max()})"
+        )
         return df
