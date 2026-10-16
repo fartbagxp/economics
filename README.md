@@ -11,7 +11,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
   <a href="https://github.com/fartbagxp/economics/actions/workflows/deploy-viz.yml"><img src="https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/deploy-viz.yml?label=deploy%20viz&style=flat-square" alt="Deploy Viz"></a>
   <a href="https://github.com/fartbagxp/economics/actions/workflows/lint.yml"><img src="https://img.shields.io/github/actions/workflow/status/fartbagxp/economics/lint.yml?label=lint&style=flat-square" alt="Lint"></a>
   <a href="https://fartbagxp.github.io/economics/"><img src="https://img.shields.io/badge/dashboard-live-brightgreen?style=flat-square" alt="Live Dashboard"></a>
-  <!-- DATASET-COUNT --><img src="https://img.shields.io/badge/datasets-96-blue?style=flat-square" alt="96 datasets"><!-- /DATASET-COUNT -->
+  <!-- DATASET-COUNT --><img src="https://img.shields.io/badge/datasets-98-blue?style=flat-square" alt="98 datasets"><!-- /DATASET-COUNT -->
 </p>
 
 - [Setup](docs/setup.md): how to run the repo
@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-10-14 18:17 UTC_
+_Last updated: 2026-10-16 09:25 UTC_
 
 _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly), or 8 points (quarterly)._
 
@@ -32,8 +32,8 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 | Unemployment Rate (U-3)   | `▂▂▃▂▁▃▃▃▅▂▅▅▆█▆▅▆▅▅▅▃▂▂▃` | 4.2%      | +0.1pp     | -0.1pp   | 2026-09-01 |
 | Total Nonfarm Payrolls    | `▁▁▃▃▃▃▄▄▄▄▄▄▃▄▄▅▄▅▆▆▇▆▇█` | 159,044K  | +29K       | +496K    | 2026-09-01 |
 | Labor Force Participation | `█▆▆▆▇▆▆▇▆▅▅▅▆▆▆▄▄▃▃▃▁▁▂▃` | 61.8%     | +0.2pp     | -0.5pp   | 2026-09-01 |
-| Initial Jobless Claims    | `▁▂▄▄▄▇█▇▅▅▅▄▁▂▂▄▄▃▄▄▂▂▂▂` | 197,000   | -2,000     | -36,000  | 2026-10-03 |
-| Continued Claims          | `▅▄▅▅▅▅▅▆▇▇█▆▆▅▆▅▆▅▅▄▂▁▁▁` | 1,716,000 | +17,000    | -213,000 | 2026-09-26 |
+| Initial Jobless Claims    | `▂▄▄▄▇█▇▅▅▅▄▁▂▂▄▄▃▄▄▂▂▂▂▂` | 199,000   | +1,000     | -23,000  | 2026-10-10 |
+| Continued Claims          | `▄▅▅▅▅▅▆▇▇█▆▆▅▆▅▆▅▅▄▂▁▁▁▁` | 1,710,000 | -4,000     | -218,000 | 2026-10-03 |
 
 ### Unemployment Measures (U1–U6)
 
@@ -76,16 +76,16 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 
 | Indicator             | Trend                      | Latest | MoM    | YoY (12m) | As of      |
 | --------------------- | -------------------------- | ------ | ------ | --------- | ---------- |
-| Philadelphia Fed      | `▃▂▁▆▄▃▁▂▂▃▂▄▁▂▁▃▄▄▅▂▃▇█▆` | 37.80  | -9.60  | +18.30    | 2026-09-01 |
-| Empire State (NY Fed) | `▁▇▄▂▄▁▂▂▁▄▅▂▅▆▃▅▅▃▆▇▅▇█▅` | 7.60   | -13.00 | +14.60    | 2026-09-01 |
+| Philadelphia Fed      | `▂▁▆▄▃▁▂▂▃▂▄▁▂▁▃▄▄▅▂▃▇█▆▄` | 20.90  | -16.90 | +31.00    | 2026-10-01 |
+| Empire State (NY Fed) | `▆▄▂▄▁▂▂▁▄▅▂▄▅▃▄▄▃▅▆▄▆▇▄█` | 25.50  | +17.90 | +17.70    | 2026-10-01 |
 | Dallas Fed            | `▅▅▆█▄▃▁▃▄▆▅▄▅▄▄▅▆▅▅▆▅▆▇▇` | 9.80   | -1.80  | +18.60    | 2026-09-01 |
 
 ### Mortgage Rates
 
 | Indicator     | Trend                      | Latest | WoW    | YoY (52w) | As of      |
 | ------------- | -------------------------- | ------ | ------ | --------- | ---------- |
-| 30-Year Fixed | `▁▁▁▂▂▂▂▂▂▁▂▂▂▃▃▃▃▃▃▃▅▅▇█` | 7.4%   | +0.1pp | +1.1pp    | 2026-10-08 |
-| 15-Year Fixed | `▁▁▁▂▂▁▂▂▂▁▂▂▃▃▃▃▂▃▃▃▄▆▇█` | 6.7%   | +0.1pp | +1.2pp    | 2026-10-08 |
+| 30-Year Fixed | `▁▁▂▂▁▂▁▁▁▁▂▂▃▃▃▂▃▃▃▄▅▇██` | 7.4%   | +0.0pp | +1.1pp    | 2026-10-15 |
+| 15-Year Fixed | `▁▁▁▂▁▁▁▁▁▁▂▂▃▃▂▂▂▃▃▄▅▇█▇` | 6.7%   | -0.0pp | +1.2pp    | 2026-10-15 |
 
 ### Consumer Spending by Age (BLS Consumer Expenditure Survey, annual)
 
