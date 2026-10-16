@@ -113,6 +113,15 @@ Total average annual expenditures per consumer unit, broken out by the age of th
 
 `Deriver` computes `ces0500000003_yoy`, the year-over-year percent change — the standard "wage growth" figure reported in the news. The viz dashboard's "Wage Growth vs. Inflation" chart plots it against CPI YoY inflation (`cpiaucsl_yoy`) and 1-year inflation expectations (`MICH`) so you can see whether pay is keeping pace with prices.
 
+### Real Wage Growth (BLS Real Earnings)
+
+- **CES0500000013**: Real Average Hourly Earnings of All Employees, Total Private (1982–84 dollars/hour, seasonally adjusted, monthly since March 2006)
+- **CES0500000012**: Real Average Weekly Earnings of All Employees, Total Private (1982–84 dollars/week, seasonally adjusted, monthly since March 2006)
+
+These are BLS's own CPI-U–deflated earnings from the monthly *Real Earnings* release. FRED doesn't mirror them, so they are fetched from the BLS API via `uv run python main.py --source bls` (requests start at 2006 to stay well under the unregistered 25-requests/day limit). `Deriver` computes `ces0500000013_yoy` and `ces0500000012_yoy`; the viz dashboard's "Real Wage Growth" chart plots both, shaded green where hourly pay is beating inflation and red where it is losing. Weekly earnings also reflect changes in average hours worked, so the two lines can diverge.
+
+October 2025 has no value (BLS publishes `-`: no CPI was collected during the appropriations lapse). The collector stores it as a `NaN` row, matching FRED's convention, so the 12-row YoY shift stays aligned to calendar months.
+
 ### Income & Poverty (Census CPS ASEC)
 
 - **MEHOINUSA672N**: Real Median Household Income in the United States (FRED, annual since 1984). Expressed in constant dollars of the latest data year; Census rebases every September, so the whole history shifts with each release. Census now deflates with C-CPI-U (FRED units read "2025 C-CPI-U Dollars").

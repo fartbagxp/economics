@@ -7,7 +7,9 @@ Freshness thresholds are based on typical release lags per frequency:
     Friday of the following month. Worst case is two adjacent 31-day months plus
     a release as late as the 7th, e.g. Jul 1 -> Aug 1 (31) -> Sep 1 (31) -> Sep 7
     release (7) = 69 days just before the next release (70-day threshold)
-  - Monthly (CPI/PPI): BLS releases ~2-3 weeks after month end; 75-day threshold
+  - Monthly (CPI/PPI, BLS real earnings): BLS releases ~2 weeks after month end,
+    as late as the 15th-16th, e.g. Aug 1 -> Oct 15 release = 75 days just before
+    it arrives (80-day threshold)
   - Monthly (Michigan): UMich releases at end of the month; 90-day threshold
   - Monthly (PCE/PI): BEA's Personal Income and Outlays release lands at the end
     of the following month, but some months it slips into the first days of the
@@ -20,7 +22,8 @@ Freshness thresholds are based on typical release lags per frequency:
     quarter + release lag + one additional quarter of buffer before next release)
 """
 
-from datetime import UTC, date, datetime
+import re
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
 import polars as pl
@@ -53,13 +56,25 @@ SERIES_MAX_AGE = [
     ("lns11327689", 70),
     ("lns11327662", 70),
     ("jtshir", 95),
-    ("cpiaucsl", 75),
-    ("cpilfesl", 75),
+    ("cpiaucsl", 80),
+    ("cpilfesl", 80),
     ("umcsent", 90),
     ("pcepi", 100),
     ("pcepilfe", 100),
-    ("ppifid", 75),
-    ("ppifes", 75),
+    ("ppifid", 80),
+    ("ppifes", 80),
+    # Monthly — CES payrolls and earnings, in the same first-Friday release as
+    # the labor series above
+    ("ces0000000001", 70),
+    ("ces0500000003", 70),
+    # Monthly — BLS Real Earnings, released with CPI
+    ("ces0500000013", 80),
+    ("ces0500000012", 80),
+    # Monthly — regional Fed manufacturing surveys, released within the
+    # survey month itself (Dallas, the latest, on its last Monday)
+    ("gacdfsa066msfrbphi", 70),
+    ("gacdisa066msfrbny", 70),
+    ("bactsamfrbdal", 70),
     # Quarterly — observation date is quarter start, not release date
     ("gdp", 215),
     # Monthly — BEA personal income & outlays (released end of following month,
@@ -70,6 +85,19 @@ SERIES_MAX_AGE = [
     ("psave", 215),
     ("psavert", 100),
     ("mich", 90),
+    ("w875rx1", 100),
+    # Monthly — Fed G.19 consumer credit, released ~5th business day of the
+    # second month after, e.g. Aug 1 -> Nov 7 = ~98 days just before it arrives
+    ("revolsl", 105),
+    ("nonrevsl", 105),
+    # SLOAS and MVLOAS are deliberately absent: FRED discontinued both after
+    # 2024:Q4, and the viz only draws them in the fallback chart shown when the
+    # NY Fed data is missing.
+    # Weekly — EIA retail fuel prices (Mondays) and Brent spot, which EIA posts
+    # to FRED about a week behind
+    ("gasregw", 21),
+    ("gasdesw", 21),
+    ("dcoilbrenteu", 21),
     # Daily — TIPS-based breakeven rates
     ("t5yie", 21),
     ("t10yie", 21),
@@ -100,6 +128,23 @@ SERIES_MAX_AGE = [
     # Quarterly — new bankruptcies from the same NY Fed workbook, same release lag
     ("nyfed_bankruptcy_by_age", 215),
     ("nyfed_bankruptcy_total", 215),
+    # Quarterly — balances from the same NY Fed workbook
+    ("nyfed_mortgage", 215),
+    ("nyfed_he_revolving", 215),
+    ("nyfed_auto", 215),
+    ("nyfed_credit_card", 215),
+    ("nyfed_student", 215),
+    ("nyfed_other", 215),
+    ("nyfed_total", 215),
+    # Monthly — USDA SNAP National Data Bank, refreshed roughly monthly with a
+    # ~3-month lag, so ~140 days old just before a refresh. The collector once
+    # sat on a superseded archive for months while still "succeeding"; this is
+    # the check that catches that.
+    ("snap_persons", 160),
+    # Monthly — CMS Medicare and Medicaid/CHIP enrollment, published ~4-5 months
+    # after the reference month
+    ("medicare_total_enrollment", 200),
+    ("medicaid_chip_enrollment", 200),
     # Annual — BLS Consumer Expenditure Survey, spending by age of reference
     # person. Data for calendar year Y is published in September of Y+1 and the
     # observation date is stored as Jan 1 of year Y (FRED annual convention), so
@@ -126,6 +171,8 @@ SERIES_MAX_AGE = [
     # on release day and ~8.5 months old just before the next one. 300 days
     # covers that with room for a slipped release.
     ("gfdebtn", 300),
+    # Quarterly — Fed Z.1 household mortgages, same release and dating as gfdebtn
+    ("hhmsdodns", 300),
     # Quarterly — Fed Distributional Financial Accounts, published alongside the
     # Z.1 release on the same lag and dating convention as gfdebtn above.
     ("fed_dfa_wealth_by_percentile", 300),
@@ -134,36 +181,35 @@ SERIES_MAX_AGE = [
     ("treasury_national_debt", 10),
 ]
 
-# Must match RAW_SERIES in viz/src/routes/+page.server.js
-VIZ_RAW_SERIES = [
-    "unrate",
-    "u6rate",
-    "civpart",
-    "icsa",
-    "cpiaucsl",
-    "gdp",
-    "umcsent",
-    "mortgage30us",
-    "mortgage15us",
-]
+VIZ_SERVER = Path(__file__).parent.parent / "viz" / "src" / "routes" / "+page.server.js"
 
-# Must match DERIVED_SERIES in viz/src/routes/+page.server.js
-VIZ_DERIVED_SERIES = [
-    "cpiaucsl_mom",
-    "cpiaucsl_yoy",
-    "cpilfesl_mom",
-    "cpilfesl_yoy",
-    "pcepi_mom",
-    "pcepi_yoy",
-    "pcepilfe_mom",
-    "pcepilfe_yoy",
-    "ppifid_mom",
-    "ppifid_yoy",
-    "ppifes_mom",
-    "ppifes_yoy",
-]
 
-DERIVED_SOURCES = sorted({s.rsplit("_", 1)[0] for s in VIZ_DERIVED_SERIES})
+def _viz_series_lists() -> tuple[list[str], list[str]]:
+    """Read every `const *_SERIES[_OPTIONAL] = [...]` list from the viz loader,
+    so these tests can't drift from what the page actually loads."""
+    src = VIZ_SERVER.read_text()
+    raw, derived = [], []
+    for name, body in re.findall(r"const (\w*SERIES\w*) = \[(.*?)\];", src, re.DOTALL):
+        ids = re.findall(r"'([^']+)'", body)
+        (derived if name.startswith("DERIVED") else raw).extend(ids)
+    return raw, derived
+
+
+VIZ_RAW_SERIES, VIZ_DERIVED_SERIES = _viz_series_lists()
+
+# Suffixes Deriver appends; longest first so "_chg_3mo" isn't read as "_3mo"
+DERIVED_SUFFIXES = ("_chg_3mo", "_chg", "_mom", "_yoy")
+
+
+def _derived_source(name: str) -> str:
+    for suffix in DERIVED_SUFFIXES:
+        if name.endswith(suffix):
+            return name[: -len(suffix)]
+    raise ValueError(f"unrecognized derived series name: {name}")
+
+
+DERIVED_FILES = sorted(p.stem for p in (DATA_DIR / "derived").glob("*.csv"))
+ALL_CSVS = sorted(str(p.relative_to(DATA_DIR)) for p in DATA_DIR.glob("*/*.csv"))
 
 
 def _latest(path: Path) -> str:
@@ -195,18 +241,44 @@ def test_viz_derived_series_present(series_id):
     assert pl.read_csv(path).height > 0, f"{series_id} is empty"
 
 
-@pytest.mark.parametrize("source_id", DERIVED_SOURCES)
-def test_derived_in_sync_with_source(source_id):
+def test_viz_series_lists_parsed():
+    """Guard the regex above: if the loader is restructured, fail loudly rather
+    than silently parametrizing the presence tests over nothing."""
+    assert len(VIZ_RAW_SERIES) > 30, VIZ_RAW_SERIES
+    assert len(VIZ_DERIVED_SERIES) > 10, VIZ_DERIVED_SERIES
+
+
+@pytest.mark.parametrize("name", DERIVED_FILES)
+def test_derived_in_sync_with_source(name):
+    source_id = _derived_source(name)
     raw_latest = _latest(DATA_DIR / "raw" / f"{source_id}.csv")
-    for suffix in ("_mom", "_yoy"):
-        derived_path = DATA_DIR / "derived" / f"{source_id}{suffix}.csv"
-        if not derived_path.exists():
-            continue
-        derived_latest = _latest(derived_path)
-        assert derived_latest == raw_latest, (
-            f"{source_id}{suffix}: derived latest {derived_latest} does not match "
-            f"raw latest {raw_latest} — re-run derivation"
-        )
+    derived_latest = _latest(DATA_DIR / "derived" / f"{name}.csv")
+    assert derived_latest == raw_latest, (
+        f"{name}: derived latest {derived_latest} does not match "
+        f"raw latest {raw_latest} — re-run derivation"
+    )
+
+
+@pytest.mark.parametrize("rel_path", ALL_CSVS)
+def test_dates_unique_and_sorted(rel_path):
+    """Every reader (Deriver's row-based shifts, the viz's line paths, the
+    README's latest-value lookup) assumes one row per date in ascending order."""
+    dates = pl.read_csv(DATA_DIR / rel_path)["date"].str.slice(0, 10).to_list()
+    dupes = sorted({d for d in dates if dates.count(d) > 1})
+    assert not dupes, f"{rel_path}: duplicate dates {dupes[:5]}"
+    assert dates == sorted(dates), f"{rel_path}: dates not in ascending order"
+
+
+def test_brent_futures_curve_current():
+    """The futures CSV is dated by contract month, not observation, so it has no
+    age to check. A stale curve shows up as its front contract slipping into
+    the past instead."""
+    path = DATA_DIR / "raw" / "brent_futures_curve.csv"
+    front = date.fromisoformat(pl.read_csv(path)["date"].min()[:10])
+    cutoff = datetime.now(UTC).date() - timedelta(days=45)
+    assert front >= cutoff, (
+        f"brent_futures_curve: front contract {front} is in the past"
+    )
 
 
 def test_bankruptcy_bands_track_national_total():

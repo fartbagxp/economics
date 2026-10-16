@@ -78,7 +78,11 @@ const DERIVED_SERIES = [
 ];
 
 // Payroll change is optional, same as BLS_SERIES above
-const DERIVED_SERIES_OPTIONAL = ['ces0000000001_chg', 'ces0000000001_chg_3mo', 'ces0500000003_yoy'];
+// Real (CPI-deflated) earnings YoY — populated by: python main.py --source bls
+const DERIVED_SERIES_OPTIONAL = [
+  'ces0000000001_chg', 'ces0000000001_chg_3mo', 'ces0500000003_yoy',
+  'ces0500000013_yoy', 'ces0500000012_yoy',
+];
 
 function loadCsv(path) {
   const raw = readFileSync(path, 'utf-8');

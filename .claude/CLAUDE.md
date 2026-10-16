@@ -81,6 +81,8 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Raw series stored as
 **src/bls.py (BlsCollector):**
 
 - Fetches data from BLS public API; no authentication required
+- `collect_series` takes a `start_year` (default 1990); series that begin later start there to save requests against the 25/day unregistered limit
+- Months BLS publishes as `-` are kept as `NaN` rows (as FRED does) so row-based YoY shifts stay aligned
 
 **src/ce.py (CeCollector):**
 
@@ -111,6 +113,8 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Raw series stored as
 - Downloads USDA's per-fiscal-year SNAP National Data Bank workbook archive (zip)
 - Extracts national monthly persons-participating from each workbook's "US Summary" sheet
 - Saves `snap_persons.csv`; covers October 1988–present
+- The archive URL's numeric suffix (`…fy69tocurrent-9.zip`) changes with each USDA refresh and old versions stay downloadable, so the current link is scraped from the USDA data page each run (pinned URL is only a fallback)
+- Jan and Feb 2019 are intentionally absent: USDA footnotes them as shutdown-distorted, and the month parser rejects footnoted labels
 
 **src/medicare.py (MedicareCollector):**
 
@@ -146,7 +150,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Raw series stored as
 
 **src/derive.py (Deriver):**
 
-- Computes derived series from raw CSVs (YoY inflation, income growth)
+- Computes derived series from raw CSVs (YoY inflation, income growth, real wage growth)
 - Writes results to `data/derived/`
 
 **src/sparkline.py:**
@@ -166,10 +170,10 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Raw series stored as
 
 ### Viz Layer (viz/)
 
-SvelteKit 2 / Svelte 5 app deployed to GitHub Pages via `deploy-viz.yml`.
+SvelteKit 3 / Svelte 5 app deployed to GitHub Pages via `deploy-viz.yml`. SvelteKit config (adapter, `paths.base` from `BASE_PATH`) lives in the `sveltekit({...})` call in `viz/vite.config.js`; Kit 3 refuses to start if a `svelte.config.js` exists.
 
 - **viz/src/routes/+page.server.js** - Loads raw and derived CSVs at build time; exposes `data.series` and `data.metadata` to the page. Wide CSVs (the DFA wealth file and the NY Fed bankruptcy-by-age file) load through `loadWideCsvOptional` and arrive as `data.wealth` and `data.bankruptcyByAge`; the daily Treasury debt file is read last-line-only as `data.treasuryDebtLatest` so 8k rows don't ship to the client
-- **viz/src/routes/+page.svelte** - Main dashboard page with D3 / svelteplot charts
+- **viz/src/routes/+page.svelte** - Main dashboard page with D3 / svelteplot charts. The loader drops NaN rows, so monthly `<Line>` marks go through `breakGaps()` to break the line at holes (GS20 1987–93, Oct 2025, Medicaid 2013–17) instead of bridging them
 - **viz/src/routes/LazyChart.svelte** - Intersection-observer-based lazy loading wrapper
 - Uses `pnpm` as the package manager; `pnpm build` outputs to `viz/build/`
 
@@ -206,6 +210,8 @@ See `docs/collection.md` for the full catalog. Key series:
 **Labor Market:** UNRATE (U-3), U1RATE-U6RATE, CIVPART, initial/continued jobless claims, unemployment by age group (LNS series)
 
 **Economy:** GDP, CPIAUCSL (+ core/PCE/PPI variants), UMCSENT, real disposable income (W875RX1)
+
+**Real Wages (BLS Real Earnings):** CES0500000013 (real avg hourly earnings), CES0500000012 (real avg weekly earnings) — CPI-U deflated, 1982–84 dollars, monthly since 2006; not on FRED, collected via `--source bls`. October 2025 is a `NaN` row (no CPI during the appropriations lapse)
 
 **Income & Poverty (Census CPS ASEC, annual):** MEHOINUSA672N (real median household income via FRED, since 1984, constant latest-year C-CPI-U dollars), census_poverty_rate (official poverty rate, all people, since 1959)
 
@@ -247,13 +253,13 @@ See `docs/collection.md` for the full catalog. Key series:
 - `python-dotenv`: `.env` file loading
 
 **Viz frontend (viz/):**
-- SvelteKit 2 / Svelte 5
+- SvelteKit 3 / Svelte 5
 - D3 7 + svelteplot
 - Vite 8
 - pnpm
 
 **CI (GitHub Actions):**
-- `update.yml`: daily data collection, freshness tests, README dashboard update, git commit
+- `update.yml`: weekly data collection (Saturdays 18:00 UTC, plus every push to main and manual dispatch), freshness tests, README dashboard update, git commit
 - `deploy-viz.yml`: builds SvelteKit app and deploys to GitHub Pages
 - `lint.yml`: pre-commit checks
 

@@ -3,7 +3,7 @@ from pathlib import Path
 import polars as pl
 
 INFLATION_SERIES = ["cpiaucsl", "cpilfesl", "pcepi", "pcepilfe", "ppifid", "ppifes"]
-INCOME_YOY_SERIES = ["w875rx1", "ces0500000003"]
+INCOME_YOY_SERIES = ["w875rx1", "ces0500000003", "ces0500000013", "ces0500000012"]
 PAYROLL_SERIES = ["ces0000000001"]
 
 
