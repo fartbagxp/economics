@@ -3,12 +3,12 @@ name = "economics"
 version = "1.0.0"
 description = "To collect various economic based metrics"
 readme = "README.md"
-requires-python = ">=3.14,<3.15"
+requires-python = ">=3.14"
 dependencies = [
     "fredapi==0.5.2",
     "matplotlib==3.11.2",
     "openpyxl==3.1.5",
-    "polars==1.44.2",
+    "polars==2.0.0",
     "python-dotenv==1.2.4",
     "requests==2.34.2",
     "xlrd==2.0.2",
