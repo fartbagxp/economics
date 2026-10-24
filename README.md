@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-10-17 20:27 UTC_
+_Last updated: 2026-10-24 11:12 UTC_
 
 _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly), or 8 points (quarterly)._
 
@@ -32,8 +32,8 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 | Unemployment Rate (U-3)   | `▂▂▃▂▁▃▃▃▅▂▅▅▆█▆▅▆▅▅▅▃▂▂▃` | 4.2%      | +0.1pp     | -0.1pp   | 2026-09-01 |
 | Total Nonfarm Payrolls    | `▁▁▃▃▃▃▄▄▄▄▄▄▃▄▄▅▄▅▆▆▇▆▇█` | 159,044K  | +29K       | +496K    | 2026-09-01 |
 | Labor Force Participation | `█▆▆▆▇▆▆▇▆▅▅▅▆▆▆▄▄▃▃▃▁▁▂▃` | 61.8%     | +0.2pp     | -0.5pp   | 2026-09-01 |
-| Initial Jobless Claims    | `▂▄▄▄▇█▇▅▅▅▄▁▂▂▄▄▃▄▄▂▂▂▂▂` | 199,000   | +1,000     | -23,000  | 2026-10-10 |
-| Continued Claims          | `▄▅▅▅▅▅▆▇▇█▆▆▅▆▅▆▅▅▄▂▁▁▁▁` | 1,710,000 | -4,000     | -218,000 | 2026-10-03 |
+| Initial Jobless Claims    | `▄▄▄▇█▇▅▅▅▄▁▂▂▄▄▃▄▄▂▂▂▂▂▁` | 194,000   | -6,000     | -37,000  | 2026-10-17 |
+| Continued Claims          | `▅▅▅▅▅▆▇▇█▆▆▅▆▅▆▅▅▄▂▁▁▁▁▂` | 1,728,000 | +25,000    | -219,000 | 2026-10-10 |
 
 ### Unemployment Measures (U1–U6)
 
@@ -62,7 +62,7 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 | GDP                                | `▁▁▁▂▂▃▃▃▃▄▄▄▅▅▅▅▆▆▆▆▇▇▇█` | $32,563 | +$657      | +$1,933  | 2026-04-01 |
 | CPI (All Urban)                    | `▁▁▁▁▂▂▂▂▂▃▃▃▄▄▄▄▅▆▆▇▆▆▇█` | 336.30  | +2.17      | +13.01   | 2026-09-01 |
 | Avg. Hourly Earnings (Wage Growth) | `▁▁▁▂▂▂▂▃▃▄▄▄▅▅▅▆▆▆▆▇▇▇▇█` | $38     | +$0        | +$1      | 2026-09-01 |
-| Consumer Sentiment (U. Mich.)      | `▇▇▇█▇▅▃▂▂▄▅▄▃▃▂▂▃▃▃▂▁▂▃▂` | 51.70   | -3.50      | -6.50    | 2026-08-01 |
+| Consumer Sentiment (U. Mich.)      | `▇▇█▇▅▃▂▂▄▅▄▃▃▂▂▃▃▃▂▁▂▃▂▁` | 48.10   | -3.60      | -7.00    | 2026-09-01 |
 | Supply Chain Pressure (GSCPI)      | `▁▁▁▁▁▁▁▂▂▂▁▂▁▁▃▃▃▄▇█▆▅▆▆` | 1.28    | +0.09      | +1.32    | 2026-09-01 |
 
 ### Income & Poverty (Census CPS ASEC, annual)
@@ -84,8 +84,8 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 
 | Indicator     | Trend                      | Latest | WoW    | YoY (52w) | As of      |
 | ------------- | -------------------------- | ------ | ------ | --------- | ---------- |
-| 30-Year Fixed | `▁▁▂▂▁▂▁▁▁▁▂▂▃▃▃▂▃▃▃▄▅▇██` | 7.4%   | +0.0pp | +1.1pp    | 2026-10-15 |
-| 15-Year Fixed | `▁▁▁▂▁▁▁▁▁▁▂▂▃▃▂▂▂▃▃▄▅▇█▇` | 6.7%   | -0.0pp | +1.2pp    | 2026-10-15 |
+| 30-Year Fixed | `▁▂▂▁▂▁▁▁▁▂▂▃▃▃▂▃▃▃▄▅▇██▇` | 7.3%   | -0.1pp | +1.1pp    | 2026-10-22 |
+| 15-Year Fixed | `▁▁▂▁▁▁▁▁▁▂▂▃▃▂▂▂▃▃▄▅▇█▇▇` | 6.7%   | -0.0pp | +1.2pp    | 2026-10-22 |
 
 ### Consumer Spending by Age (BLS Consumer Expenditure Survey, annual)
 
