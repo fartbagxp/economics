@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-11-09 17:29 UTC_
+_Last updated: 2026-11-14 22:15 UTC_
 
 _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly), or 8 points (quarterly)._
 
@@ -32,8 +32,8 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 | Unemployment Rate (U-3)   | `▂▃▂▁▃▃▃▅▂▅▅▆█▆▅▆▅▅▅▃▂▂▃▂` | 4.1%      | -0.1pp     | -0.3pp   | 2026-10-01 |
 | Total Nonfarm Payrolls    | `▁▂▂▂▂▃▃▃▃▃▃▂▃▃▃▃▄▅▅▅▅▆▇█` | 159,293K  | +165K      | +885K    | 2026-10-01 |
 | Labor Force Participation | `▇▆▇█▇▇█▆▆▅▆▇▇▆▅▄▃▃▃▁▁▂▃▃` | 61.9%     | +0.1pp     | -0.6pp   | 2026-10-01 |
-| Initial Jobless Claims    | `▄▇█▇▅▅▅▄▁▂▂▄▄▃▄▄▂▂▂▂▂▂▂▁` | 189,000   | -6,000     | -39,000  | 2026-10-31 |
-| Continued Claims          | `▆▅▆▆▇▇█▆▆▅▆▅▆▅▅▄▂▁▁▂▁▂▁▂` | 1,718,000 | +23,000    | -244,000 | 2026-10-24 |
+| Initial Jobless Claims    | `▇█▇▅▅▅▄▁▂▂▄▄▃▄▄▂▂▂▂▂▂▂▁▂` | 200,000   | +9,000     | -28,000  | 2026-11-07 |
+| Continued Claims          | `▅▆▆▇▇█▆▆▅▆▅▆▅▅▄▂▁▁▂▁▂▁▂▁` | 1,697,000 | -20,000    | -249,000 | 2026-10-31 |
 
 ### Unemployment Measures (U1–U6)
 
@@ -60,7 +60,7 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 | Indicator                          | Trend                      | Latest  | Chg (prev) | Chg (1Y) | As of      |
 | ---------------------------------- | -------------------------- | ------- | ---------- | -------- | ---------- |
 | GDP                                | `▁▁▁▂▂▃▃▃▄▄▄▄▅▅▅▅▆▆▆▆▇▇▇█` | $33,010 | +$447      | +$1,830  | 2026-07-01 |
-| CPI (All Urban)                    | `▁▁▁▁▂▂▂▂▂▃▃▃▄▄▄▄▅▆▆▇▆▆▇█` | 336.30  | +2.17      | +13.01   | 2026-09-01 |
+| CPI (All Urban)                    | `▁▁▁▂▂▂▂▂▂▃▃▃▄▄▄▄▅▆▆▆▆▆▇█` | 337.48  | +1.18      | +13.23   | 2026-10-01 |
 | Avg. Hourly Earnings (Wage Growth) | `▁▁▁▁▂▂▂▃▃▃▄▄▅▅▅▅▆▆▆▆▆▇▇█` | $38     | +$0        | +$1      | 2026-10-01 |
 | Consumer Sentiment (U. Mich.)      | `▇▇█▇▅▃▂▂▄▅▄▃▃▂▂▃▃▃▂▁▂▃▂▁` | 48.10   | -3.60      | -7.00    | 2026-09-01 |
 | Supply Chain Pressure (GSCPI)      | `▁▁▁▁▁▁▂▂▂▁▁▁▁▃▃▃▄█▇▅▅▆▆▆` | 1.26    | -0.10      | +1.35    | 2026-10-01 |
@@ -84,8 +84,8 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 
 | Indicator     | Trend                      | Latest | WoW    | YoY (52w) | As of      |
 | ------------- | -------------------------- | ------ | ------ | --------- | ---------- |
-| 30-Year Fixed | `▁▁▁▁▁▁▁▁▂▂▂▂▂▂▃▃▄▅▇██▇▆▆` | 7.2%   | -0.1pp | +1.0pp    | 2026-11-05 |
-| 15-Year Fixed | `▁▁▁▁▁▁▁▂▂▂▂▂▂▂▂▃▄▅▇█▇▇▇▆` | 6.6%   | -0.0pp | +1.1pp    | 2026-11-05 |
+| 30-Year Fixed | `▁▁▁▁▁▁▁▂▂▂▂▂▂▃▃▄▅▇██▇▆▆▅` | 7.1%   | -0.1pp | +0.9pp    | 2026-11-12 |
+| 15-Year Fixed | `▁▁▁▁▁▁▂▂▂▂▂▂▂▂▃▄▅▇█▇▇▇▆▅` | 6.5%   | -0.1pp | +1.0pp    | 2026-11-12 |
 
 ### Consumer Spending by Age (BLS Consumer Expenditure Survey, annual)
 
@@ -103,10 +103,10 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 
 | Indicator     | Trend                      | Latest | QoQ    | YoY (4q) | As of      |
 | ------------- | -------------------------- | ------ | ------ | -------- | ---------- |
-| Credit Cards  | `▃▃▄▃▂▁▂▁▁▁▁▁▃▃▄▅▅▅▆▆▇▇█▇` | 12.9%  | -0.2pp | +0.7pp   | 2026-06-01 |
-| Auto Loans    | `▅▄▄▃▂▁▂▁▁▁▁▁▁▂▃▃▄▅▅▅▅▆█▇` | 5.5%   | -0.1pp | +0.5pp   | 2026-06-01 |
-| Student Loans | `▅▅▄▄▄▄▃▃▃▁▁▁▁▁▁▁▁▁▆▇▇▇▇█` | 10.6%  | +0.3pp | +0.4pp   | 2026-06-01 |
-| Mortgages     | `▄▃▃▁▁▁▁▂▁▁▁▁▂▂▃▂▄▄▅▅▅▆█▇` | 1.0%   | -0.1pp | +0.2pp   | 2026-06-01 |
-| HELOC         | `█▇▇▆▆▄▄▅▆▅▄▃▄▃▂▁▁▂▅▄▄▄▅▆` | 1.0%   | +0.0pp | +0.1pp   | 2026-06-01 |
-| All Debt      | `▄▄▄▃▂▂▂▂▁▁▁▁▁▂▂▂▃▃▆▆▆▇█▇` | 3.3%   | -0.0pp | +0.3pp   | 2026-06-01 |
+| Credit Cards  | `▃▄▃▂▁▂▁▁▁▁▁▃▃▄▅▅▅▆▆▇▇█▇▇` | 12.9%  | -0.0pp | +0.5pp   | 2026-09-01 |
+| Auto Loans    | `▄▄▃▂▁▁▁▁▁▁▁▁▂▃▃▄▄▅▅▅▆▇▇█` | 5.7%   | +0.2pp | +0.6pp   | 2026-09-01 |
+| Student Loans | `▅▄▄▄▄▃▃▃▁▁▁▁▁▁▁▁▁▅▇▆▇▇▇█` | 10.9%  | +0.3pp | +1.6pp   | 2026-09-01 |
+| Mortgages     | `▃▃▁▁▁▁▂▁▁▁▁▂▂▃▂▄▄▅▅▅▆▇▆█` | 1.1%   | +0.1pp | +0.3pp   | 2026-09-01 |
+| HELOC         | `▇█▆▆▄▄▅▇▅▄▃▄▃▂▁▁▂▅▅▄▄▆▆▅` | 0.8%   | -0.1pp | +0.1pp   | 2026-09-01 |
+| All Debt      | `▄▄▃▂▂▂▂▁▁▁▁▁▂▂▂▃▃▆▆▆▇█▇▇` | 3.3%   | -0.1pp | +0.3pp   | 2026-09-01 |
 <!-- ECONOMIC-DATA-END -->
