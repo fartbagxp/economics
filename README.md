@@ -21,7 +21,7 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Time series stored a
 <!-- ECONOMIC-DATA-START -->
 ## Economic Dashboard
 
-_Last updated: 2026-11-14 22:15 UTC_
+_Last updated: 2026-11-21 23:02 UTC_
 
 _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly), or 8 points (quarterly)._
 
@@ -32,8 +32,8 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 | Unemployment Rate (U-3)   | `▂▃▂▁▃▃▃▅▂▅▅▆█▆▅▆▅▅▅▃▂▂▃▂` | 4.1%      | -0.1pp     | -0.3pp   | 2026-10-01 |
 | Total Nonfarm Payrolls    | `▁▂▂▂▂▃▃▃▃▃▃▂▃▃▃▃▄▅▅▅▅▆▇█` | 159,293K  | +165K      | +885K    | 2026-10-01 |
 | Labor Force Participation | `▇▆▇█▇▇█▆▆▅▆▇▇▆▅▄▃▃▃▁▁▂▃▃` | 61.9%     | +0.1pp     | -0.6pp   | 2026-10-01 |
-| Initial Jobless Claims    | `▇█▇▅▅▅▄▁▂▂▄▄▃▄▄▂▂▂▂▂▂▂▁▂` | 200,000   | +9,000     | -28,000  | 2026-11-07 |
-| Continued Claims          | `▅▆▆▇▇█▆▆▅▆▅▆▅▅▄▂▁▁▂▁▂▁▂▁` | 1,697,000 | -20,000    | -249,000 | 2026-10-31 |
+| Initial Jobless Claims    | `█▇▅▅▅▄▁▂▂▄▄▃▄▄▂▂▂▂▂▂▂▁▃▃` | 203,000   | +1,000     | -19,000  | 2026-11-14 |
+| Continued Claims          | `▆▆▇▇█▆▆▅▆▅▆▅▅▄▂▂▁▂▁▂▁▂▁▄` | 1,763,000 | +70,000    | -186,000 | 2026-11-07 |
 
 ### Unemployment Measures (U1–U6)
 
@@ -62,7 +62,7 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 | GDP                                | `▁▁▁▂▂▃▃▃▄▄▄▄▅▅▅▅▆▆▆▆▇▇▇█` | $33,010 | +$447      | +$1,830  | 2026-07-01 |
 | CPI (All Urban)                    | `▁▁▁▂▂▂▂▂▂▃▃▃▄▄▄▄▅▆▆▆▆▆▇█` | 337.48  | +1.18      | +13.23   | 2026-10-01 |
 | Avg. Hourly Earnings (Wage Growth) | `▁▁▁▁▂▂▂▃▃▃▄▄▅▅▅▅▆▆▆▆▆▇▇█` | $38     | +$0        | +$1      | 2026-10-01 |
-| Consumer Sentiment (U. Mich.)      | `▇▇█▇▅▃▂▂▄▅▄▃▃▂▂▃▃▃▂▁▂▃▂▁` | 48.10   | -3.60      | -7.00    | 2026-09-01 |
+| Consumer Sentiment (U. Mich.)      | `▇█▇▅▃▂▂▄▅▄▃▃▂▂▃▃▃▂▁▂▃▂▁▁` | 48.00   | -0.10      | -5.60    | 2026-10-01 |
 | Supply Chain Pressure (GSCPI)      | `▁▁▁▁▁▁▂▂▂▁▁▁▁▃▃▃▄█▇▅▅▆▆▆` | 1.26    | -0.10      | +1.35    | 2026-10-01 |
 
 ### Income & Poverty (Census CPS ASEC, annual)
@@ -76,16 +76,16 @@ _Sparklines show the last 24 data points (monthly or annual), 52 points (weekly)
 
 | Indicator             | Trend                      | Latest | MoM    | YoY (12m) | As of      |
 | --------------------- | -------------------------- | ------ | ------ | --------- | ---------- |
-| Philadelphia Fed      | `▂▁▆▄▃▁▂▂▃▂▄▁▂▁▃▄▄▅▂▃▇█▆▄` | 20.90  | -16.90 | +31.00    | 2026-10-01 |
-| Empire State (NY Fed) | `▆▄▂▄▁▂▂▁▄▅▂▄▅▃▄▄▃▅▆▄▆▇▄█` | 25.50  | +17.90 | +17.70    | 2026-10-01 |
+| Philadelphia Fed      | `▁▆▄▃▁▂▂▃▂▄▁▂▁▃▄▄▅▂▃▇█▆▄▃` | 6.30   | -14.60 | +5.70     | 2026-11-01 |
+| Empire State (NY Fed) | `▄▂▄▁▂▂▁▄▅▂▄▅▃▄▄▃▅▆▄▆▇▄█▄` | 7.80   | -17.70 | -5.70     | 2026-11-01 |
 | Dallas Fed            | `▅▆█▄▃▁▃▄▆▅▄▅▄▄▅▆▅▅▆▅▆▇▇▇` | 13.40  | +3.60  | +18.20    | 2026-10-01 |
 
 ### Mortgage Rates
 
 | Indicator     | Trend                      | Latest | WoW    | YoY (52w) | As of      |
 | ------------- | -------------------------- | ------ | ------ | --------- | ---------- |
-| 30-Year Fixed | `▁▁▁▁▁▁▁▂▂▂▂▂▂▃▃▄▅▇██▇▆▆▅` | 7.1%   | -0.1pp | +0.9pp    | 2026-11-12 |
-| 15-Year Fixed | `▁▁▁▁▁▁▂▂▂▂▂▂▂▂▃▄▅▇█▇▇▇▆▅` | 6.5%   | -0.1pp | +1.0pp    | 2026-11-12 |
+| 30-Year Fixed | `▁▁▁▁▁▁▂▂▂▂▂▂▃▃▄▅▇██▇▆▆▅▇` | 7.3%   | +0.2pp | +1.0pp    | 2026-11-19 |
+| 15-Year Fixed | `▁▁▁▁▁▂▂▂▂▂▂▂▂▃▄▅▇█▇▇▇▆▅▇` | 6.7%   | +0.2pp | +1.1pp    | 2026-11-19 |
 
 ### Consumer Spending by Age (BLS Consumer Expenditure Survey, annual)
 
