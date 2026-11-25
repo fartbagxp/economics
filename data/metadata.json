@@ -265,7 +265,7 @@
     "units": "Billions of Dollars",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
-    "last_updated": "2026-10-29 07:43:40-05",
+    "last_updated": "2026-11-25 07:42:51-06",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/PI"
   },
@@ -274,7 +274,7 @@
     "units": "Billions of Dollars",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
-    "last_updated": "2026-10-29 07:43:47-05",
+    "last_updated": "2026-11-25 07:43:07-06",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/DSPI"
   },
@@ -283,7 +283,7 @@
     "units": "Billions of Dollars",
     "frequency": "Monthly",
     "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
-    "last_updated": "2026-10-29 07:43:31-05",
+    "last_updated": "2026-11-25 07:42:51-06",
     "source": "FRED, Federal Reserve Bank of St. Louis",
     "source_url": "https://fred.stlouisfed.org/series/PCE"
   },

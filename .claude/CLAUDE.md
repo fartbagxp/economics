@@ -39,7 +39,8 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Raw series stored as
 
 **Derived Series:**
 
-- `uv run python main.py --derive` - Compute derived series (YoY inflation, etc.) from raw data into `data/derived/`
+- Derived series are recomputed automatically at the end of every `main.py --source ...` run (there is no `--derive` flag)
+- `uv run python -c "from src.derive import Deriver; Deriver().derive_all()"` - Recompute derived series from existing raw CSVs without re-collecting
 
 **Visualization (matplotlib charts):**
 
@@ -150,7 +151,8 @@ US economic data from FRED, BLS, NY Fed, and Yahoo Finance. Raw series stored as
 
 **src/derive.py (Deriver):**
 
-- Computes derived series from raw CSVs (YoY inflation, income growth, real wage growth)
+- Computes derived series from raw CSVs (YoY inflation, income growth, spending vs. income growth, real wage growth)
+- Run by `main.py` after collection; a new YoY series only needs its id added to `INCOME_YOY_SERIES` and to `DERIVED_SERIES` in `viz/src/routes/+page.server.js`
 - Writes results to `data/derived/`
 
 **src/sparkline.py:**
@@ -237,7 +239,7 @@ See `docs/collection.md` for the full catalog. Key series:
 
 **Government Debt:** treasury_national_debt (Treasury Debt to the Penny, daily since April 1993, dollars), GFDEBTN (FRED, quarterly end-of-period since 1966, millions of dollars)
 
-**Derived:** YoY inflation rates for CPI/PCE/PPI series, income YoY growth
+**Derived:** YoY inflation rates for CPI/PCE/PPI series, income YoY growth, nominal personal spending vs. income YoY (`pce_yoy`, `pi_yoy`, `dspi_yoy`)
 
 ## Tech Stack
 
