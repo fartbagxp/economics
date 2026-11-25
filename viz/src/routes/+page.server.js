@@ -74,7 +74,7 @@ const DERIVED_SERIES = [
   'pcepilfe_mom', 'pcepilfe_yoy',
   'ppifid_mom',   'ppifid_yoy',
   'ppifes_mom',   'ppifes_yoy',
-  'w875rx1_yoy',
+  'w875rx1_yoy', 'pi_yoy', 'dspi_yoy', 'pce_yoy',
 ];
 
 // Payroll change is optional, same as BLS_SERIES above

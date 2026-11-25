@@ -118,6 +118,12 @@
   const w875rx1_yoy   = $derived(parse(data.series.w875rx1_yoy).filter((d) => d.date >= cutoff));
   const dspi          = $derived(parse(data.series.dspi).filter((d) => d.date >= cutoff));
   const pce      = $derived(parse(data.series.pce).filter((d) => d.date >= cutoff));
+  // Nominal YoY growth of spending (PCE) vs. income (PI). Spending above income
+  // means households are funding consumption by saving less or borrowing more.
+  const pceYoy   = $derived(parse(data.series.pce_yoy).filter((d) => d.date >= cutoff));
+  const piYoy    = $derived(parse(data.series.pi_yoy).filter((d) => d.date >= cutoff));
+  const dspiYoy  = $derived(parse(data.series.dspi_yoy).filter((d) => d.date >= cutoff));
+  const spendIncML = $derived(multiLine({ spending: pceYoy, income: piYoy, disposable: dspiYoy }));
   const psave    = $derived(parse(data.series.psave).filter((d) => d.date >= cutoff));
   const psavert  = $derived(parse(data.series.psavert).filter((d) => d.date >= cutoff));
   const mich     = $derived(parse(data.series.mich).filter((d) => d.date >= cutoff));
@@ -1313,6 +1319,52 @@
       </Plot>
       </LazyChart>
       <p class="source">Source: <a href={fredUrl('pce')} target="_blank" rel="noopener">FRED / PCE</a></p>
+    </div>
+
+    <!-- Personal Spending vs Personal Income, YoY -->
+    <div class="card wide" id="spending-vs-income">
+      <h2>Personal Spending vs. Personal Income, YoY Change <a class="anchor-link" href="#spending-vs-income">#</a></h2>
+      <p class="meta">
+        Monthly · Nominal · % change from a year earlier ·
+        <span class="legend-swatch" style="background:#2a9d8f"></span> Spending (PCE) &nbsp;
+        <span class="legend-swatch dashed" style="border-color:#1a6faf"></span> Personal Income &nbsp;
+        <span class="legend-swatch dashed" style="border-color:#f4a261"></span> Disposable Income
+      </p>
+      <LazyChart height={220}>
+      <Plot height={220} marginLeft={44} marginRight={10} x={{ type: 'time' }} y={{ label: '%', grid: true }}>
+        <Frame />
+        <RuleY data={[0]} />
+        <RuleX data={recessionLines} stroke="var(--band-fill)" strokeOpacity={0.5} />
+        <Line data={breakGaps(piYoy)} x="date" y="value" stroke="#1a6faf" strokeWidth={1.5} strokeDasharray="5,3" />
+        <Line data={breakGaps(dspiYoy)} x="date" y="value" stroke="#f4a261" strokeWidth={1.5} strokeDasharray="2,2" />
+        <Line data={breakGaps(pceYoy)} x="date" y="value" stroke="#2a9d8f" strokeWidth={1.5} />
+        {#snippet overlay()}<RecessionHover bands={recessions} />
+          <HTMLTooltip data={spendIncML.all} x="date" y="value">
+            {#snippet children({ datum })}
+              {#if datum}
+                {@const v = spendIncML.byDate.get(datum.date.getTime())}
+                <div class="tip" style:transform={tipTransform(datum)}>
+                  <span class="tip-label">Spending vs. Income</span>
+                  <span class="tip-date">{fmt(datum.date)}</span>{#each annotationsFor(datum.date) as note}<span class="tip-note">{note}</span>{/each}
+                  {#if v}
+                    <span class="tip-edu-row"><span><span style="color:#2a9d8f">●</span> Spending</span><b>{v.spending?.toFixed(1)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#1a6faf">●</span> Income</span><b>{v.income?.toFixed(1)}%</b></span>
+                    <span class="tip-edu-row"><span><span style="color:#f4a261">●</span> Disposable</span><b>{v.disposable?.toFixed(1)}%</b></span>
+                    {#if v.spending != null && v.income != null}
+                      <span class="tip-edu-row"><span>Gap vs. income</span><b>{v.spending - v.income >= 0 ? '+' : ''}{(v.spending - v.income).toFixed(1)} pts</b></span>
+                    {/if}
+                    {#if v.spending != null && v.disposable != null}
+                      <span class="tip-edu-row"><span>Gap vs. disposable</span><b>{v.spending - v.disposable >= 0 ? '+' : ''}{(v.spending - v.disposable).toFixed(1)} pts</b></span>
+                    {/if}
+                  {/if}
+                </div>
+              {/if}
+            {/snippet}
+          </HTMLTooltip>
+        {/snippet}
+      </Plot>
+      </LazyChart>
+      <p class="source">Source: FRED — <a href={fredUrl('pce')} target="_blank" rel="noopener">PCE</a> · <a href={fredUrl('pi')} target="_blank" rel="noopener">PI</a> · <a href={fredUrl('dspi')} target="_blank" rel="noopener">DSPI</a></p>
     </div>
 
     <!-- Personal Savings Level -->
